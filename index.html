@@ -525,7 +525,16 @@ async function loadData() {
     const {data,error} = await db.from('dashboard_data').select('*').eq('id',cfg.dbRow).single();
     if (error) throw error;
     if (data) {
-      state[co].weekData = data.week_data || {};
+      const zd = {};
+      if (data.weekly_revenue != null) zd.weekly_revenue = parseFloat(data.weekly_revenue);
+      if (data.close_rate != null)     zd.close_rate     = parseFloat(data.close_rate);
+      if (data.pipeline_count != null) zd.pipeline_count = parseFloat(data.pipeline_count);
+      if (data.ar_days != null)        zd.ar_days        = parseFloat(data.ar_days);
+      if (data.gross_margin != null)   zd.gross_margin   = parseFloat(data.gross_margin);
+      if (data.cash_runway != null)    zd.cash_runway    = parseFloat(data.cash_runway);
+      if (data.google_reviews != null) zd.google_reviews = parseFloat(data.google_reviews);
+      if (data.outbound_touches != null) zd.outbound_touches = parseFloat(data.outbound_touches);
+      state[co].weekData = Object.assign({}, zd, data.week_data || {});
       state[co].history  = data.history   || [];
       state[co].currentWeek = data.current_week || getMondayOfWeek();
     } else {
@@ -561,9 +570,14 @@ async function saveData() {
 ['driven','tb'].forEach(c => {
   db.channel(c+'-cmd-rt').on('postgres_changes',{event:'UPDATE',schema:'public',table:'dashboard_data',filter:'id=eq.'+COMPANIES[c].dbRow}, payload => {
     if (c !== co) return; // only update if this company is active
-    state[c].weekData = payload.new.week_data || {};
-    state[c].history  = payload.new.history   || [];
-    renderAll();
+    const rz = {}; const rn = payload.new;
+    if (rn.weekly_revenue != null) rz.weekly_revenue = parseFloat(rn.weekly_revenue);
+    if (rn.close_rate != null)     rz.close_rate     = parseFloat(rn.close_rate);
+    if (rn.ar_days != null)        rz.ar_days        = parseFloat(rn.ar_days);
+    if (rn.gross_margin != null)   rz.gross_margin   = parseFloat(rn.gross_margin);
+    if (rn.cash_runway != null)    rz.cash_runway    = parseFloat(rn.cash_runway);
+    state[c].weekData = Object.assign({}, rz, rn.week_data || {});
+    state[c].history  = payload.new.history   || [];   renderAll();
     document.getElementById('last-sync').textContent = 'just now';
     toast('Updated by team','ok');
   }).subscribe();
