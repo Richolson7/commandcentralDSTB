@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trailblazers — Weekly KPI Entry</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --dk:#060808;--s:#0C1010;--s2:#121818;--s3:#1A2020;
+  --br:rgba(255,255,255,0.07);--tx:#E8EDE8;--td:#8FA8A0;--tm:#4A5E58;
+  --red:#FF4444;--rbg:#2A0808;--rbr:#993333;
+  --amb:#FFB800;--abg:#1A1200;--abr:#886600;
+  --g:#5CB800;--gd:#3B6D11;--gbg:#0A1408;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-size:14px;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--s)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+
+.hdr{width:100%;background:linear-gradient(135deg,#040604 0%,#080E08 60%,#060806 100%);border-bottom:3px solid var(--g);padding:24px 24px 18px;text-align:center}
+.hdr h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:var(--g);line-height:1}
+.hdr p{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;color:var(--td);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+.hdr .week{margin-top:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--td)}
+
+.wrap{width:100%;max-width:700px;padding:24px;flex:1}
+
+.card{background:var(--s2);border:1px solid var(--br);border-radius:6px;padding:20px;margin-bottom:16px}
+.card h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h2 .num{background:var(--g);color:#040804;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-family:'Barlow',sans-serif}
+
+label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;color:var(--td);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;margin-top:12px}
+label:first-child{margin-top:0}
+label .target{color:var(--tm);font-size:10px;margin-left:8px;text-transform:none;letter-spacing:0;font-weight:400}
+
+input[type="text"],input[type="number"],input[type="date"],select{
+  width:100%;background:var(--s);border:1px solid var(--br);border-radius:4px;color:var(--tx);font-family:'Barlow',sans-serif;font-size:15px;padding:10px 12px;transition:border .15s
+}
+input:focus,select:focus{outline:none;border-color:var(--g);background:#0a1108}
+input[type="number"]{font-family:'DM Mono',monospace}
+
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:6px}
+.role-btn{padding:14px 12px;background:var(--s);border:2px solid var(--br);border-radius:6px;color:var(--td);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-align:center}
+.role-btn:hover{border-color:rgba(92,184,0,.3);color:var(--tx)}
+.role-btn.active{background:var(--gbg);border-color:var(--g);color:var(--g)}
+.role-btn .ico{font-size:22px;display:block;margin-bottom:4px}
+.role-btn .sub{font-size:10px;color:var(--tm);font-weight:400;margin-top:3px;letter-spacing:0;text-transform:none}
+
+.kpi-row{display:grid;grid-template-columns:1fr 100px;gap:12px;align-items:end;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.kpi-row:last-child{border-bottom:none}
+.kpi-info{font-size:13px}
+.kpi-info .name{color:var(--tx);font-weight:500;margin-bottom:3px}
+.kpi-info .meta{font-size:11px;color:var(--tm);font-family:'DM Mono',monospace}
+.kpi-info .meta .floor{color:var(--red)}
+.kpi-info .meta .target-v{color:var(--g)}
+.kpi-row input{padding:8px 10px;font-size:14px;text-align:right}
+
+.btn{width:100%;padding:14px 24px;background:var(--g);color:#040804;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-top:8px}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.secondary{background:var(--s);color:var(--td);border:1px solid var(--br)}
+
+.hidden{display:none}
+
+.success-box{background:var(--gbg);border:1px solid var(--gd);border-radius:6px;padding:24px;text-align:center;margin-top:20px}
+.success-box .check{font-size:48px;margin-bottom:10px}
+.success-box h3{color:var(--g);font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;margin-bottom:8px}
+.success-box p{color:var(--td);font-size:13px;line-height:1.6}
+
+.error-box{background:var(--rbg);border:1px solid var(--rbr);color:var(--red);padding:14px;border-radius:4px;margin-top:12px;font-size:13px;text-align:center}
+
+.footer{padding:20px;font-size:11px;color:var(--tm);text-align:center;font-family:'DM Mono',monospace}
+.footer a{color:var(--td);text-decoration:none;border-bottom:1px dotted var(--tm)}
+
+.help{font-size:12px;color:var(--td);background:var(--s);padding:10px 12px;border-radius:4px;margin-top:8px;line-height:1.5;border-left:2px solid var(--g)}
+
+@media (max-width:560px){
+  .role-grid{grid-template-columns:1fr 1fr}
+  .role-btn{padding:12px 8px;font-size:12px}
+  .kpi-row{grid-template-columns:1fr 80px;gap:8px}
+  .hdr h1{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🌲 TRAILBLAZERS</h1>
+  <p>Weekly KPI Submission</p>
+  <div class="week">Submit by Thursday EOD · Reviewed at Friday L10</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ── STEP 1: NAME + WEEK ── -->
+  <div class="card">
+    <h2><span class="num">1</span> Your Info</h2>
+    <label>Your Name</label>
+    <input type="text" id="user-name" placeholder="e.g. John Smith" autocomplete="name">
+
+    <label>Week of (Monday)</label>
+    <input type="date" id="week-date">
+  </div>
+
+  <!-- ── STEP 2: PICK ROLE ── -->
+  <div class="card">
+    <h2><span class="num">2</span> Your Role</h2>
+    <div class="role-grid">
+      <div class="role-btn" data-role="sales">
+        <span class="ico">📋</span>
+        SALES
+        <div class="sub">Estimator / AE</div>
+      </div>
+      <div class="role-btn" data-role="ops">
+        <span class="ico">⚙️</span>
+        FIELD OPS
+        <div class="sub">Ops Manager / Crews</div>
+      </div>
+      <div class="role-btn" data-role="marketing">
+        <span class="ico">📣</span>
+        MARKETING
+        <div class="sub">Marketing Coord</div>
+      </div>
+      <div class="role-btn" data-role="finance">
+        <span class="ico">📊</span>
+        FINANCE / ADMIN
+        <div class="sub">Admin / Bookkeeper</div>
+      </div>
+      <div class="role-btn" data-role="trees">
+        <span class="ico">🌳</span>
+        TREE CREW
+        <div class="sub">Tree-specific only</div>
+      </div>
+      <div class="role-btn" data-role="all">
+        <span class="ico">👤</span>
+        PRESIDENT
+        <div class="sub">Everything (Rich)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: KPI INPUTS (populated by JS) ── -->
+  <div class="card hidden" id="kpi-card">
+    <h2><span class="num">3</span> Your Numbers This Week</h2>
+    <div class="help">💡 Enter only the metrics you know. Leave blank if you don't have it — partial data is better than no data. All boxes accept numbers only.</div>
+    <div id="kpi-list"></div>
+  </div>
+
+  <!-- ── STEP 4: NOTES + SUBMIT ── -->
+  <div class="card hidden" id="submit-card">
+    <h2><span class="num">4</span> Notes for L10 (optional)</h2>
+    <label>Anything we should discuss Friday?</label>
+    <input type="text" id="user-notes" placeholder="e.g. Lost 2 quotes to ABC Tree this week — pricing issue?">
+
+    <button class="btn" id="submit-btn">📤 Submit My Numbers</button>
+    <div id="submit-msg"></div>
+  </div>
+
+  <!-- ── SUCCESS ── -->
+  <div class="success-box hidden" id="success-box">
+    <div class="check">✅</div>
+    <h3>Submitted!</h3>
+    <p>Your numbers are now in the Command Center.<br>See you Friday at L10.</p>
+    <button class="btn secondary" style="margin-top:16px;max-width:200px" onclick="resetForm()">Submit Another</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  Trailblazers Command Center · <a href="https://richolson7.github.io/commandcentralDSTB" target="_blank">View Dashboard →</a>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════════════════════════════
+const {createClient} = supabase;
+const db = createClient(
+  'https://igaylyhkssahczubiztb.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo'
+);
+
+// ══════════════════════════════════════════════════════════
+// KPI DEFINITIONS (matches Command Center exactly)
+// ══════════════════════════════════════════════════════════
+const KPIS = {
+  sales: [
+    {key:'close_rate',         label:'Close Rate % (last 30 days)',     floor:55,   target:65,    unit:'%',  hint:'Won quotes ÷ total quotes sent'},
+    {key:'pipeline_count',     label:'Open Quotes in Pipeline',         floor:15,   target:25,    unit:'',   hint:'Active quotes not yet won/lost'},
+    {key:'estimates_per_day',  label:'Estimates Sent / Day (avg)',      floor:5,    target:8,     unit:'',   hint:'Average per business day this week'},
+    {key:'avg_ticket',         label:'Avg Ticket ($)',                  floor:1800, target:2500,  unit:'$',  hint:'Average job value won this week'},
+    {key:'maint_contracts',    label:'Maintenance Contracts Signed',    floor:1,    target:2,     unit:'',   hint:'New recurring contracts this week'},
+    {key:'tree_close_rate',    label:'🌳 Tree Close Rate %',            floor:45,   target:80,    unit:'%',  hint:'Tree service quotes only'},
+    {key:'tree_avg_ticket',    label:'🌳 Tree Avg Ticket ($)',          floor:2000, target:5000,  unit:'$',  hint:'Average tree job won this week'},
+  ],
+  ops: [
+    {key:'crew_util',          label:'Crew Utilization %',              floor:75,   target:88,    unit:'%',  hint:'Billable hours ÷ total clocked'},
+    {key:'on_time_pct',        label:'On-Time Completion %',            floor:90,   target:95,    unit:'%',  hint:'Jobs finished on scheduled day'},
+    {key:'safety_incidents',   label:'Safety Incidents',                floor:0,    target:0,     unit:'',   hint:'Any injury, near-miss, or property damage'},
+    {key:'complaints',         label:'Customer Complaints',             floor:0,    target:0,     unit:'',   hint:'Calls, emails, or reviews about issues'},
+    {key:'dispatch_pct',       label:'Dispatch by 6:30 AM %',           floor:90,   target:100,   unit:'%',  hint:'Crews rolling on time daily avg'},
+    {key:'tree_jobs_week',     label:'🌳 Tree Jobs Completed',          floor:3,    target:8,     unit:'',   hint:'Total tree jobs finished this week'},
+    {key:'tree_jobs_crew_day', label:'🌳 Tree Jobs / Crew / Day',       floor:1,    target:2,     unit:'',   hint:'Average per crew per working day'},
+    {key:'tree_rev_crew_day',  label:'🌳 Tree Revenue / Crew / Day ($)',floor:3000, target:8000,  unit:'$',  hint:'Avg revenue produced per crew per day'},
+    {key:'tree_bucket_util',   label:'🌳 Bucket Truck Utilization %',   floor:60,   target:85,    unit:'%',  hint:'Days bucket truck on jobs ÷ total days'},
+    {key:'tree_chipper_util',  label:'🌳 Chipper Utilization %',        floor:50,   target:80,    unit:'%',  hint:'Days chipper on jobs ÷ total days'},
+  ],
+  marketing: [
+    {key:'google_reviews',     label:'Google Reviews This Month',       floor:20,   target:40,    unit:'',   hint:'New reviews added in current month'},
+    {key:'social_posts',       label:'Social Posts This Week',          floor:7,    target:14,    unit:'',   hint:'Across all social channels'},
+    {key:'door_hangers',       label:'Door Hangers Distributed',        floor:300,  target:500,   unit:'',   hint:'Total distributed by all crews'},
+    {key:'lsa_cpl',            label:'LSA Cost Per Lead ($)',           floor:50,   target:35,    unit:'$',  hint:'Lower is better'},
+  ],
+  finance: [
+    {key:'ar_days',            label:'AR Days Outstanding',             floor:35,   target:28,    unit:'d',  hint:'Average days to collect (lower is better)'},
+    {key:'cash_collection_rate', label:'Cash Collection Rate %',        floor:80,   target:95,    unit:'%',  hint:'Invoiced ÷ collected this week'},
+    {key:'cash_on_hand',       label:'Cash on Hand ($)',                floor:40000,target:120000,unit:'$',  hint:'Total across all accounts'},
+  ],
+  trees: [
+    {key:'tree_revenue',       label:'🌳 Tree Weekly Revenue ($)',      floor:15000,target:40000, unit:'$',  hint:'Total tree service revenue this week'},
+    {key:'tree_jobs_week',     label:'🌳 Tree Jobs Completed',          floor:3,    target:8,     unit:'',   hint:'Total tree jobs finished'},
+    {key:'tree_removal_jobs',  label:'🌳 Removal Jobs',                 floor:2,    target:5,     unit:'',   hint:'Tree removals completed this week'},
+    {key:'tree_trim_jobs',     label:'🌳 Trim Jobs',                    floor:1,    target:3,     unit:'',   hint:'Trim/prune jobs this week'},
+    {key:'tree_stump_jobs',    label:'🌳 Stump Grinding',               floor:0,    target:2,     unit:'',   hint:'Stump grinding jobs this week'},
+    {key:'tree_jobs_crew_day', label:'🌳 Jobs / Crew / Day',            floor:1,    target:2,     unit:'',   hint:'Average per crew per working day'},
+  ],
+  all: [
+    // President sees everything — combined list, deduped
+    {key:'weekly_revenue',     label:'Weekly Revenue ($) — TOTAL',      floor:46000,target:57700, unit:'$',  hint:'Total revenue for the company this week'},
+    {key:'gross_margin',       label:'Gross Margin %',                  floor:28,   target:32,    unit:'%',  hint:'(Revenue - COGS) ÷ Revenue × 100'},
+    {key:'net_profit',         label:'Net Profit ($)',                  floor:5000, target:12000, unit:'$',  hint:'Bottom-line profit this week'},
+    {key:'cash_runway',        label:'Cash Runway (weeks)',             floor:4,    target:8,     unit:'wk', hint:'Cash ÷ weekly burn'},
+    {key:'tree_revenue',       label:'🌳 Tree Weekly Revenue ($)',      floor:15000,target:40000, unit:'$',  hint:'Tree division revenue'},
+    {key:'close_rate',         label:'Close Rate %',                    floor:55,   target:65,    unit:'%',  hint:'Total company close rate'},
+    {key:'crew_util',          label:'Crew Utilization %',              floor:75,   target:88,    unit:'%',  hint:'Total crew utilization'},
+    {key:'ar_days',            label:'AR Days Outstanding',             floor:35,   target:28,    unit:'d',  hint:'Lower is better'},
+    {key:'l10_held',           label:'L10 Held (1=yes, 0=no)',          floor:1,    target:1,     unit:'',   hint:'Did you hold L10 this week?'},
+    {key:'open_roles',         label:'Open Critical Roles',             floor:0,    target:0,     unit:'',   hint:'Roles you need to fill ASAP'},
+  ],
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let selectedRole = null;
+let enteredValues = {};
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function getMondayOfWeek(d) {
+  const dt = new Date(d || Date.now());
+  const day = dt.getDay();
+  const diff = dt.getDate() - day + (day===0?-6:1);
+  dt.setDate(diff);
+  return dt.toISOString().split('T')[0];
+}
+
+// Default the week input to current Monday
+document.getElementById('week-date').value = getMondayOfWeek();
+
+// ══════════════════════════════════════════════════════════
+// ROLE PICKER
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.role-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedRole = btn.dataset.role;
+    renderKPIs();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// RENDER KPI INPUTS BASED ON ROLE
+// ══════════════════════════════════════════════════════════
+function renderKPIs() {
+  if (!selectedRole) return;
+  const kpis = KPIS[selectedRole];
+  const list = document.getElementById('kpi-list');
+  list.innerHTML = '';
+
+  kpis.forEach(k => {
+    const lbStr = k.unit === '$' ? `$${k.floor.toLocaleString()}` : `${k.floor}${k.unit}`;
+    const tgStr = k.unit === '$' ? `$${k.target.toLocaleString()}` : `${k.target}${k.unit}`;
+    const row = document.createElement('div');
+    row.className = 'kpi-row';
+    row.innerHTML = `
+      <div class="kpi-info">
+        <div class="name">${k.label}</div>
+        <div class="meta">Floor: <span class="floor">${lbStr}</span>  ·  Target: <span class="target-v">${tgStr}</span>  ·  ${k.hint}</div>
+      </div>
+      <input type="number" data-key="${k.key}" placeholder="—" step="any">
+    `;
+    list.appendChild(row);
+  });
+
+  // Hook inputs
+  list.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const key = e.target.dataset.key;
+      const val = e.target.value;
+      if (val === '' || val == null) delete enteredValues[key];
+      else enteredValues[key] = parseFloat(val);
+    });
+  });
+
+  document.getElementById('kpi-card').classList.remove('hidden');
+  document.getElementById('submit-card').classList.remove('hidden');
+  document.getElementById('kpi-card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ══════════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════════
+document.getElementById('submit-btn').addEventListener('click', async () => {
+  const name = document.getElementById('user-name').value.trim();
+  const week = document.getElementById('week-date').value;
+  const notes = document.getElementById('user-notes').value.trim();
+  const msg = document.getElementById('submit-msg');
+  msg.innerHTML = '';
+
+  // Validate
+  if (!name) {
+    msg.innerHTML = '<div class="error-box">Please enter your name.</div>';
+    return;
+  }
+  if (!selectedRole) {
+    msg.innerHTML = '<div class="error-box">Please pick a role.</div>';
+    return;
+  }
+  if (Object.keys(enteredValues).length === 0) {
+    msg.innerHTML = '<div class="error-box">Please enter at least one number.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting...';
+
+  try {
+    // Step 1: Fetch the existing tb_cmd row
+    const {data: existing, error: fetchErr} = await db
+      .from('dashboard_data')
+      .select('*')
+      .eq('id', 'tb_cmd')
+      .single();
+
+    if (fetchErr) throw fetchErr;
+
+    // Step 2: Merge new values into existing week_data
+    const mergedWeekData = Object.assign({}, existing?.week_data || {}, enteredValues);
+
+    // Step 3: Upsert back into Supabase (only existing columns)
+    const {error: saveErr} = await db
+      .from('dashboard_data')
+      .upsert({
+        id: 'tb_cmd',
+        week_data: mergedWeekData,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (saveErr) throw saveErr;
+
+    // Success
+    document.getElementById('kpi-card').classList.add('hidden');
+    document.getElementById('submit-card').classList.add('hidden');
+    document.getElementById('success-box').classList.remove('hidden');
+    document.getElementById('success-box').scrollIntoView({behavior:'smooth', block:'start'});
+  } catch (e) {
+    console.error(e);
+    msg.innerHTML = '<div class="error-box">Submission failed: ' + (e.message || 'unknown error') + '. Please try again or contact Rich.</div>';
+    btn.disabled = false;
+    btn.textContent = '📤 Submit My Numbers';
+  }
+});
+
+// ══════════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════════
+function resetForm() {
+  enteredValues = {};
+  selectedRole = null;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('kpi-list').innerHTML = '';
+  document.getElementById('user-notes').value = '';
+  document.getElementById('kpi-card').classList.add('hidden');
+  document.getElementById('submit-card').classList.add('hidden');
+  document.getElementById('success-box').classList.add('hidden');
+  document.getElementById('submit-msg').innerHTML = '';
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = '📤 Submit My Numbers';
+  document.getElementById('week-date').value = getMondayOfWeek();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
