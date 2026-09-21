@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center — Driven + Trailblazers</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --dk:#060808;--s:#0C1010;--s2:#121818;--s3:#1A2020;
+  --br:rgba(255,255,255,0.07);--tx:#E8EDE8;--td:#8FA8A0;--tm:#4A5E58;
+  --red:#FF4444;--rbg:#2A0808;--rbr:#993333;
+  --amb:#FFB800;--abg:#1A1200;--abr:#886600;
+  --dg:#39FF14;--dgd:#2ECC0E;--dgbg:#0A1A08;
+  --tg:#5CB800;--tgd:#3B6D11;--tgbg:#0A1408;
+  --g:var(--dg);--gd:var(--dgd);--gbg:var(--dgbg);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-size:13px;min-height:100vh}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--s)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+
+.co-switcher{background:#030505;border-bottom:1px solid var(--br);padding:0;display:flex;align-items:stretch;height:48px}
+.co-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--tm);border-bottom:3px solid transparent;transition:all .2s;padding:0 20px}
+.co-btn:hover{color:var(--td)}
+.co-btn.driven.active{color:var(--dg);border-bottom-color:var(--dg);background:rgba(57,255,20,0.03)}
+.co-btn.tb.active{color:var(--tg);border-bottom-color:var(--tg);background:rgba(92,184,0,0.03)}
+.co-divider{width:1px;background:var(--br);flex-shrink:0}
+.co-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.co-dot.driven{background:var(--dg)}
+.co-dot.tb{background:var(--tg)}
+.co-subtitle{font-size:10px;font-weight:400;letter-spacing:1px;opacity:.7}
+
+.header{border-bottom:3px solid var(--g);padding:18px 36px 14px;position:relative;overflow:hidden;transition:border-color .3s}
+.header.driven-header{background:linear-gradient(135deg,#040804 0%,#0A140A 60%,#060C06 100%)}
+.header.tb-header{background:linear-gradient(135deg,#040604 0%,#080E08 60%,#060806 100%)}
+.h-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.h-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:3px;color:var(--g);line-height:1;transition:color .3s}
+.h-sub{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:var(--td);letter-spacing:3px;text-transform:uppercase;margin-top:3px}
+.badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;padding:3px 10px;border-radius:2px;text-transform:uppercase;transition:background .3s,color .3s}
+.badge.driven-badge{background:var(--dg);color:#040804}
+.badge.tb-badge{background:var(--tg);color:#040804}
+.h-stats{display:flex;gap:22px;margin-top:10px;flex-wrap:wrap}
+.hstat .val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--g);line-height:1;transition:color .3s}
+.hstat .lbl{font-size:10px;color:var(--td);letter-spacing:1px;text-transform:uppercase}
+
+.sync-bar{background:#030505;border-bottom:1px solid var(--br);padding:6px 36px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sdot.live{background:var(--g);animation:pulse 2s infinite}
+.sdot.off{background:var(--tm)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-txt{font-size:11px;color:var(--td);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:5px}
+
+.links-bar{background:#030505;border-bottom:1px solid var(--br);padding:6px 36px;display:flex;gap:8px;flex-wrap:wrap}
+.link-chip{font-size:11px;color:var(--td);border:1px solid var(--br);border-radius:3px;padding:4px 10px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.5px;transition:all .15s}
+.link-chip:hover{color:var(--g);border-color:var(--g)}
+
+.tabs{display:flex;background:#030505;border-bottom:2px solid var(--br);padding:0 36px;overflow-x:auto;gap:2px}
+.tab{padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--td);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--g);border-bottom-color:var(--g)}
+
+.tbtn{height:28px;padding:0 12px;border-radius:3px;border:1px solid var(--br);background:var(--s2);color:var(--td);font-size:11px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all .15s;white-space:nowrap}
+.tbtn:hover{color:var(--tx);border-color:rgba(255,255,255,.2)}
+.tbtn.green{border-color:var(--gd);color:var(--g);background:var(--gbg)}
+.tbtn.red{border-color:var(--rbr);color:var(--red);background:var(--rbg)}
+.btn-g{color:#040804;border:none;padding:8px 18px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;font-size:12px;cursor:pointer;border-radius:2px;background:var(--g);transition:background .3s}
+.btn-g:hover{filter:brightness(1.1)}
+
+.content{padding:22px 36px 48px;max-width:1500px}
+.panel{display:none}.panel.active{display:block}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--g);margin-bottom:5px;transition:color .3s}
+.sec-sub{font-size:12px;color:var(--td);margin-bottom:16px;line-height:1.6}
+
+.kpi-section{margin-bottom:18px}
+.kpi-sec-hdr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--br);border-radius:4px 4px 0 0;border-bottom:2px solid var(--g);transition:border-color .3s}
+.kpi-sec-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);transition:color .3s}
+.kpi-table{width:100%;border-collapse:collapse}
+.kpi-table th{background:var(--s);color:var(--td);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:7px 9px;text-align:left;border-bottom:1px solid var(--br);white-space:nowrap}
+.kpi-table td{padding:7px 9px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.kpi-table tr:hover td{background:rgba(255,255,255,.02)}
+.kpi-name{font-size:12px;color:var(--tx);font-weight:500}
+.kpi-floor{font-size:11px;color:var(--red);font-family:'DM Mono',monospace}
+.kpi-target{font-size:11px;color:var(--g);font-weight:600;font-family:'DM Mono',monospace;transition:color .3s}
+.actual-inp{width:74px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'DM Mono',monospace;font-size:12px;padding:4px 6px;transition:border .15s}
+.actual-inp:focus{outline:none;border-color:var(--g)}
+.actual-inp.g{color:var(--g);border-color:rgba(92,184,0,.4)}
+.actual-inp.a{color:var(--amb);border-color:rgba(255,184,0,.4)}
+.actual-inp.r{color:var(--red);border-color:rgba(255,68,68,.4)}
+.status-chip{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600;white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+.st-g{background:rgba(92,184,0,.12);color:#5CB800}.st-a{background:var(--abg);color:var(--amb)}.st-r{background:var(--rbg);color:var(--red)}.st-n{background:var(--s3);color:var(--tm)}
+.mini-chart{width:100px;height:32px}
+
+.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.sum-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:12px;text-align:center;position:relative;overflow:hidden}
+.sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g);transition:background .3s}
+.sum-card.red::before{background:var(--red)}
+.sum-card.amber::before{background:var(--amb)}
+.sum-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--g);line-height:1;transition:color .3s}
+.sum-num.warn{color:var(--amb)}.sum-num.breach{color:var(--red)}.sum-num.na{color:var(--tm);font-size:1.1rem}
+.sum-lbl{font-size:10px;color:var(--td);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.chart-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px}
+.chart-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--td);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.chart-wrap{position:relative;height:190px}
+.export-chart-btn{font-size:10px;padding:2px 7px;border-radius:2px;border:1px solid var(--br);background:none;color:var(--tm);cursor:pointer;font-family:'Barlow Condensed',sans-serif}
+.export-chart-btn:hover{color:var(--g);border-color:var(--g)}
+
+.history-table{width:100%;border-collapse:collapse;font-size:11px}
+.history-table th{background:var(--s);color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--br);white-space:nowrap}
+.history-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);font-family:'DM Mono',monospace;white-space:nowrap}
+
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:6px}
+.toast{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:9px 14px;font-size:12px;color:var(--tx);animation:tin .2s ease;min-width:180px}
+.toast.ok{border-color:var(--gd);color:var(--g);background:var(--gbg)}
+.toast.err{border-color:var(--rbr);color:var(--red);background:var(--rbg)}
+@keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+
+@media print {
+  .co-switcher,.sync-bar,.links-bar,.tabs,.tbtn,.btn-g,.actual-inp{display:none!important}
+  body{background:#fff;color:#000}
+  .panel{display:block!important}
+  .kpi-table td,.kpi-table th{color:#000;border-color:#ccc}
+  .sum-card,.chart-card{border-color:#ccc;background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toasts"></div>
+
+<div class="co-switcher">
+  <div class="co-btn driven active" id="co-driven" onclick="switchCompany('driven')">
+    <div class="co-dot driven"></div>
+    <div><div>DRIVEN SOLUTIONS</div><div class="co-subtitle">Packaging + Logistics</div></div>
+  </div>
+  <div class="co-divider"></div>
+  <div class="co-btn tb" id="co-tb" onclick="switchCompany('tb')">
+    <div class="co-dot tb"></div>
+    <div><div>TRAILBLAZERS</div><div class="co-subtitle">Total Outdoor Solutions</div></div>
+  </div>
+</div>
+
+<div class="header driven-header" id="main-header">
+  <div class="h-top">
+    <div>
+      <div class="h-title" id="co-title">DRIVEN SOLUTIONS</div>
+      <div class="h-sub" id="co-sub">Command Center</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+      <span class="badge driven-badge" id="co-badge">Live</span>
+      <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
+        <button class="tbtn green" onclick="shiftWeeks()">➜ Shift Weeks</button>
+        <button class="tbtn" onclick="saveToHistory()">📋 Save to History</button>
+        <button class="tbtn" onclick="window.print()">🖨️ Print</button>
+        <span style="font-size:10px;color:var(--td);align-self:center;font-family:'DM Mono',monospace">Last sync: <span id="last-sync">—</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="h-stats" id="h-stats"></div>
+</div>
+
+<div class="sync-bar">
+  <div class="sync-txt"><div class="sdot off" id="sync-dot"></div><span id="sync-lbl">Connecting…</span></div>
+  <div style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
+</div>
+
+<div class="links-bar" id="links-bar"></div>
+
+<div class="tabs" id="main-tabs">
+  <div class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
+  <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
+  <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
+  <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
+  <div class="tab" onclick="showPanel('charts',this)">📈 Charts</div>
+  <div class="tab" onclick="showPanel('history',this)">📅 History</div>
+</div>
+
+<div class="content">
+  <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
+  <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
+  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
+  <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
+  <div class="panel" id="panel-charts">
+    <div class="sec-title">📈 Trend Charts</div>
+    <div class="sec-sub">4-week trend on the metrics that matter most.</div>
+    <div class="chart-grid" id="chart-grid"></div>
+  </div>
+  <div class="panel" id="panel-history">
+    <div class="sec-title">📅 Weekly History</div>
+    <div class="sec-sub">Save a snapshot every Friday to build a permanent record (separate from the W1–W4 rolling window).</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="tbtn green" onclick="saveToHistory()">Save This Week</button>
+      <button class="tbtn" onclick="exportHistoryCSV()">Export CSV</button>
+      <button class="tbtn red" onclick="clearHistory()">Clear</button>
+    </div>
+    <div id="history-table-wrap"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════════════════════════════
+const {createClient} = supabase;
+const db = createClient(
+  'https://igaylyhkssahczubiztb.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo'
+);
+
+// ══════════════════════════════════════════════════════════
+// COMPANY + KPI CONFIG (simplified schema — one flat key store per company,
+// the SAME key can appear in more than one tab and always shows the same value)
+// ══════════════════════════════════════════════════════════
+const COMPANIES = {
+  driven: {
+    name:'DRIVEN SOLUTIONS', sub:'Command Center', badge:'Live',
+    color:'#39FF14', colorDark:'#2ECC0E', colorBg:'#0A1A08',
+    headerClass:'driven-header', badgeClass:'driven-badge', dbRow:'driven_cmd',
+    headerStats:[
+      {key:'revenue_weekly', label:'Weekly Revenue', fmt:v=>'$'+v.toLocaleString()},
+      {key:'quote_close_rate', label:'Close Rate', fmt:v=>v+'%'},
+      {key:'vendor_performance', label:'Vendor Perf.', fmt:v=>v+'%'},
+      {key:'cash_on_hand', label:'Cash on Hand', fmt:v=>'$'+v.toLocaleString()},
+    ],
+    links:[
+      {label:'QuickBooks', url:'#'},{label:'Apex', url:'#'},
+      {label:'Google Drive', url:'#'},{label:'Google Calendar', url:'#'},
+    ],
+  },
+  tb: {
+    name:'TRAILBLAZERS TOTAL OUTDOOR', sub:'Command Center', badge:'Live',
+    color:'#5CB800', colorDark:'#3B6D11', colorBg:'#0A1408',
+    headerClass:'tb-header', badgeClass:'tb-badge', dbRow:'tb_cmd',
+    headerStats:[
+      {key:'revenue_weekly', label:'Weekly Revenue', fmt:v=>'$'+v.toLocaleString()},
+      {key:'close_rate', label:'Close Rate', fmt:v=>v+'%'},
+      {key:'jobs_completed', label:'Jobs Completed', fmt:v=>v},
+      {key:'cash_on_hand', label:'Cash on Hand', fmt:v=>'$'+v.toLocaleString()},
+    ],
+    links:[
+      {label:'QuickBooks', url:'#'},{label:'Jobber', url:'#'},
+      {label:'Marketing', url:'#'},{label:'Dropbox', url:'#'},
+    ],
+  },
+};
+
+const KPIS = {
+  tb: {
+    Sales: [
+      { key: 'revenue_weekly', label: 'Overall Revenue ($)', target: 40000, floor: 15000 },
+      { key: 'close_rate', label: 'Close Rate %', target: 60, floor: 30 },
+      { key: 'pipeline_value', label: 'Pipeline ($)', target: 150000, floor: 50000 },
+      { key: 'margin_pct', label: 'Margin %', target: 45, floor: 30 },
+      { key: 'marketing_posts', label: 'Marketing Posts', target: 5, floor: 2 },
+      { key: 'google_reviews', label: 'Google Reviews', target: 3, floor: 1 },
+      { key: 'lead_sources', label: 'Lead Sources', target: 5, floor: 3 }
+    ],
+    Ops: [
+      { key: 'jobs_completed', label: 'Jobs Completed', target: 8, floor: 3 },
+      { key: 'on_time_completion', label: 'On Time Completion %', target: 95, floor: 85 },
+      { key: 'safety_incidents', label: 'Safety Incidents', target: 0, floor: 2, reverse: true },
+      { key: 'customer_satisfaction', label: 'Customer Satisfaction %', target: 95, floor: 85 }
+    ],
+    Finance: [
+      { key: 'revenue_weekly', label: 'Weekly Revenue ($)', target: 40000, floor: 15000 },
+      { key: 'gross_margin', label: 'Gross Margin %', target: 45, floor: 30 },
+      { key: 'net_profit', label: 'Net Profit ($)', target: 10000, floor: 3000 },
+      { key: 'cash_on_hand', label: 'Cash On Hand ($)', target: 100000, floor: 30000 },
+      { key: 'ar_days', label: 'A/R Days Outstanding', target: 30, floor: 60, reverse: true },
+      { key: 'revenue_per_employee', label: 'Revenue Per Employee ($)', target: 250000, floor: 150000 },
+      { key: 'pct_of_target', label: '% of $70K Monthly Target', target: 100, floor: 75 },
+      { key: 'cash_collection_rate', label: 'Cash Collection Rate %', target: 95, floor: 70 },
+      { key: 'labor_pct_sales', label: 'Labor % of Sales', target: 30, floor: 50, reverse: true },
+      { key: 'customer_complaints', label: 'Customer Complaints', target: 0, floor: 3, reverse: true },
+      { key: 'on_time_completion', label: 'On Time Completion %', target: 95, floor: 85 },
+      { key: 'jobs_value', label: 'Jobs Completed Value ($)', target: 70000, floor: 40000 },
+      { key: 'hardscape_revenue', label: 'Hard Scape Revenue ($)', target: 15000, floor: 8000 },
+      { key: 'softscape_revenue', label: 'Soft Scape Revenue ($)', target: 10000, floor: 5000 },
+      { key: 'patio_revenue', label: 'Patio Revenue ($)', target: 12000, floor: 6000 },
+      { key: 'decks_revenue', label: 'Decks Revenue ($)', target: 8000, floor: 4000 },
+      { key: 'fencing_revenue', label: 'Fencing Revenue ($)', target: 6000, floor: 3000 },
+      { key: 'pergolas_revenue', label: 'Pergolas Revenue ($)', target: 4000, floor: 2000 }
+    ]
+  },
+  driven: {
+    Sales: [
+      { key: 'revenue_weekly', label: 'Revenue ($)', target: 115000, floor: 50000 },
+      { key: 'sales_by_week', label: 'Sales by Week ($)', target: 115000, floor: 50000 },
+      { key: 'rigid_sales', label: 'Rigid Sales ($)', target: 50000, floor: 20000 },
+      { key: 'flexible_sales', label: 'Flexible Sales ($)', target: 500000, floor: 200000 },
+      { key: 'pallets_sales', label: 'Pallets Sales ($)', target: 800000, floor: 300000 },
+      { key: 'commission_freight', label: 'Commission/Freight ($)', target: 50000, floor: 20000 },
+      { key: 'pipeline', label: 'Pipeline ($)', target: 1000000, floor: 300000 },
+      { key: 'quote_close_rate', label: 'Close Rate %', target: 30, floor: 15 },
+      { key: 'open_quotes', label: 'Open Quotes >48hrs', target: 5, floor: 0, reverse: true },
+      { key: 'new_opportunities', label: 'New Opportunities', target: 5, floor: 2 },
+      { key: 'wins', label: 'Wins', target: 3, floor: 1 },
+      { key: 'losses', label: 'Losses', target: 1, floor: 0, reverse: true },
+      { key: 'quote_time', label: 'Avg Quote Time (hrs)', target: 4, floor: 24, reverse: true }
+    ],
+    Ops: [
+      { key: 'quote_time', label: 'Quote Time (hrs)', target: 4, floor: 24, reverse: true },
+      { key: 'fulfillment_time', label: 'Order Fulfillment (days)', target: 2, floor: 5, reverse: true },
+      { key: 'vendor_performance', label: 'Vendor Performance %', target: 95, floor: 75 },
+      { key: 'on_time_delivery', label: 'On Time Delivery %', target: 95, floor: 85 }
+    ],
+    Finance: [
+      { key: 'revenue_weekly', label: 'Revenue ($)', target: 115000, floor: 50000 },
+      { key: 'gross_margin', label: 'Gross Margin %', target: 30, floor: 15 },
+      { key: 'net_profit', label: 'Net Profit ($)', target: 15000, floor: 5000 },
+      { key: 'cash_on_hand', label: 'Cash On Hand ($)', target: 150000, floor: 50000 },
+      { key: 'ar_days', label: 'A/R Days Outstanding', target: 30, floor: 60, reverse: true },
+      { key: 'revenue_per_employee', label: 'Revenue Per Employee ($)', target: 600000, floor: 300000 },
+      { key: 'pct_of_target', label: '% of Target', target: 100, floor: 75 },
+      { key: 'cash_collection_rate', label: 'Cash Collection Rate %', target: 95, floor: 70 },
+      { key: 'labor_pct_sales', label: 'Labor % of Sales', target: 10, floor: 20, reverse: true }
+    ]
+  }
+};
+
+// Charts tab — which keys get a big 4-week Chart.js trend card, per company
+const CHART_KEYS = {
+  tb: ['revenue_weekly','close_rate','gross_margin','jobs_completed','cash_on_hand','ar_days'],
+  driven: ['revenue_weekly','quote_close_rate','gross_margin','vendor_performance','cash_on_hand','ar_days'],
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let co = 'driven';
+let currentTab = 'dashboard';
+const state = { driven: { data:{}, history:[] }, tb: { data:{}, history:[] } };
+let chartInstances = {};
+
+// ══════════════════════════════════════════════════════════
+// SUPABASE LOAD / SAVE / REALTIME
+// ══════════════════════════════════════════════════════════
+async function loadData() {
+  const cfg = COMPANIES[co];
+  try {
+    const {data,error} = await db.from('dashboard_data').select('*').eq('id',cfg.dbRow).single();
+    if (error) throw error;
+    state[co].data = (data && data.week_data) || {};
+    state[co].history = (data && data.history) || [];
+    setSync('live');
+    if (data && data.updated_at) {
+      const ago = Math.round((Date.now()-new Date(data.updated_at))/60000);
+      document.getElementById('last-sync').textContent = ago<2?'just now':ago<60?ago+'m ago':Math.round(ago/60)+'h ago';
+    }
+  } catch(e) {
+    state[co].data = {}; state[co].history = [];
+    setSync('error');
+  }
+  renderAll();
+}
+
+let saveTimer;
+function debouncedSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveAllData,600); }
+
+async function saveAllData() {
+  const cfg = COMPANIES[co]; const s = state[co];
+  try {
+    const {error} = await db.from('dashboard_data').upsert({
+      id: cfg.dbRow, week_data: s.data, history: s.history, updated_at: new Date().toISOString()
+    }, {onConflict:'id'});
+    if (error) throw error;
+    document.getElementById('last-sync').textContent = 'just now';
+  } catch(e) {
+    toast('Save failed — check connection','err');
+  }
+}
+
+['driven','tb'].forEach(c => {
+  db.channel(c+'-cmd-rt').on('postgres_changes',{event:'UPDATE',schema:'public',table:'dashboard_data',filter:'id=eq.'+COMPANIES[c].dbRow}, payload => {
+    if (c !== co) return;
+    state[c].data = payload.new.week_data || {};
+    state[c].history = payload.new.history || [];
+    renderAll();
+    document.getElementById('last-sync').textContent = 'just now';
+    toast('Updated by team','ok');
+  }).subscribe();
+});
+
+function setSync(status){
+  const dot = document.getElementById('sync-dot'); const lbl = document.getElementById('sync-lbl');
+  if (status==='live'){ dot.className='sdot live'; lbl.textContent='Live — synced across the team in real time'; }
+  else { dot.className='sdot off'; lbl.textContent='Offline — changes will retry'; }
+}
+
+// ══════════════════════════════════════════════════════════
+// COMPANY SWITCH
+// ══════════════════════════════════════════════════════════
+function switchCompany(c) {
+  co = c; const cfg = COMPANIES[c];
+  document.getElementById('co-driven').className = 'co-btn driven' + (c==='driven'?' active':'');
+  document.getElementById('co-tb').className = 'co-btn tb' + (c==='tb'?' active':'');
+  document.documentElement.style.setProperty('--g', cfg.color);
+  document.documentElement.style.setProperty('--gd', cfg.colorDark);
+  document.documentElement.style.setProperty('--gbg', cfg.colorBg);
+  const hdr = document.getElementById('main-header');
+  hdr.className = 'header ' + cfg.headerClass;
+  document.getElementById('co-title').textContent = cfg.name;
+  document.getElementById('co-sub').textContent = cfg.sub;
+  const bdg = document.getElementById('co-badge');
+  bdg.textContent = cfg.badge; bdg.className = 'badge ' + cfg.badgeClass;
+  renderLinks();
+  loadData();
+}
+
+function renderLinks(){
+  const cfg = COMPANIES[co];
+  document.getElementById('links-bar').innerHTML = cfg.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════
+function showPanel(id, el){
+  currentTab = id;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════
+// STATUS / HELPERS
+// ══════════════════════════════════════════════════════════
+function getW(key, w){ return parseFloat(state[co].data[`${key}_${w}`]) || 0; }
+function setW(key, w, val){ state[co].data[`${key}_${w}`] = parseFloat(val) || 0; }
+
+function getStatus(value, kpi){
+  const v = parseFloat(value) || 0;
+  if (kpi.reverse){ if (v<=kpi.floor) return 'g'; if (v<=kpi.target) return 'a'; return 'r'; }
+  return v>=kpi.target ? 'g' : v>=kpi.floor ? 'a' : 'r';
+}
+function fmtVal(v){ return v ? (Math.abs(v)>=1000 ? v.toLocaleString() : v) : '—'; }
+
+// ══════════════════════════════════════════════════════════
+// RENDER: ALL
+// ══════════════════════════════════════════════════════════
+function renderAll(){
+  const cfg = COMPANIES[co]; const s = state[co];
+  let hs = '';
+  cfg.headerStats.forEach(st=>{
+    const v = getW(st.key,'w4');
+    hs += `<div class="hstat"><div class="val">${v?st.fmt(v):'—'}</div><div class="lbl">${st.label}</div></div>`;
+  });
+  document.getElementById('h-stats').innerHTML = hs;
+
+  renderDashboard();
+  ['Sales','Ops','Finance'].forEach(renderKPITable);
+  renderCharts();
+  renderHistory();
+}
+
+function renderDashboard(){
+  const cfg = COMPANIES[co]; const s = state[co];
+  const allKpis = [];
+  ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k => { if(!allKpis.find(x=>x.key===k.key)) allKpis.push(k); }));
+
+  let html = '<div class="summary-grid">';
+  cfg.headerStats.forEach(st=>{
+    const kpi = allKpis.find(k=>k.key===st.key);
+    const v = getW(st.key,'w4');
+    let cls='sum-num na', disp='—';
+    if (v){ disp = st.fmt(v); if (kpi){ const stt=getStatus(v,kpi); cls='sum-num'+(stt==='g'?'':stt==='a'?' warn':' breach'); } }
+    html += `<div class="sum-card"><div class="${cls}">${disp}</div><div class="sum-lbl">${st.label}</div></div>`;
+  });
+  html += '</div>';
+
+  const reds = allKpis.filter(k => getW(k.key,'w4') && getStatus(getW(k.key,'w4'),k)==='r');
+  const ambers = allKpis.filter(k => getW(k.key,'w4') && getStatus(getW(k.key,'w4'),k)==='a');
+
+  if (reds.length){
+    html += `<div style="background:var(--rbg);border:1px solid var(--rbr);border-radius:4px;padding:12px 14px;margin-bottom:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--red);margin-bottom:8px">🔴 ${reds.length} KPI${reds.length>1?'s':''} Below Floor</div>`;
+    reds.forEach(k=>{ html += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span style="color:var(--tx)">${k.label}</span><span style="color:var(--red);font-size:11px">${fmtVal(getW(k.key,'w4'))} vs floor ${k.floor}</span></div>`; });
+    html += '</div>';
+  }
+  if (ambers.length){
+    html += `<div style="background:var(--abg);border:1px solid var(--abr);border-radius:4px;padding:12px 14px;margin-bottom:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--amb);margin-bottom:8px">⚠️ ${ambers.length} KPI${ambers.length>1?'s':''} Above Floor, Below Target</div>`;
+    ambers.forEach(k=>{ html += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span style="color:var(--tx)">${k.label}</span><span style="color:var(--td)">${fmtVal(getW(k.key,'w4'))} / target ${k.target}</span></div>`; });
+    html += '</div>';
+  }
+  if (!reds.length && !ambers.length && Object.keys(s.data).length){
+    html += '<div style="background:rgba(10,26,8,.5);border:1px solid var(--gd);border-radius:4px;padding:12px 14px;font-size:13px;color:var(--g)">✅ All tracked KPIs are on target or above floor this week.</div>';
+  }
+  document.getElementById('dash-content').innerHTML = html;
+}
+
+function sparkline(key, kpi){
+  const trend = ['w1','w2','w3','w4'].map(w=>getW(key,w));
+  const status = getStatus(trend[3], kpi);
+  const color = status==='g' ? '#5CB800' : status==='a' ? '#FFB800' : trend[3] ? '#FF4444' : '#4A5E58';
+  const max = Math.max(kpi.target, ...trend.filter(v=>v>0)) * 1.15 || 1;
+  const w=100,h=32,pts=trend.map((v,i)=> v>0 ? `${(i/3)*w},${h-(v/max)*h}` : null).filter(Boolean).join(' ');
+  return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function renderKPITable(tab){
+  const kpis = KPIS[co][tab];
+  const el = document.getElementById('kpi-'+tab);
+  let rows = kpis.map(k=>{
+    const w1=getW(k.key,'w1'), w2=getW(k.key,'w2'), w3=getW(k.key,'w3'), w4=getW(k.key,'w4');
+    const status = w4 ? getStatus(w4,k) : 'n';
+    const chip = status==='g'?'<span class="status-chip st-g">On Target</span>':status==='a'?'<span class="status-chip st-a">Watch</span>':status==='r'?'<span class="status-chip st-r">Below Floor</span>':'<span class="status-chip st-n">No Data</span>';
+    return `<tr>
+      <td class="kpi-name">${k.label}</td>
+      <td class="kpi-floor">${k.floor.toLocaleString()}</td>
+      <td class="kpi-target">${k.target.toLocaleString()}</td>
+      <td><input type="number" class="actual-inp ${w1?getStatus(w1,k):''}" value="${w1||''}" onchange="setW('${k.key}','w1',this.value);debouncedSave();renderAll()"></td>
+      <td><input type="number" class="actual-inp ${w2?getStatus(w2,k):''}" value="${w2||''}" onchange="setW('${k.key}','w2',this.value);debouncedSave();renderAll()"></td>
+      <td><input type="number" class="actual-inp ${w3?getStatus(w3,k):''}" value="${w3||''}" onchange="setW('${k.key}','w3',this.value);debouncedSave();renderAll()"></td>
+      <td><input type="number" class="actual-inp ${w4?getStatus(w4,k):''}" value="${w4||''}" onchange="setW('${k.key}','w4',this.value);debouncedSave();renderAll()"></td>
+      <td>${sparkline(k.key,k)}</td>
+      <td>${chip}</td>
+    </tr>`;
+  }).join('');
+  el.innerHTML = `<div class="kpi-section"><div class="kpi-sec-hdr"><div class="kpi-sec-name">${tab}</div></div>
+    <table class="kpi-table"><thead><tr><th>Metric</th><th>Floor</th><th>Target</th><th>W1</th><th>W2</th><th>W3</th><th>W4 (Current)</th><th>Trend</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+function renderCharts(){
+  const grid = document.getElementById('chart-grid');
+  const sections = ['Sales','Ops','Finance'];
+
+  Object.values(chartInstances).forEach(c=>c.destroy());
+  chartInstances = {};
+
+  let html = '';
+  sections.forEach(tab=>{
+    html += `<div style="grid-column:1/-1;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin:${tab==='Sales'?'0':'8px'} 0 -4px">${tab}</div>`;
+    KPIS[co][tab].forEach((kpi,idx)=>{
+      const chartId = `chart-${tab}-${idx}-${kpi.key}`;
+      html += `<div class="chart-card"><div class="chart-title"><span>${kpi.label}</span></div><div class="chart-wrap"><canvas id="${chartId}"></canvas></div></div>`;
+    });
+  });
+  grid.innerHTML = html;
+
+  sections.forEach(tab=>{
+    KPIS[co][tab].forEach((kpi,idx)=>{
+      const chartId = `chart-${tab}-${idx}-${kpi.key}`;
+      const ctx = document.getElementById(chartId);
+      if (!ctx) return;
+      const trend = ['w1','w2','w3','w4'].map(w=>getW(kpi.key,w));
+      chartInstances[chartId] = new Chart(ctx, {
+        type:'line',
+        data:{ labels:['W1','W2','W3','W4'], datasets:[
+          { label:kpi.label, data:trend, borderColor:COMPANIES[co].color, backgroundColor:COMPANIES[co].color+'22', tension:.3, fill:true },
+          { label:'Target', data:[kpi.target,kpi.target,kpi.target,kpi.target], borderColor:'#7c3aed', borderDash:[4,3], pointRadius:0 },
+        ]},
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{labels:{color:'#8FA8A0',font:{size:10}}} },
+          scales:{ x:{ticks:{color:'#8FA8A0'},grid:{color:'rgba(255,255,255,.05)'}}, y:{ticks:{color:'#8FA8A0'},grid:{color:'rgba(255,255,255,.05)'}} }
+        }
+      });
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// SHIFT WEEKS / HISTORY
+// ══════════════════════════════════════════════════════════
+async function shiftWeeks(){
+  const allKeys = new Set();
+  ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k=>allKeys.add(k.key)));
+  allKeys.forEach(key=>{
+    state[co].data[`${key}_w1`] = getW(key,'w2');
+    state[co].data[`${key}_w2`] = getW(key,'w3');
+    state[co].data[`${key}_w3`] = getW(key,'w4');
+    state[co].data[`${key}_w4`] = 0;
+  });
+  await saveAllData();
+  renderAll();
+  toast('Weeks shifted — enter this week into W4','ok');
+}
+
+async function saveToHistory(){
+  const allKeys = new Set();
+  ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k=>allKeys.add(k.key)));
+  const snapshot = { date: new Date().toISOString().split('T')[0] };
+  allKeys.forEach(key => snapshot[key] = getW(key,'w4'));
+  state[co].history.push(snapshot);
+  await saveAllData();
+  renderHistory();
+  toast('Saved to history','ok');
+}
+
+function clearHistory(){
+  if (!confirm('Clear all history for '+COMPANIES[co].name+'?')) return;
+  state[co].history = [];
+  saveAllData();
+  renderHistory();
+  toast('History cleared','ok');
+}
+
+function renderHistory(){
+  const h = state[co].history;
+  const el = document.getElementById('history-table-wrap');
+  if (!h.length){ el.innerHTML = '<div style="color:var(--td);font-size:12px">No history saved yet.</div>'; return; }
+  const cols = Object.keys(h[0]).filter(k=>k!=='date');
+  const headerLabelMap = {};
+  ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k=>headerLabelMap[k.key]=k.label));
+  let html = `<table class="history-table"><thead><tr><th>Date</th>${cols.map(c=>`<th>${headerLabelMap[c]||c}</th>`).join('')}</tr></thead><tbody>`;
+  h.slice().reverse().forEach(row=>{
+    html += `<tr><td>${row.date}</td>${cols.map(c=>`<td>${fmtVal(row[c])}</td>`).join('')}</tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function exportHistoryCSV(){
+  const h = state[co].history;
+  if (!h.length){ toast('No history to export','err'); return; }
+  const cols = Object.keys(h[0]);
+  let csv = cols.join(',') + '\n';
+  h.forEach(row=>{ csv += cols.map(c=>row[c]).join(',') + '\n'; });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${co}-history.csv`;
+  a.click();
+}
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+function toast(msg, type){
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type||'');
+  t.textContent = msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+renderLinks();
+loadData();
+</script>
+</body>
+</html>
