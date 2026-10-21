@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finance Accountability — Command Center</title>
+<style>
+  :root{--navy:#1F3B57;--green:#2E7D32;--amber:#B8860B;--red:#B7472A;--grey:#6b7280;--bg:#f4f6f8;}
+  *{box-sizing:border-box} body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);margin:0;color:#222}
+  header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+  header h1{font-size:18px;margin:0} header a{color:#cfe0f3;font-size:13px;text-decoration:none}
+  main{max-width:960px;margin:0 auto;padding:18px}
+  .banner{border-radius:10px;padding:22px 24px;color:#fff;margin-bottom:14px}
+  .banner .big{font-size:34px;font-weight:700;letter-spacing:1px} .banner .sub{font-size:16px;margin-top:4px}
+  .banner .meta{font-size:12px;opacity:.85;margin-top:8px}
+  .GREEN{background:var(--green)} .AMBER,.DUE{background:var(--amber)} .RED{background:var(--red)} .PENDING{background:var(--grey)}
+  .esc{background:#7f1d1d;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:14px;font-weight:700;display:none}
+  .card{background:#fff;border-radius:10px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .card h2{font-size:15px;color:var(--navy);margin:0 0 10px}
+  .links a,.links span{display:inline-block;margin:0 8px 8px 0;padding:9px 14px;border-radius:7px;font-size:14px;text-decoration:none}
+  .links a{background:var(--navy);color:#fff} .links span{background:#e5e7eb;color:#6b7280}
+  .strip{display:flex;gap:6px;flex-wrap:wrap}
+  .sq{width:62px;text-align:center;font-size:11px;color:#444} .sq div{height:30px;border-radius:5px;margin-bottom:3px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px} .grid .full{grid-column:1/-1}
+  label{font-size:12px;color:#444;display:block;margin-bottom:3px}
+  input,select,textarea{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;font-family:inherit}
+  textarea{min-height:56px}
+  button{background:var(--navy);color:#fff;border:0;border-radius:7px;padding:10px 16px;font-size:14px;cursor:pointer;margin:10px 8px 0 0}
+  button.alt{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+  #msg{margin-top:10px;font-size:13px;min-height:18px} .ok{color:var(--green)} .bad{color:var(--red)}
+  table{border-collapse:collapse;width:100%;font-size:12px} th{background:var(--navy);color:#fff;padding:6px;text-align:left}
+  td{padding:6px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+  .note{font-size:12px;color:#555}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  @media print{header,.card.form,button{display:none}}
+</style>
+</head>
+<body>
+<header><h1>Finance Accountability</h1><a href="./">← Command Center</a></header>
+<main>
+  <div id="banner" class="banner PENDING"><div class="big" id="bigtxt">Loading…</div><div class="sub" id="sub"></div><div class="meta" id="meta"></div></div>
+  <div id="esc" class="esc">TWO RED WEEKS IN A ROW. Rich: written note and a same-day call with Dan. Ask why: hours, a blocker, or a skill gap.</div>
+
+  <div class="card"><h2>Meetings and Files</h2><div class="links" id="links"></div>
+    <div class="note">Wednesday: Dan + Amber (log by 6 PM CT). Thursday 5 PM CT: report due. Friday: Rich + Dan status, 10-minute check.</div></div>
+
+  <div class="card"><h2>Last 12 Weeks</h2><div class="strip" id="strip"></div></div>
+
+  <div class="card form"><h2>Dan: Log the Wednesday Meeting and Weekly Report</h2>
+    <div class="grid">
+      <div class="full"><label>Passcode</label><input type="password" id="pass" autocomplete="off" placeholder="Shared passcode"></div>
+      <div><label>Dan–Amber meeting held?</label><select id="held"><option value="true">Yes, held</option><option value="false">No, not held</option></select></div>
+      <div><label>Tasks due this week (#)</label><input type="number" id="due" min="0"></div>
+      <div><label>Tasks done on time (#)</label><input type="number" id="done" min="0"></div>
+      <div><label>Amber's errors this week (#)</label><input type="number" id="err" min="0"></div>
+      <div><label>Cash position, Driven ($)</label><input type="number" id="cd"></div>
+      <div><label>Cash position, Trailblazers ($)</label><input type="number" id="ct"></div>
+      <div class="full"><label>Dates that slipped (task, old date, new date)</label><textarea id="slip"></textarea></div>
+      <div class="full"><label>Blockers</label><textarea id="block"></textarea></div>
+      <div class="full"><label>Decision needed from Rich</label><textarea id="dec"></textarea></div>
+    </div>
+    <button id="btnMeet">Log meeting now</button>
+    <button id="btnReport">Submit weekly report</button>
+    <button class="alt" id="btnRich">Rich: mark Friday check done</button>
+    <div id="msg"></div>
+    <div class="note">Timestamps are set by the server. A logged meeting or report can't be edited away or back-dated.</div>
+  </div>
+
+  <div class="card"><h2>Details (passcode)</h2>
+    <button class="alt" id="btnLog" style="margin-top:0">Show last 15 weeks</button>
+    <div id="log" style="margin-top:10px;overflow-x:auto"></div></div>
+</main>
+<script>
+const SB_URL="https://igaylyhkssahczubiztb.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo";
+const LABEL={GREEN:"ON TRACK",AMBER:"WATCH",DUE:"DUE TODAY",RED:"RED",PENDING:"THIS WEEK"};
+const COLOR={GREEN:"#2E7D32",AMBER:"#B8860B",DUE:"#B8860B",RED:"#B7472A",PENDING:"#9ca3af"};
+const $=id=>document.getElementById(id);
+async function rpc(name,body){
+  const r=await fetch(`${SB_URL}/rest/v1/rpc/${name}`,{method:"POST",
+    headers:{apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify(body||{})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.message||("Request failed ("+r.status+")"));
+  return j;
+}
+function render(s){
+  const b=$("banner"); b.className="banner "+s.status;
+  $("bigtxt").textContent=LABEL[s.status]||s.status; $("sub").textContent=s.headline;
+  $("meta").textContent="Week of "+s.week_of+"  ·  as of "+s.as_of;
+  $("esc").style.display=s.escalate?"block":"none";
+  const L=s.links||{}, items=[["meeting","Wednesday meeting (Dan + Amber)"],["friday","Friday status (Rich + Dan)"],["tracker","Monthly tracker"],["who","Who Does What"]];
+  $("links").innerHTML=items.map(([k,t])=>L[k]?`<a href="${L[k]}" target="_blank" rel="noopener">${t}</a>`:`<span>${t} — link not set</span>`).join("");
+  $("strip").innerHTML=(s.history||[]).slice().reverse().map(h=>`<div class="sq" title="${h.headline}"><div style="background:${COLOR[h.status]||'#ccc'}"></div>${h.week_of.slice(5)}</div>`).join("");
+}
+async function refresh(){ try{ render(await rpc("fin_public_status")); }catch(e){ $("bigtxt").textContent="Can't load"; $("sub").textContent=e.message; } }
+const num=id=>{const v=$(id).value; return v===""?null:Number(v);}
+const txt=id=>{const v=$(id).value.trim(); return v===""?null:v;}
+function say(m,ok){ $("msg").className=ok?"ok":"bad"; $("msg").textContent=m; }
+function pass(){ const p=$("pass").value; if(!p){say("Enter the passcode.",false);return null;} sessionStorage.setItem("finpass",p); return p; }
+$("btnMeet").onclick=async()=>{ const p=pass(); if(!p)return;
+  try{ render(await rpc("fin_submit",{p_pass:p,p_meeting_held:$("held").value==="true",p_final:false})); say("Meeting logged.",true);}catch(e){say(e.message,false);} };
+$("btnReport").onclick=async()=>{ const p=pass(); if(!p)return;
+  try{ render(await rpc("fin_submit",{p_pass:p,p_meeting_held:$("held").value==="true",p_tasks_due:num("due"),p_tasks_done:num("done"),
+      p_amber_errors:num("err"),p_cash_driven:num("cd"),p_cash_tb:num("ct"),p_blockers:txt("block"),p_decisions:txt("dec"),p_slipped:txt("slip"),p_final:true})); say("Report submitted.",true);}catch(e){say(e.message,false);} };
+$("btnRich").onclick=async()=>{ const p=pass(); if(!p)return;
+  try{ render(await rpc("fin_rich_check",{p_pass:p})); say("Friday check logged.",true);}catch(e){say(e.message,false);} };
+$("btnLog").onclick=async()=>{ const p=pass(); if(!p)return;
+  try{ const rows=await rpc("fin_get_log",{p_pass:p}); const f=v=>v==null?"":v; const d=v=>v?String(v).replace("T"," ").slice(0,16):"";
+    $("log").innerHTML="<table><tr><th>Week</th><th>Meeting held</th><th>Logged</th><th>Report in</th><th>Tasks</th><th>Errors</th><th>Cash D / TB</th><th>Rich check</th><th>Blockers</th><th>Decision needed</th></tr>"+
+    rows.map(r=>`<tr><td>${r.week_of}</td><td>${r.meeting_held===null?"":(r.meeting_held?"Y":"N")}</td><td>${d(r.meeting_logged_at)}</td><td>${d(r.report_submitted_at)}</td><td>${f(r.tasks_done)}/${f(r.tasks_due)}</td><td>${f(r.amber_errors)}</td><td>${f(r.cash_driven)} / ${f(r.cash_tb)}</td><td>${r.rich_check_done?"Y":""}</td><td>${f(r.blockers)}</td><td>${f(r.decisions_needed)}</td></tr>`).join("")+"</table>"; say("",true);}catch(e){say(e.message,false);} };
+const saved=sessionStorage.getItem("finpass"); if(saved) $("pass").value=saved;
+refresh(); setInterval(refresh,60000);
+</script>
+</body>
+</html>
