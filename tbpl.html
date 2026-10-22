@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trailblazers Landscaping — P&L Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1B5E20;--gp:#E8F5E9;--red:#C62828;--rp:#FFEBEE;
+  --blue:#1565C0;--bp:#E3F2FD;--gold:#7B5800;--gop:#FDF6E3;
+  --orange:#BF360C;--op:#FBE9E7;
+  --g9:#1a1a1a;--g7:#444;--g5:#777;--g3:#ccc;--g1:#f7f7f7;--w:#fff;
+  --r:5px;--f:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:#111;color:var(--g9);min-height:100vh;}
+.topbar{background:var(--green);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200;}
+.topbar-title h1{font-size:9px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.topbar-title h2{font-size:15px;font-weight:800;color:#fff;}
+.top-btns{display:flex;gap:6px;}
+.tbtn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-family:var(--f);font-size:10px;font-weight:700;padding:5px 11px;border-radius:4px;cursor:pointer;}
+.tbtn.primary{background:#fff;color:var(--green);}
+
+/* 3-column comparison */
+.comp3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;margin:10px;border-radius:var(--r);overflow:hidden;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.comp-col{padding:12px 14px;}
+.comp-col.cur{background:#ececec;}
+.comp-col.scen{background:var(--w);}
+.comp-col.tgt{background:#E8F5E9;}
+.comp-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.comp-col.cur .comp-label{color:var(--g5);}
+.comp-col.scen .comp-label{color:var(--blue);}
+.comp-col.tgt .comp-label{color:var(--green);}
+.comp-net{font-size:22px;font-weight:900;line-height:1;}
+.comp-sub{font-size:10px;font-weight:600;margin-top:3px;}
+.comp-be{font-size:10px;color:var(--g5);margin-top:4px;}
+
+/* Revenue sliders */
+.rev-section{background:var(--w);border-radius:var(--r);margin:0 10px 8px;padding:12px 14px;}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.rev-col-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.rev-amount{font-size:24px;font-weight:900;line-height:1;margin-bottom:6px;}
+.rev-locked{color:var(--g5);}
+.rev-scen{color:var(--blue);}
+.rev-tgt{color:var(--green);}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;border-radius:3px;background:var(--g3);margin:4px 0;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input.green-range::-webkit-slider-thumb{background:var(--green);}
+input.orange-range::-webkit-slider-thumb{background:var(--orange);}
+.rev-marks{display:flex;justify-content:space-between;font-size:9px;color:var(--g5);}
+
+/* Materials % row */
+.mat-section{background:var(--w);border-radius:var(--r);margin:0 10px 8px;padding:10px 14px;}
+.mat-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:10px;align-items:center;}
+.mat-label{font-size:11px;font-weight:700;color:var(--g7);}
+.mat-val{font-size:18px;font-weight:900;text-align:center;}
+
+/* P&L table */
+.pl-wrap{margin:0 10px 8px;border-radius:var(--r);overflow:hidden;background:var(--w);}
+.pl-sh{padding:8px 12px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff;display:grid;grid-template-columns:1fr 72px 72px 72px;gap:3px;align-items:center;}
+.sh-green{background:var(--green);}
+.sh-dark{background:#1a1a1a;}
+.sh-gold{background:var(--gold);}
+.sh-orange{background:var(--orange);}
+.pl-sh span{text-align:right;font-size:8px;}
+.pl-sh span:first-child{text-align:left;font-size:9px;}
+
+.pl-row{display:grid;grid-template-columns:1fr 72px 72px 72px;gap:3px;padding:7px 12px;border-bottom:1px solid #f0f0f0;align-items:center;}
+.pl-row:last-child{border-bottom:none;}
+.pl-row.alt{background:var(--g1);}
+.pl-row.sub{background:#efefef;}
+.pl-row.tot{background:var(--g9);}
+.pl-row.comm-row{background:#FFFDE7;}
+.pl-row.driven-row{background:var(--op);}
+.pl-row.disabled{opacity:.35;}
+
+.cell-l{min-width:0;}
+.cell-name{font-size:11px;font-weight:500;color:var(--g7);}
+.cell-name.bold{font-weight:700;color:var(--g9);}
+.cell-name.white{color:#fff;font-weight:800;}
+.cell-sub{font-size:9px;color:var(--g5);margin-top:1px;}
+
+/* Value cells */
+.vc{font-size:11px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;padding:2px 0;}
+.vc.cur{color:#aaa;}
+.vc.cur.neg{color:#bbb;}
+.vc.cur.pos{color:#66BB6A;}
+.vc.scen{color:var(--g9);}
+.vc.scen.neg{color:var(--red);}
+.vc.scen.pos{color:var(--green);}
+.vc.tgt{color:var(--green);}
+.vc.tgt.neg{color:#2E7D32;}
+.vc.tgt.pos{color:#1B5E20;}
+.vc.white{color:#fff!important;}
+
+/* Inputs */
+.num-inp{width:66px;border:1.5px solid #ddd;border-radius:3px;padding:3px 4px;font-size:10px;font-weight:700;font-family:var(--f);color:var(--g9);text-align:right;-moz-appearance:textfield;}
+.num-inp::-webkit-outer-spin-button,.num-inp::-webkit-inner-spin-button{-webkit-appearance:none;}
+.num-inp:focus{outline:none;border-color:var(--blue);}
+.num-inp.green{border-color:#A5D6A7;}
+.num-inp.green:focus{border-color:var(--green);}
+.tog{position:relative;display:inline-block;width:30px;height:17px;flex-shrink:0;margin-right:4px;vertical-align:middle;}
+.tog input{opacity:0;width:0;height:0;}
+.tsl{position:absolute;cursor:pointer;inset:0;background:#ddd;border-radius:17px;transition:.2s;}
+.tsl:before{position:absolute;content:"";height:11px;width:11px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s;}
+input:checked+.tsl{background:var(--green);}
+input:checked+.tsl:before{transform:translateX(13px);}
+
+/* Commission config */
+.comm-config{background:#FFFDE7;border-top:1px solid #FFF176;padding:8px 12px;}
+.comm-row-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.comm-row-inner label{font-size:10px;font-weight:600;color:var(--gold);}
+.comm-mode{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1.5px solid;cursor:pointer;background:transparent;}
+.comm-mode.active-rev{background:#F57F17;color:#fff;border-color:#F57F17;}
+.comm-mode.active-margin{background:var(--green);color:#fff;border-color:var(--green);}
+.comm-mode.inactive{color:var(--g5);border-color:var(--g3);}
+
+/* Driven */
+.driven-config{background:var(--op);border-top:1px solid #FFCCBC;padding:8px 12px;}
+
+.note{font-size:9px;color:#555;text-align:center;padding:4px 10px 14px;line-height:1.5;}
+.pct-small{font-size:9px;font-weight:600;opacity:.65;display:block;margin-top:1px;}
+.pct-small.warn{color:#C62828;}
+.pct-small.ok{color:#2E7D32;}
+.bmark-wrap{margin:0 10px 8px;border-radius:var(--r);overflow:hidden;background:var(--w);}
+.bmark-grid{display:grid;grid-template-columns:1fr 80px 80px 80px;gap:0;}
+.bmark-sh{padding:8px 12px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:#1565C0;display:grid;grid-template-columns:1fr 80px 80px 80px;gap:3px;}
+.bmark-sh span{text-align:right;font-size:8px;}
+.bmark-sh span:first-child{text-align:left;font-size:9px;}
+.bmark-row{display:grid;grid-template-columns:1fr 80px 80px 80px;gap:3px;padding:7px 12px;border-bottom:1px solid #f0f0f0;align-items:center;}
+.bmark-row:last-child{border-bottom:none;}
+.bmark-row.alt{background:var(--g1);}
+.bmark-name{font-size:11px;font-weight:500;color:var(--g7);}
+.bmark-cur{font-size:11px;font-weight:700;text-align:right;color:#aaa;}
+.bmark-std{font-size:11px;font-weight:700;text-align:right;color:#1565C0;}
+.bmark-gap{font-size:11px;font-weight:700;text-align:right;}
+.bmark-gap.good{color:#2E7D32;}
+.bmark-gap.bad{color:#C62828;}
+.bmark-gap.ok{color:#F57F17;}
+@media print{body{background:#fff;}.topbar{display:none;}.sh-dark,.sh-green,.sh-gold,.sh-orange,.pl-row.tot{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title"><h1>Trailblazers Landscaping</h1><h2>P&L — 3-Column Builder</h2></div>
+  <div class="top-btns">
+    <button class="tbtn" onclick="window.print()">🖨 Print</button>
+    <button class="tbtn primary" id="dlBtn">⬇ Download</button>
+  </div>
+</div>
+
+<!-- 3-column comparison -->
+<div class="comp3">
+  <div class="comp-col cur">
+    <div class="comp-label">🔒 Current</div>
+    <div class="comp-net" id="c-net" style="color:var(--red)">—</div>
+    <div class="comp-sub" id="c-status" style="color:var(--red)">—</div>
+    <div class="comp-be" id="c-be">BE: —</div>
+  </div>
+  <div class="comp-col scen">
+    <div class="comp-label">✏️ Scenario</div>
+    <div class="comp-net" id="s-net">—</div>
+    <div class="comp-sub" id="s-status">—</div>
+    <div class="comp-be" id="s-be">BE: —</div>
+  </div>
+  <div class="comp-col tgt">
+    <div class="comp-label">🎯 Target</div>
+    <div class="comp-net" id="t-net">—</div>
+    <div class="comp-sub" id="t-status">—</div>
+    <div class="comp-be" id="t-be">BE: —</div>
+  </div>
+</div>
+
+<!-- Revenue -->
+<div class="rev-section">
+  <div class="rev-grid">
+    <div>
+      <div class="rev-col-label">Current Revenue 🔒</div>
+      <div class="rev-amount rev-locked" id="c-rev-disp">$26,000</div>
+      <div style="font-size:9px;color:var(--g5);font-weight:600;">YTD monthly avg · $536K ÷ 9.7 months</div>
+    </div>
+    <div>
+      <div class="rev-col-label">Scenario Revenue ✏️</div>
+      <div class="rev-amount rev-scen" id="s-rev-disp">$26,000</div>
+      <input type="range" id="s-rev-slider" min="10000" max="150000" step="1000" value="55320">
+      <div class="rev-marks"><span>$10K</span><span>$80K</span><span>$150K</span></div>
+    </div>
+    <div>
+      <div class="rev-col-label">Target Revenue 🎯</div>
+      <div class="rev-amount rev-tgt" id="t-rev-disp">$70,000</div>
+      <input type="range" class="green-range" id="t-rev-slider" min="10000" max="150000" step="1000" value="70000">
+      <div class="rev-marks"><span>$10K</span><span>$80K</span><span>$150K</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Materials % -->
+<div class="mat-section">
+  <div class="mat-grid">
+    <div class="mat-label">Materials % of Revenue (COGS)</div>
+    <div style="text-align:center;">
+      <div style="font-size:9px;font-weight:700;color:var(--g5);margin-bottom:2px;">CURRENT</div>
+      <div class="mat-val" style="color:#aaa;" id="c-mat-disp">—%</div>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;color:var(--blue);margin-bottom:2px;text-align:center;">SCENARIO</div>
+      <div class="mat-val rev-scen" id="s-mat-disp">—%</div>
+      <input type="range" id="s-mat-slider" min="5" max="60" step="5" value="20">
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:700;color:var(--green);margin-bottom:2px;text-align:center;">TARGET</div>
+      <div class="mat-val rev-tgt" id="t-mat-disp">—%</div>
+      <input type="range" class="green-range" id="t-mat-slider" min="5" max="60" step="5" value="20">
+    </div>
+  </div>
+  <div style="font-size:9px;color:var(--g5);margin-top:6px;">Current QB shows ~3% COGS (materials not coded correctly) · Business plan assumed 55% · Adjust to your real job cost</div>
+</div>
+
+<!-- Commission -->
+<div class="pl-wrap">
+  <div class="pl-sh sh-gold">
+    <span>Commission</span><span>Current</span><span>Scenario</span><span>Target</span>
+  </div>
+  <div class="pl-row comm-row">
+    <div class="cell-l">
+      <div class="cell-name bold" style="color:var(--gold)">Sales Commission</div>
+      <div class="cell-sub" id="comm-mode-desc">paid to closer on each job</div>
+    </div>
+    <div class="vc cur neg" id="c-comm">—</div>
+    <div class="vc scen neg" id="s-comm">—</div>
+    <div class="vc tgt neg" id="t-comm">—</div>
+  </div>
+  <div class="comm-config">
+    <div class="comm-row-inner">
+      <label>Mode:</label>
+      <button class="comm-mode active-rev" id="btn-rev" onclick="setCommMode('rev')">% of Revenue</button>
+      <button class="comm-mode inactive" id="btn-margin" onclick="setCommMode('margin')">% of Gross Profit</button>
+      <label>Scen rate:</label>
+      <input type="number" class="num-inp" id="s-comm-rate" value="7.5" min="0" max="25" step="0.5">%
+      <label>Target rate:</label>
+      <input type="number" class="num-inp green" id="t-comm-rate" value="12" min="0" max="25" step="0.5">%
+    </div>
+  </div>
+  <div class="pl-row sub">
+    <div class="cell-l"><div class="cell-name bold">Net After COGS + Commission</div></div>
+    <div class="vc cur" id="c-after-comm">—</div>
+    <div class="vc scen" id="s-after-comm">—</div>
+    <div class="vc tgt" id="t-after-comm">—</div>
+  </div>
+</div>
+
+<!-- Labor -->
+<div class="pl-wrap">
+  <div class="pl-sh sh-dark">
+    <span>Labor (+15% tax loaded)</span><span>Current</span><span>Scenario</span><span>Target</span>
+  </div>
+  <!-- Dylan -->
+  <div class="pl-row" id="row-dylan">
+    <div class="cell-l"><div class="cell-name">Dylan</div><div class="cell-sub">$40/hr × 40hrs</div></div>
+    <div class="vc cur neg">($7,968)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-dylan" value="7968" min="0" max="25000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-dylan" value="7968" min="0" max="25000"></div>
+  </div>
+  <!-- Justin -->
+  <div class="pl-row alt">
+    <div class="cell-l"><div class="cell-name">Justin</div><div class="cell-sub">$25/hr × 40hrs</div></div>
+    <div class="vc cur neg">($4,980)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-justin" value="4980" min="0" max="25000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-justin" value="4980" min="0" max="25000"></div>
+  </div>
+  <!-- Bryce -->
+  <div class="pl-row">
+    <div class="cell-l"><div class="cell-name">Bryce — Base</div><div class="cell-sub">$80K/yr · adjust to model restructure</div></div>
+    <div class="vc cur neg">($7,667)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-bryce" value="7667" min="0" max="25000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-bryce" value="5292" min="0" max="25000"></div>
+  </div>
+  <!-- Admin -->
+  <div class="pl-row alt">
+    <div class="cell-l"><div class="cell-name">Admin</div><div class="cell-sub">PT · $25/hr × 20hrs</div></div>
+    <div class="vc cur neg">($2,490)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-admin" value="2490" min="0" max="25000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-admin" value="1245" min="0" max="25000"></div>
+  </div>
+  <!-- Rich -->
+  <div class="pl-row">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-rich"><span class="tsl"></span></label>Rich — Draw
+        <label class="tog" style="margin-left:12px;"><input type="checkbox" id="tog-t-rich"><span class="tsl"></span></label><span style="color:var(--green);">Tgt</span>
+      </div>
+      <div class="cell-sub">Spring — toggle on to include</div>
+    </div>
+    <div class="vc cur">($0)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-rich" value="2500" min="0" max="10000" disabled></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-rich" value="2500" min="0" max="10000" disabled></div>
+  </div>
+  <div class="pl-row sub">
+    <div class="cell-l"><div class="cell-name bold">Total Labor</div></div>
+    <div class="vc cur neg">($23,105)</div>
+    <div class="vc scen neg" id="s-labor-tot">—</div>
+    <div class="vc tgt neg" id="t-labor-tot">—</div>
+  </div>
+</div>
+
+<!-- Equipment -->
+<div class="pl-wrap">
+  <div class="pl-sh sh-dark">
+    <span>Equipment · toggle = sold</span><span>Current</span><span>Scenario</span><span>Target</span>
+  </div>
+  <!-- S595 -->
+  <div class="pl-row" id="row-s595">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-s595" checked><span class="tsl"></span></label>S595 Skid Steer
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-s595" checked><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">Kinetic · $974/mo</div>
+    </div>
+    <div class="vc cur neg">($974)</div>
+    <div class="vc scen neg" id="sv-s595">—</div>
+    <div class="vc tgt neg" id="tv-s595">—</div>
+  </div>
+  <!-- Bandit -->
+  <div class="pl-row alt" id="row-bandit">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-bandit" checked><span class="tsl"></span></label>Stump Grinder (Bandit)
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-bandit"><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">$736/mo · for sale</div>
+    </div>
+    <div class="vc cur neg">($736)</div>
+    <div class="vc scen neg" id="sv-bandit">—</div>
+    <div class="vc tgt neg" id="tv-bandit">—</div>
+  </div>
+  <!-- Dump -->
+  <div class="pl-row" id="row-dump">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;color:var(--blue);">
+        <label class="tog"><input type="checkbox" id="tog-s-dump"><span class="tsl"></span></label>Dump Trailer (Green)
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-dump"><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">$642/mo lease</div>
+    </div>
+    <div class="vc cur neg">($642)</div>
+    <div class="vc scen neg" id="sv-dump">—</div>
+    <div class="vc tgt neg" id="tv-dump">—</div>
+  </div>
+  <!-- GMC -->
+  <div class="pl-row alt" id="row-gmc">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-gmc" checked><span class="tsl"></span></label>GMC
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-gmc" checked><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">$800/mo</div>
+    </div>
+    <div class="vc cur neg">($800)</div>
+    <div class="vc scen neg" id="sv-gmc">—</div>
+    <div class="vc tgt neg" id="tv-gmc">—</div>
+  </div>
+  <!-- F450 -->
+  <div class="pl-row" id="row-f450">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-f450" checked><span class="tsl"></span></label>Ford F-450
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-f450"><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">$316/mo · blown motor</div>
+    </div>
+    <div class="vc cur neg">($316)</div>
+    <div class="vc scen neg" id="sv-f450">—</div>
+    <div class="vc tgt neg" id="tv-f450">—</div>
+  </div>
+  <!-- F350 -->
+  <div class="pl-row alt" id="row-f350">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;">
+        <label class="tog"><input type="checkbox" id="tog-s-f350" checked><span class="tsl"></span></label>Ford F-350
+        <label class="tog" style="margin-left:8px;"><input type="checkbox" id="tog-t-f350" checked><span class="tsl"></span></label><span style="font-size:9px;color:var(--green)">Tgt</span>
+      </div>
+      <div class="cell-sub">$329/mo</div>
+    </div>
+    <div class="vc cur neg">($329)</div>
+    <div class="vc scen neg" id="sv-f350">—</div>
+    <div class="vc tgt neg" id="tv-f350">—</div>
+  </div>
+  <div class="pl-row sub">
+    <div class="cell-l"><div class="cell-name bold">Total Equipment</div></div>
+    <div class="vc cur neg">($3,155)</div>
+    <div class="vc scen neg" id="s-equip-tot">—</div>
+    <div class="vc tgt neg" id="t-equip-tot">—</div>
+  </div>
+</div>
+
+<!-- Other Fixed -->
+<div class="pl-wrap">
+  <div class="pl-sh sh-dark">
+    <span>Other Fixed Costs</span><span>Current</span><span>Scenario</span><span>Target</span>
+  </div>
+  <div class="pl-row">
+    <div class="cell-l"><div class="cell-name">Insurance</div></div>
+    <div class="vc cur neg">($4,000)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-ins" value="4000" min="0" max="20000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-ins" value="4000" min="0" max="20000"></div>
+  </div>
+  <div class="pl-row alt">
+    <div class="cell-l"><div class="cell-name">Marketing (incl. GHL)</div></div>
+    <div class="vc cur neg">($3,300)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-mkt" value="3300" min="0" max="20000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-mkt" value="2000" min="0" max="20000"></div>
+  </div>
+  <div class="pl-row">
+    <div class="cell-l"><div class="cell-name">Rent / Yard</div></div>
+    <div class="vc cur neg">($1,400)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-rent" value="1400" min="0" max="10000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-rent" value="1400" min="0" max="10000"></div>
+  </div>
+  <div class="pl-row alt">
+    <div class="cell-l"><div class="cell-name">Fuel</div></div>
+    <div class="vc cur neg">($1,250)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-fuel" value="1250" min="0" max="10000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-fuel" value="1000" min="0" max="10000"></div>
+  </div>
+  <div class="pl-row">
+    <div class="cell-l"><div class="cell-name">Software (Jobber + QB)</div></div>
+    <div class="vc cur neg">($200)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-sw" value="200" min="0" max="2000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-sw" value="200" min="0" max="2000"></div>
+  </div>
+  <div class="pl-row alt">
+    <div class="cell-l"><div class="cell-name">Phones + Supplies</div></div>
+    <div class="vc cur neg">($260)</div>
+    <div class="vc scen neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp" id="s-misc" value="260" min="0" max="2000"></div>
+    <div class="vc tgt neg" style="display:flex;justify-content:flex-end;"><input type="number" class="num-inp green" id="t-misc" value="260" min="0" max="2000"></div>
+  </div>
+  <div class="pl-row sub">
+    <div class="cell-l"><div class="cell-name bold">Total Other Fixed</div></div>
+    <div class="vc cur neg">($10,410)</div>
+    <div class="vc scen neg" id="s-other-tot">—</div>
+    <div class="vc tgt neg" id="t-other-tot">—</div>
+  </div>
+</div>
+
+<!-- Driven -->
+<div class="pl-wrap">
+  <div class="pl-sh sh-orange">
+    <span>Driven Repayment · profit-based only</span><span>Current</span><span>Scenario</span><span>Target</span>
+  </div>
+  <div class="pl-row driven-row">
+    <div class="cell-l">
+      <div class="cell-name" style="display:flex;align-items:center;color:var(--orange);">
+        <label class="tog"><input type="checkbox" id="tog-s-driven"><span class="tsl" style=""></span></label>
+        <span>Driven Repayment (Scen)</span>
+      </div>
+      <div class="cell-sub" style="color:var(--orange);" id="driven-calc">toggle on to model</div>
+    </div>
+    <div class="vc cur">$0</div>
+    <div class="vc scen neg" id="sv-driven">$0</div>
+    <div class="vc tgt" style="color:#999;">TBD</div>
+  </div>
+  <div class="driven-config">
+    <div class="comm-row-inner">
+      <label style="color:var(--orange);font-size:10px;font-weight:600;">% of profit:</label>
+      <input type="range" class="orange-range" id="driven-pct-slider" min="5" max="50" step="5" value="25" style="flex:1;">
+      <div style="font-size:14px;font-weight:900;color:var(--orange);width:32px;" id="driven-pct-val">25%</div>
+      <label style="color:var(--orange);font-size:10px;font-weight:600;">Balance: $</label>
+      <input type="number" class="num-inp" id="driven-bal" value="45000" min="0" max="500000" style="border-color:#FFAB91;width:76px;">
+    </div>
+  </div>
+</div>
+
+<!-- Net -->
+<div class="pl-wrap" style="margin-bottom:10px;">
+  <div class="pl-row tot">
+    <div class="cell-l"><div class="cell-name white" style="font-size:13px;font-weight:900;">NET PROFIT / LOSS</div></div>
+    <div class="vc white" id="c-net-row" style="font-size:13px;">—</div>
+    <div class="vc white" id="s-net-row" style="font-size:13px;">—</div>
+    <div class="vc white" id="t-net-row" style="font-size:13px;">—</div>
+  </div>
+</div>
+
+<!-- INDUSTRY BENCHMARKS -->
+<div class="bmark-wrap">
+  <div class="bmark-sh">
+    <span>Industry Benchmarks — Landscaping</span>
+    <span>Your %</span><span>Industry Std</span><span>Gap</span>
+  </div>
+  <div class="bmark-row"><div class="bmark-name">Materials / COGS</div><div class="bmark-cur" id="bm-mat">—</div><div class="bmark-std">25–35%</div><div class="bmark-gap" id="bg-mat">—</div></div>
+  <div class="bmark-row alt"><div class="bmark-name">Total Labor</div><div class="bmark-cur" id="bm-labor">—</div><div class="bmark-std">25–35%</div><div class="bmark-gap" id="bg-labor">—</div></div>
+  <div class="bmark-row"><div class="bmark-name">Commission</div><div class="bmark-cur" id="bm-comm">—</div><div class="bmark-std">3–8%</div><div class="bmark-gap" id="bg-comm">—</div></div>
+  <div class="bmark-row alt"><div class="bmark-name">Marketing</div><div class="bmark-cur" id="bm-mkt">—</div><div class="bmark-std">3–5%</div><div class="bmark-gap" id="bg-mkt">—</div></div>
+  <div class="bmark-row"><div class="bmark-name">Insurance</div><div class="bmark-cur" id="bm-ins">—</div><div class="bmark-std">2–4%</div><div class="bmark-gap" id="bg-ins">—</div></div>
+  <div class="bmark-row alt"><div class="bmark-name">Equipment Payments</div><div class="bmark-cur" id="bm-equip">—</div><div class="bmark-std">3–6%</div><div class="bmark-gap" id="bg-equip">—</div></div>
+  <div class="bmark-row"><div class="bmark-name">Gross Margin (after COGS)</div><div class="bmark-cur" id="bm-gm">—</div><div class="bmark-std">45–65%</div><div class="bmark-gap" id="bg-gm">—</div></div>
+  <div class="bmark-row alt"><div class="bmark-name">Net Profit</div><div class="bmark-cur" id="bm-net">—</div><div class="bmark-std">10–15%</div><div class="bmark-gap" id="bg-net">—</div></div>
+  <div class="bmark-row" style="background:#E3F2FD;">
+    <div class="bmark-name" style="font-weight:700;color:#1565C0;">⚡ Note: % improves as revenue grows</div>
+    <div class="bmark-std" colspan="3" style="color:#1565C0;text-align:right;font-size:9px;" id="bm-note">At $26K/mo fixed costs dominate</div>
+    <div></div><div></div>
+  </div>
+</div>
+<div class="note">
+  Current column locked to Oct actual · Scenario + Target columns fully adjustable<br>
+  Materials % is the key variable — adjust to your real job cost, not the plan assumption<br>
+  Target defaults show lean structure: Bandit+Dump+F450 sold, Bryce at $55K base, marketing cut
+</div>
+
+<script>
+// ── LOCKED CURRENT ──────────────────────────────────────────────────────────
+const CUR={rev:55320,matPct:0.20,labor:23105,equip:3797,other:10410,commRate:0.075,commOnRev:true};
+
+let commMode='rev'; // 'rev' or 'margin'
+
+const $=id=>document.getElementById(id);
+const fmt=n=>{const a=Math.abs(n),s='$'+Math.round(a).toLocaleString();return n<0?'('+s+')':s;};
+const pos=n=>'$'+Math.round(Math.abs(n)).toLocaleString();
+const fmtSign=n=>(n>=0?'+':'')+fmt(n);
+const pct=n=>Math.round(n*100)+'%';
+
+function setCommMode(m){
+  commMode=m;
+  $('btn-rev').className='comm-mode '+(m==='rev'?'active-rev':'inactive');
+  $('btn-margin').className='comm-mode '+(m==='margin'?'active-margin':'inactive');
+  $('comm-mode-desc').textContent=m==='rev'?'% of gross revenue — paid to closer':'% of gross profit — rewards high-margin jobs';
+  update();
+}
+
+function calcComm(rev,matPct,rate,mode){
+  const gp=rev*(1-matPct);
+  return mode==='rev'?rev*rate:gp*rate;
+}
+
+function calcNet(rev,matPct,commRate,commMode,labor,equip,other,drivenPayment){
+  const gp=rev*(1-matPct);
+  const comm=calcComm(rev,matPct,commRate,commMode);
+  return gp-comm-labor-equip-other-drivenPayment;
+}
+
+function calcBE(labor,equip,other,matPct,commRate,commMode){
+  // BE: rev*(1-matPct) - comm - fixed = 0
+  // if commOnRev: rev*(1-matPct-commRate) = fixed → rev = fixed/(1-matPct-commRate)
+  // if commOnMargin: rev*(1-matPct)*(1-commRate) = fixed → rev = fixed/((1-matPct)*(1-commRate))
+  const fixed=labor+equip+other;
+  if(commMode==='rev') return Math.round(fixed/((1-matPct)-commRate));
+  else return Math.round(fixed/((1-matPct)*(1-commRate)));
+}
+
+function getEquip(prefix){
+  const items={s595:974,bandit:736,dump:0,gmc:800,f450:316,f350:329};
+  let total=0;
+  Object.entries(items).forEach(([k,v])=>{
+    const on=$('tog-'+prefix+'-'+k).checked;
+    const rowEl=$('row-'+k);
+    if(rowEl) rowEl.classList.toggle('disabled',!on&&prefix==='s');
+    if(on) total+=v;
+    const el=$(prefix+'v-'+k);
+    if(el) el.textContent=on?fmt(-v):'—';
+  });
+  return total;
+}
+
+function getLabor(prefix){
+  const sRich=$('tog-s-rich').checked, tRich=$('tog-t-rich').checked;
+  $('s-rich').disabled=!sRich; $('t-rich').disabled=!tRich;
+  const d=parseFloat($(`${prefix}-dylan`).value)||0;
+  const j=parseFloat($(`${prefix}-justin`).value)||0;
+  const b=parseFloat($(`${prefix}-bryce`).value)||0;
+  const a=parseFloat($(`${prefix}-admin`).value)||0;
+  const r=prefix==='s'?(sRich?(parseFloat($('s-rich').value)||0):0):(tRich?(parseFloat($('t-rich').value)||0):0);
+  return d+j+b+a+r;
+}
+
+function getOther(prefix){
+  return ['ins','mkt','rent','fuel','sw','misc'].reduce((sum,k)=>sum+(parseFloat($(prefix+'-'+k).value)||0),0);
+}
+
+function statusText(net,be,rev){
+  if(net<0) return{t:'🔴 Losing money',c:'var(--red)'};
+  if(rev<be*1.1) return{t:'🟡 Thin margin',c:'#C65100'};
+  return{t:'🟢 Profitable',c:'var(--green)'};
+}
+
+function update(){
+  // --- CURRENT (locked) ---
+  const cRev=CUR.rev;
+  const cMatPct=CUR.matPct;
+  const cCommRate=CUR.commRate;
+  const cGP=cRev*(1-cMatPct);
+  const cComm=calcComm(cRev,cMatPct,cCommRate,commMode); // use current mode for display
+  const cNet=calcNet(cRev,cMatPct,cCommRate,commMode,CUR.labor,CUR.equip,CUR.other,0);
+  const cBE=calcBE(CUR.labor,CUR.equip,CUR.other,cMatPct,cCommRate,commMode);
+  $('c-comm').textContent=fmt(-cComm);
+  $('c-after-comm').textContent=pos(cGP-cComm);
+  const cSt=statusText(cNet,cBE,cRev);
+  $('c-net').textContent=fmtSign(cNet); $('c-net').style.color=cSt.c;
+  $('c-status').textContent=cSt.t; $('c-status').style.color=cSt.c;
+  $('c-be').textContent='BE: $'+cBE.toLocaleString()+'/mo';
+  $('c-net-row').textContent=fmtSign(cNet);
+  $('c-mat-disp').textContent=Math.round(cMatPct*100)+'%';
+
+  // --- SCENARIO ---
+  const sRev=parseInt($('s-rev-slider').value);
+  const sMatPct=(parseInt($('s-mat-slider').value)||20)/100;
+  const sCommRate=(parseFloat($('s-comm-rate').value)||0)/100;
+  const sLabor=getLabor('s');
+  const sEquip=getEquip('s');
+  const sOther=getOther('s');
+  $('s-labor-tot').textContent=fmt(-sLabor);
+  $('s-other-tot').textContent=fmt(-sOther);
+  $('s-equip-tot').textContent=fmt(-sEquip);
+  $('s-rev-disp').textContent='$'+sRev.toLocaleString();
+  $('s-mat-disp').textContent=Math.round(sMatPct*100)+'%';
+  const sGP=sRev*(1-sMatPct);
+  const sComm=calcComm(sRev,sMatPct,sCommRate,commMode);
+
+  // Driven
+  const drivenOn=$('tog-s-driven').checked;
+  const drivenPct=(parseInt($('driven-pct-slider').value)||25)/100;
+  const drivenBal=parseFloat($('driven-bal').value)||0;
+  $('driven-pct-val').textContent=Math.round(drivenPct*100)+'%';
+  const preDrivenNet=calcNet(sRev,sMatPct,sCommRate,commMode,sLabor,sEquip,sOther,0);
+  const drivenPay=drivenOn&&preDrivenNet>0?Math.min(preDrivenNet*drivenPct,drivenBal):0;
+  $('sv-driven').textContent=drivenPay>0?fmt(-drivenPay):'$0';
+  if(drivenOn&&preDrivenNet<=0) $('driven-calc').textContent='not triggered — not yet profitable';
+  else if(drivenOn&&drivenPay>0){const mo=Math.ceil(drivenBal/drivenPay);$('driven-calc').textContent='$'+Math.round(drivenPay).toLocaleString()+'/mo → ~'+mo+' months to clear';}
+  else $('driven-calc').textContent='toggle on to model';
+
+  const sNet=preDrivenNet-drivenPay;
+  const sBE=calcBE(sLabor,sEquip,sOther,sMatPct,sCommRate,commMode);
+  $('s-comm').textContent=fmt(-sComm);
+  $('s-after-comm').textContent=pos(sGP-sComm);
+  const sSt=statusText(sNet,sBE,sRev);
+  $('s-net').textContent=fmtSign(sNet); $('s-net').style.color=sSt.c;
+  $('s-status').textContent=sSt.t; $('s-status').style.color=sSt.c;
+  $('s-be').textContent='BE: $'+sBE.toLocaleString()+'/mo';
+  $('s-net-row').textContent=fmtSign(sNet);
+
+  // --- TARGET ---
+  const tRev=parseInt($('t-rev-slider').value);
+  const tMatPct=(parseInt($('t-mat-slider').value)||15)/100;
+  const tCommRate=(parseFloat($('t-comm-rate').value)||0)/100;
+  const tLabor=getLabor('t');
+  const tEquip=getEquip('t');
+  const tOther=getOther('t');
+  $('t-labor-tot').textContent=fmt(-tLabor);
+  $('t-other-tot').textContent=fmt(-tOther);
+  $('t-equip-tot').textContent=fmt(-tEquip);
+  $('t-rev-disp').textContent='$'+tRev.toLocaleString();
+  $('t-mat-disp').textContent=Math.round(tMatPct*100)+'%';
+  const tGP=tRev*(1-tMatPct);
+  const tComm=calcComm(tRev,tMatPct,tCommRate,commMode);
+  const tNet=calcNet(tRev,tMatPct,tCommRate,commMode,tLabor,tEquip,tOther,0);
+  const tBE=calcBE(tLabor,tEquip,tOther,tMatPct,tCommRate,commMode);
+  $('t-comm').textContent=fmt(-tComm);
+  $('t-after-comm').textContent=pos(tGP-tComm);
+  const tSt=statusText(tNet,tBE,tRev);
+  $('t-net').textContent=fmtSign(tNet); $('t-net').style.color=tSt.c;
+  $('t-status').textContent=tSt.t; $('t-status').style.color=tSt.c;
+  $('t-be').textContent='BE: $'+tBE.toLocaleString()+'/mo';
+  $('t-net-row').textContent=fmtSign(tNet);
+}
+
+// Wire all inputs
+['s-rev-slider','t-rev-slider','s-mat-slider','t-mat-slider','driven-pct-slider'].forEach(id=>$(id).addEventListener('input',update));
+['s-dylan','t-dylan','s-justin','t-justin','s-bryce','t-bryce','s-admin','t-admin','s-rich','t-rich',
+ 's-ins','t-ins','s-mkt','t-mkt','s-rent','t-rent','s-fuel','t-fuel','s-sw','t-sw','s-misc','t-misc',
+ 's-comm-rate','t-comm-rate','driven-bal'].forEach(id=>$(id).addEventListener('input',update));
+['tog-s-rich','tog-t-rich','tog-s-driven',
+ 'tog-s-s595','tog-t-s595','tog-s-bandit','tog-t-bandit','tog-s-dump','tog-t-dump',
+ 'tog-s-gmc','tog-t-gmc','tog-s-f450','tog-t-f450','tog-s-f350','tog-t-f350'].forEach(id=>$(id).addEventListener('change',update));
+
+function pctOf(val, rev) { return rev > 0 ? Math.round(val/rev*100) : 0; }
+function bmarkGap(actual, lo, hi) {
+  if(actual < lo) return {t: actual+'% — below std', c:'good'};
+  if(actual > hi) return {t: actual+'% — above std', c:'bad'};
+  return {t: actual+'% — on target', c:'ok'};
+}
+function updateBenchmarks(rev, matPct, commAmt, laborAmt, equipAmt, insAmt, mktAmt, gpAmt, netAmt) {
+  const bm = [
+    ['mat', Math.round(matPct*100), 25, 35],
+    ['labor', pctOf(laborAmt, rev), 25, 35],
+    ['comm', pctOf(commAmt, rev), 3, 8],
+    ['mkt', pctOf(mktAmt, rev), 3, 5],
+    ['ins', pctOf(insAmt, rev), 2, 4],
+    ['equip', pctOf(equipAmt, rev), 3, 6],
+    ['gm', pctOf(gpAmt, rev), 45, 65],
+    ['net', Math.round(netAmt/rev*100), 10, 15],
+  ];
+  bm.forEach(([k, actual, lo, hi]) => {
+    const el = document.getElementById('bm-'+k);
+    const gap = document.getElementById('bg-'+k);
+    if(el) el.textContent = actual+'%';
+    if(gap) { const g = bmarkGap(actual, lo, hi); gap.textContent = g.t; gap.className = 'bmark-gap '+g.c; }
+  });
+  const noteEl = document.getElementById('bm-note');
+  if(noteEl) noteEl.textContent = rev < 50000 ? 'At $'+Math.round(rev/1000)+'K/mo fixed costs dominate — % improves with revenue' : 'Revenue at $'+Math.round(rev/1000)+'K/mo — % ratios becoming meaningful';
+}
+
+update();
+
+// Update benchmarks using scenario column values
+  const sMatPctForBmark = (parseInt($('s-mat-slider').value)||20)/100;
+  const sRevForBmark = parseInt($('s-rev-slider').value);
+  const sCommForBmark = calcComm(sRevForBmark, sMatPctForBmark, (parseFloat($('s-comm-rate').value)||0)/100, commMode);
+  const sLaborForBmark = getLabor('s');
+  const sEquipForBmark = getEquip('s');
+  const sInsForBmark = parseFloat($('s-ins').value)||0;
+  const sMktForBmark = parseFloat($('s-mkt').value)||0;
+  const sGPForBmark = sRevForBmark * (1 - sMatPctForBmark);
+  const sNetForBmark = calcNet(sRevForBmark, sMatPctForBmark, (parseFloat($('s-comm-rate').value)||0)/100, commMode, sLaborForBmark, sEquipForBmark, (parseFloat($('s-ins').value)||0)+(parseFloat($('s-mkt').value)||0)+(parseFloat($('s-rent').value)||0)+(parseFloat($('s-fuel').value)||0)+(parseFloat($('s-sw').value)||0)+(parseFloat($('s-misc').value)||0), 0);
+  updateBenchmarks(sRevForBmark, sMatPctForBmark, sCommForBmark, sLaborForBmark, sEquipForBmark, sInsForBmark, sMktForBmark, sGPForBmark, sNetForBmark);
+
+// Download
+// Download
+(async()=>{
+  const btn=$('dlBtn');
+  try{
+    const dl=await window.claude?.use?.('downloads');
+    if(!dl){btn.onclick=()=>window.print();btn.textContent='🖨 Print';return;}
+    btn.onclick=async()=>{
+      btn.textContent='Saving...';btn.disabled=true;
+      try{await dl.save({filename:'Trailblazers_PL_Builder.html',data:new Blob([document.documentElement.outerHTML],{type:'text/html'})});}
+      catch(e){window.print();}
+      btn.textContent='⬇ Download';btn.disabled=false;
+    };
+  }catch(e){btn.onclick=()=>window.print();}
+})();
+</script>
+</body>
+</html>
