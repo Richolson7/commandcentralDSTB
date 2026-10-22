@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Driven Solutions — P&L Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1B5E20;--gp:#E8F5E9;--red:#C62828;--rp:#FFEBEE;
+  --blue:#1565C0;--bp:#E3F2FD;--gold:#7B5800;--gop:#FDF6E3;
+  --orange:#BF360C;--op:#FBE9E7;
+  --g9:#1a1a1a;--g7:#444;--g5:#777;--g3:#ccc;--g1:#f7f7f7;--w:#fff;
+  --r:5px;--f:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:#111;color:var(--g9);min-height:100vh;}
+.topbar{background:var(--green);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200;}
+.topbar-title h1{font-size:9px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.topbar-title h2{font-size:15px;font-weight:800;color:#fff;}
+.top-btns{display:flex;gap:6px;}
+.tbtn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-family:var(--f);font-size:10px;font-weight:700;padding:5px 11px;border-radius:4px;cursor:pointer;}
+.tbtn.primary{background:#fff;color:var(--green);}
+
+/* 3-column comparison */
+.comp3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;margin:10px;border-radius:var(--r);overflow:hidden;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.comp-col{padding:12px 14px;}
+.comp-col.cur{background:#ececec;}
+.comp-col.scen{background:var(--w);}
+.comp-col.tgt{background:#E8F5E9;}
+.comp-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.comp-col.cur .comp-label{color:var(--g5);}
+.comp-col.scen .comp-label{color:var(--blue);}
+.comp-col.tgt .comp-label{color:var(--green);}
+.comp-net{font-size:22px;font-weight:900;line-height:1;}
+.comp-sub{font-size:10px;font-weight:600;margin-top:3px;}
+.comp-be{font-size:10px;color:var(--g5);margin-top:4px;}
+
+/* Revenue sliders */
+.rev-section{background:var(--w);border-radius:var(--r);margin:0 10px 8px;padding:12px 14px;}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.rev-col-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.rev-amount{font-size:24px;font-weight:900;line-height:1;margin-bottom:6px;}
+.rev-locked{color:var(--g5);}
+.rev-scen{color:var(--blue);}
+.rev-tgt{color:var(--green);}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;border-radius:3px;background:var(--g3);margin:4px 0;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input.green-range::-webkit-slider-thumb{background:var(--green);}
+input.orange-range::-webkit-slider-thumb{background:var(--orange);}
+.rev-marks{display:flex;justify-content:space-between;font-size:9px;color:var(--g5);}
+
+/* Materials % row */
+.mat-section{background:var(--w);border-radius:var(--r);margin:0 10px 8px;padding:10px 14px;}
+.mat-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:10px;align-items:center;}
+.mat-label{font-size:11px;font-weight:700;color:var(--g7);}
+.mat-val{font-size:18px;font-weight:900;text-align:center;}
+
+/* P&L table */
+.pl-wrap{margin:0 10px 8px;border-radius:var(--r);overflow:hidden;background:var(--w);}
+.pl-sh{padding:8px 12px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff;display:grid;grid-template-columns:1fr 72px 72px 72px;gap:3px;align-items:center;}
+.sh-green{background:var(--green);}
+.sh-dark{background:#1a1a1a;}
+.sh-gold{background:var(--gold);}
+.sh-orange{background:var(--orange);}
+.pl-sh span{text-align:right;font-size:8px;}
+.pl-sh span:first-child{text-align:left;font-size:9px;}
+
+.pl-row{display:grid;grid-template-columns:1fr 72px 72px 72px;gap:3px;padding:7px 12px;border-bottom:1px solid #f0f0f0;align-items:center;}
+.pl-row:last-child{border-bottom:none;}
+.pl-row.alt{background:var(--g1);}
+.pl-row.sub{background:#efefef;}
+.pl-row.tot{background:var(--g9);}
+.pl-row.comm-row{background:#FFFDE7;}
+.pl-row.driven-row{background:var(--op);}
+.pl-row.disabled{opacity:.35;}
+
+.cell-l{min-width:0;}
+.cell-name{font-size:11px;font-weight:500;color:var(--g7);}
+.cell-name.bold{font-weight:700;color:var(--g9);}
+.cell-name.white{color:#fff;font-weight:800;}
+.cell-sub{font-size:9px;color:var(--g5);margin-top:1px;}
+
+/* Value cells */
+.vc{font-size:11px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;padding:2px 0;}
+.vc.cur{color:#aaa;}
+.vc.cur.neg{color:#bbb;}
+.vc.cur.pos{color:#66BB6A;}
+.vc.scen{color:var(--g9);}
+.vc.scen.neg{color:var(--red);}
+.vc.scen.pos{color:var(--green);}
+.vc.tgt{color:var(--green);}
+.vc.tgt.neg{color:#2E7D32;}
+.vc.tgt.pos{color:#1B5E20;}
+.vc.white{color:#fff!important;}
+
+/* Inputs */
+.num-inp{width:66px;border:1.5px solid #ddd;border-radius:3px;padding:3px 4px;font-size:10px;font-weight:700;font-family:var(--f);color:var(--g9);text-align:right;-moz-appearance:textfield;}
+.num-inp::-webkit-outer-spin-button,.num-inp::-webkit-inner-spin-button{-webkit-appearance:none;}
+.num-inp:focus{outline:none;border-color:var(--blue);}
+.num-inp.green{border-color:#A5D6A7;}
+.num-inp.green:focus{border-color:var(--green);}
+.tog{position:relative;display:inline-block;width:30px;height:17px;flex-shrink:0;margin-right:4px;vertical-align:middle;}
+.tog input{opacity:0;width:0;height:0;}
+.tsl{position:absolute;cursor:pointer;inset:0;background:#ddd;border-radius:17px;transition:.2s;}
+.tsl:before{position:absolute;content:"";height:11px;width:11px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s;}
+input:checked+.tsl{background:var(--green);}
+input:checked+.tsl:before{transform:translateX(13px);}
+
+/* Commission config */
+.comm-config{background:#FFFDE7;border-top:1px solid #FFF176;padding:8px 12px;}
+.comm-row-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.comm-row-inner label{font-size:10px;font-weight:600;color:var(--gold);}
+.comm-mode{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1.5px solid;cursor:pointer;background:transparent;}
+.comm-mode.active-rev{background:#F57F17;color:#fff;border-color:#F57F17;}
+.comm-mode.active-margin{background:var(--green);color:#fff;border-color:var(--green);}
+.comm-mode.inactive{color:var(--g5);border-color:var(--g3);}
+
+/* Driven */
+.driven-config{background:var(--op);border-top:1px solid #FFCCBC;padding:8px 12px;}
+
+.note{font-size:9px;color:#555;text-align:center;padding:4px 10px 14px;line-height:1.5;}
+.pct-small{font-size:9px;font-weight:600;opacity:.65;display:block;margin-top:1px;}
+.pct-small.warn{color:#C62828;}
+.pct-small.ok{color:#2E7D32;}
+.bmark-wrap{margin:0 10px 8px;border-radius:var(--r);overflow:hidden;background:var(--w);}
+.bmark-grid{display:grid;grid-template-columns:1fr 80px 80px 80px;gap:0;}
+.bmark-sh{padding:8px 12px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:#1565C0;display:grid;grid-template-columns:1fr 80px 80px 80px;gap:3px;}
+.bmark-sh span{text-align:right;font-size:8px;}
+.bmark-sh span:first-child{text-align:left;font-size:9px;}
+.bmark-row{display:grid;grid-template-columns:1fr 80px 80px 80px;gap:3px;padding:7px 12px;border-bottom:1px solid #f0f0f0;align-items:center;}
+.bmark-row:last-child{border-bottom:none;}
+.bmark-row.alt{background:var(--g1);}
+.bmark-name{font-size:11px;font-weight:500;color:var(--g7);}
+.bmark-cur{font-size:11px;font-weight:700;text-align:right;color:#aaa;}
+.bmark-std{font-size:11px;font-weight:700;text-align:right;color:#1565C0;}
+.bmark-gap{font-size:11px;font-weight:700;text-align:right;}
+.bmark-gap.good{color:#2E7D32;}
+.bmark-gap.bad{color:#C62828;}
+.bmark-gap.ok{color:#F57F17;}
+@media print{body{background:#fff;}.topbar{display:none;}.sh-dark,.sh-green,.sh-gold,.sh-orange,.pl-row.tot{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+
+.note-box{background:#FFF8E1;border:1px solid #FFE082;border-radius:var(--r);margin:0 10px 8px;padding:9px 12px;font-size:10px;color:#6b5200;line-height:1.5;}
+.chip{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;margin-top:3px;}
+.chip.ok{background:#E8F5E9;color:#1B5E20;} .chip.low{background:#FFF3E0;color:#BF360C;}
+.pl-row.totrow{background:#f1f1f1;}
+.pl-row.netrow{background:#1a1a1a;}
+.pl-row.netrow .cell-name,.pl-row.netrow .vc{color:#fff!important;}
+@media print{.topbar .top-btns{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-title"><h1>Driven Solutions</h1><h2>P&amp;L — 3-Column Builder</h2></div>
+  <div class="top-btns"><button class="tbtn" onclick="window.print()">🖨 Print</button></div>
+</div>
+
+<div class="comp3">
+  <div class="comp-col cur"><div class="comp-label">🔒 Current</div><div class="comp-net" id="c-net">—</div><div class="comp-sub" id="c-status">—</div><div class="comp-be" id="c-be">BE: —</div><div id="c-plan"></div></div>
+  <div class="comp-col scen"><div class="comp-label">✏️ Scenario</div><div class="comp-net" id="s-net">—</div><div class="comp-sub" id="s-status">—</div><div class="comp-be" id="s-be">BE: —</div><div id="s-plan"></div></div>
+  <div class="comp-col tgt"><div class="comp-label">🎯 Target</div><div class="comp-net" id="t-net">—</div><div class="comp-sub" id="t-status">—</div><div class="comp-be" id="t-be">BE: —</div><div id="t-plan"></div></div>
+</div>
+
+<div class="rev-section"><div class="rev-grid">
+  <div>
+    <div class="rev-col-label">Current Revenue 🔒</div>
+    <div class="rev-amount rev-locked" id="c-rev-disp">—</div>
+    <div style="font-size:9px;color:var(--g5);font-weight:600;">QuickBooks trailing 90 days ÷ 3 (Jul 21 – Oct 18)</div>
+  </div>
+  <div>
+    <div class="rev-col-label">Scenario Revenue ✏️</div>
+    <div class="rev-amount rev-scen" id="s-rev-disp">—</div>
+    <input type="range" id="s-rev" min="50000" max="600000" step="1000" value="157000" oninput="update()">
+    <div class="rev-marks"><span>$50K</span><span>$300K</span><span>$600K</span></div>
+  </div>
+  <div>
+    <div class="rev-col-label">Target Revenue 🎯</div>
+    <div class="rev-amount rev-tgt" id="t-rev-disp">—</div>
+    <input type="range" class="green-range" id="t-rev" min="50000" max="600000" step="1000" value="500000" oninput="update()">
+    <div class="rev-marks"><span>$50K</span><span>$300K</span><span>$600K</span></div>
+  </div>
+</div></div>
+
+<div class="mat-section">
+  <div class="mat-grid">
+    <div class="mat-label">Cost of goods sold (% of revenue)</div>
+    <div style="text-align:center;"><div style="font-size:9px;font-weight:700;color:var(--g5);margin-bottom:2px;">CURRENT</div><div class="mat-val" style="color:#aaa;" id="c-cogs-disp">—</div></div>
+    <div><div style="font-size:9px;font-weight:700;color:var(--blue);margin-bottom:2px;text-align:center;">SCENARIO</div><div class="mat-val rev-scen" id="s-cogs-disp">—</div><input type="range" id="s-cogs" min="40" max="80" step="1" value="66" oninput="update()"></div>
+    <div><div style="font-size:9px;font-weight:700;color:var(--green);margin-bottom:2px;text-align:center;">TARGET</div><div class="mat-val rev-tgt" id="t-cogs-disp">—</div><input type="range" class="green-range" id="t-cogs" min="40" max="80" step="1" value="66" oninput="update()"></div>
+  </div>
+</div>
+
+<div class="pl-wrap">
+  <div class="pl-sh sh-dark"><span>Monthly P&amp;L</span><span>Current</span><span>Scenario</span><span>Target</span></div>
+  <div class="pl-row"><div class="cell-l"><div class="cell-name bold">Revenue</div></div><div class="vc cur" id="c-rev-row">—</div><div class="vc scen" id="s-rev-row">—</div><div class="vc tgt" id="t-rev-row">—</div></div>
+  <div class="pl-row alt"><div class="cell-l"><div class="cell-name">Cost of goods sold</div></div><div class="vc cur" id="c-cogs-row">—</div><div class="vc scen" id="s-cogs-row">—</div><div class="vc tgt" id="t-cogs-row">—</div></div>
+  <div class="pl-row totrow"><div class="cell-l"><div class="cell-name bold">Gross profit</div></div><div class="vc cur" id="c-gp">—</div><div class="vc scen" id="s-gp">—</div><div class="vc tgt" id="t-gp">—</div></div>
+</div>
+
+<div class="pl-wrap">
+  <div class="pl-sh sh-green"><span>Operating expenses · monthly</span><span>Current</span><span>Scenario</span><span>Target</span></div>
+  <div id="lines"></div>
+  <div class="pl-row totrow"><div class="cell-l"><div class="cell-name bold">Total operating expenses</div></div><div class="vc cur" id="c-fixed">—</div><div class="vc scen" id="s-fixed">—</div><div class="vc tgt" id="t-fixed">—</div></div>
+  <div class="pl-row netrow"><div class="cell-l"><div class="cell-name bold">NET OPERATING PROFIT</div></div><div class="vc cur" id="c-netrow">—</div><div class="vc scen" id="s-netrow">—</div><div class="vc tgt" id="t-netrow">—</div></div>
+</div>
+
+<div class="note-box">
+  <b>How to use:</b> Current revenue and cost of goods sold come from QuickBooks and are locked. Everything else is yours to change. Move the revenue and COGS sliders for Scenario and Target, and edit any expense line. QuickBooks only gives one total for operating expenses, so split that total into the lines below it. Keep the total the same for Current.<br>
+  <b>Plan:</b> the Target revenue starts at $500K a month ($6M a year) and the plan margin is 18-30% (from your July plan). Both are only starting points.<br>
+  <b>Heads up:</b> QuickBooks was edited between Oct 19 and Oct 22 and income and cost of goods sold moved by $17-19K. Treat Current as approximate until the books are final. This is net <i>operating</i> profit. It leaves out other income and expense.
+</div>
+
+<script>
+const CUR = { rev: 157142.89, cogs: 0.663098 };
+const LINES = [{"id": "qb", "name": "Operating expenses (QuickBooks total)", "cur": 47305.95, "hint": "Trailing-90-day monthly average. Split it into the lines below."}, {"id": "pay", "name": "Payroll & benefits", "cur": 0, "hint": ""}, {"id": "rent", "name": "Rent / warehouse", "cur": 0, "hint": ""}, {"id": "ins", "name": "Insurance", "cur": 0, "hint": ""}, {"id": "soft", "name": "Software & subscriptions", "cur": 0, "hint": ""}, {"id": "veh", "name": "Vehicles / delivery / fuel", "cur": 0, "hint": ""}, {"id": "mkt", "name": "Marketing", "cur": 0, "hint": ""}, {"id": "loan", "name": "Loan payments", "cur": 0, "hint": ""}, {"id": "oth", "name": "Other", "cur": 0, "hint": ""}];
+const $ = id => document.getElementById(id);
+const money = n => { const a = Math.abs(n), s = '$' + Math.round(a).toLocaleString(); return n < 0 ? '(' + s + ')' : s; };
+const signed = n => (n >= 0 ? '+' : '') + money(n);
+const pct = n => (n * 100).toFixed(1) + '%';
+
+(function build(){
+  $('lines').innerHTML = LINES.map((l, i) => `
+    <div class="pl-row ${i % 2 ? 'alt' : ''}">
+      <div class="cell-l"><div class="cell-name">${l.name}</div>${l.hint ? `<div class="cell-sub">${l.hint}</div>` : ''}</div>
+      <div><input class="num-inp" type="number" id="c-${l.id}" value="${Math.round(l.cur)}" oninput="update()"></div>
+      <div><input class="num-inp" type="number" id="s-${l.id}" value="${Math.round(l.cur)}" oninput="update()"></div>
+      <div><input class="num-inp green" type="number" id="t-${l.id}" value="${Math.round(l.cur)}" oninput="update()"></div>
+    </div>`).join('');
+})();
+
+function status(net, be, rev){
+  if (net < 0) return {t: '🔴 Losing money', c: 'var(--red)'};
+  if (rev < be * 1.1) return {t: '🟡 Thin margin', c: '#C65100'};
+  return {t: '🟢 Profitable', c: 'var(--green)'};
+}
+
+function update(){
+  ['c','s','t'].forEach(p => {
+    const rev  = p === 'c' ? CUR.rev  : parseFloat($(p + '-rev').value);
+    const cogs = p === 'c' ? CUR.cogs : parseFloat($(p + '-cogs').value) / 100;
+    const fixed = LINES.reduce((s, l) => s + (parseFloat($(p + '-' + l.id).value) || 0), 0);
+    const cogsAmt = rev * cogs, gp = rev - cogsAmt, net = gp - fixed;
+    const be = cogs < 1 ? Math.round(fixed / (1 - cogs)) : 0;
+    const margin = rev ? net / rev : 0;
+    const st = status(net, be, rev);
+
+    $(p + '-rev-disp').textContent = money(rev);
+    $(p + '-cogs-disp').textContent = Math.round(cogs * 100) + '%';
+    $(p + '-rev-row').textContent = money(rev);
+    $(p + '-cogs-row').textContent = money(-cogsAmt);
+    $(p + '-gp').innerHTML = money(gp) + '<span class="pct-small">' + pct(1 - cogs) + '</span>';
+    $(p + '-fixed').innerHTML = money(-fixed) + '<span class="pct-small">' + pct(rev ? fixed / rev : 0) + '</span>';
+    $(p + '-netrow').innerHTML = signed(net) + '<span class="pct-small">' + pct(margin) + '</span>';
+    $(p + '-net').textContent = signed(net); $(p + '-net').style.color = st.c;
+    $(p + '-status').textContent = st.t; $(p + '-status').style.color = st.c;
+    $(p + '-be').textContent = 'BE: $' + be.toLocaleString() + '/mo';
+    $(p + '-plan').innerHTML = '<span class="chip ' + (margin >= 0.18 ? 'ok' : 'low') + '">' + pct(margin) + ' margin · ' + (margin >= 0.18 ? 'in plan range' : 'below 18% plan') + '</span>';
+  });
+}
+update();
+</script>
+</body>
+</html>
