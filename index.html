@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="css/running-tasks.css">
 <style>
 :root{
   --dk:#060808;--s:#0C1010;--s2:#121818;--s3:#1A2020;
@@ -180,6 +181,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="tab" onclick="showPanel('proj',this)">🧮 Projections</div>
   <div class="tab" onclick="showPanel('charts',this)">📈 Charts</div>
   <div class="tab" onclick="showPanel('tasks',this)">✅ Tasks</div>
+  <div class="tab" onclick="showPanel('running',this)">🗂️ Running</div>
   <div class="tab" onclick="showPanel('history',this)">📅 History</div>
 </div>
 
@@ -220,6 +222,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     </div>
     <div id="task-list"></div>
   </div>
+  <div class="panel" id="panel-running"></div>
   <div class="panel" id="panel-history">
     <div class="sec-title">📅 Weekly History</div>
     <div class="sec-sub">Save a snapshot every Friday to build a permanent record (separate from the W1–W4 rolling window).</div>
@@ -241,6 +244,7 @@ const db = createClient(
   'https://igaylyhkssahczubiztb.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo'
 );
+window.db = db;
 
 // ══════════════════════════════════════════════════════════
 // COMPANY + KPI CONFIG (simplified schema — one flat key store per company,
@@ -740,5 +744,6 @@ function toast(msg, type){
 renderLinks();
 loadData();
 </script>
+<script type="module" src="js/running-tasks.js"></script>
 </body>
 </html>

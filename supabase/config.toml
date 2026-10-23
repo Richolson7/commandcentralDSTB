@@ -1,0 +1,5 @@
+# Only the read-only calendar function lives here.
+# Task rows are created by supabase/migrations/20261023223000_running_tasks.sql.
+
+[functions.calendar-availability]
+verify_jwt = true
