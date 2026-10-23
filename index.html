@@ -6,6 +6,7 @@
 <title>Command Center — Driven + Trailblazers</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/save-guard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{
@@ -118,11 +119,14 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .toast{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:9px 14px;font-size:12px;color:var(--tx);animation:tin .2s ease;min-width:180px}
 .toast.ok{border-color:var(--gd);color:var(--g);background:var(--gbg)}
 .toast.err{border-color:var(--rbr);color:var(--red);background:var(--rbg)}
+.load-banner{display:none;background:var(--rbg);border-bottom:1px solid var(--rbr);color:#ffb4b4;padding:10px 36px;font-size:13px;line-height:1.45;gap:12px;align-items:center}
+.load-banner.show{display:flex;flex-wrap:wrap}
+.load-banner .tbtn{flex-shrink:0}
 @keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
 
 @media print {
   #panel-proj{display:none!important}
-  .co-switcher,.sync-bar,.links-bar,.tabs,.tbtn,.btn-g,.actual-inp{display:none!important}
+  .co-switcher,.sync-bar,.links-bar,.tabs,.tbtn,.btn-g,.actual-inp,.load-banner{display:none!important}
   body{background:#fff;color:#000}
   .panel{display:block!important}
   .kpi-table td,.kpi-table th{color:#000;border-color:#ccc}
@@ -167,6 +171,10 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 <div class="sync-bar">
   <div class="sync-txt"><div class="sdot off" id="sync-dot"></div><span id="sync-lbl">Connecting…</span></div>
   <div style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
+</div>
+<div class="load-banner" id="load-banner" role="alert">
+  <span id="load-banner-text"></span>
+  <button class="tbtn" type="button" onclick="loadData()">Retry</button>
 </div>
 
 <div class="links-bar" id="links-bar"></div>
@@ -350,74 +358,183 @@ const CHART_KEYS = {
 let co = 'driven';
 let currentTab = 'dashboard';
 const state = { driven: { data:{}, history:[], tasks:[], pnl:null }, tb: { data:{}, history:[], tasks:[], pnl:null } };
+const memory = { driven: SaveGuard.createMemory(), tb: SaveGuard.createMemory() };
+const loadSeq = { driven: 0, tb: 0 };
+const saveGen = { driven: 0, tb: 0 };
+const saveTail = { driven: Promise.resolve(), tb: Promise.resolve() };
 let chartInstances = {};
+let saveTimer = null;
+let switchToken = 0;
 
 // ══════════════════════════════════════════════════════════
 // SUPABASE LOAD / SAVE / REALTIME
+// Writes only the columns this page changed, and only after a successful load.
 // ══════════════════════════════════════════════════════════
-async function loadData() {
-  const cfg = COMPANIES[co];
-  try {
-    const {data,error} = await db.from('dashboard_data').select('*').eq('id',cfg.dbRow).single();
+const rowAdapter = {
+  async readRow(id) {
+    const {data, error} = await db.from('dashboard_data').select('week_data, history, tasks, updated_at').eq('id', id).single();
     if (error) throw error;
-    state[co].data = (data && data.week_data) || {};
-    state[co].history = (data && data.history) || [];
-    state[co].tasks = (data && data.tasks) || [];
-    state[co].pnl = (data && data.pnl) || null;
-    setSync('live');
-    if (data && data.updated_at) {
-      const ago = Math.round((Date.now()-new Date(data.updated_at))/60000);
-      document.getElementById('last-sync').textContent = ago<2?'just now':ago<60?ago+'m ago':Math.round(ago/60)+'h ago';
-    }
-  } catch(e) {
-    state[co].data = {}; state[co].history = []; state[co].tasks = []; state[co].pnl = null;
-    setSync('error');
-  }
-  renderAll();
+    return data;
+  },
+  async update(id, patch, updatedAt) {
+    let query = db.from('dashboard_data').update(patch).eq('id', id);
+    if (updatedAt) query = query.eq('updated_at', updatedAt);
+    const {data, error} = await query.select('updated_at');
+    if (error) throw error;
+    return Array.isArray(data) && data.length > 0;
+  },
+};
+
+function setBanner(show) {
+  const el = document.getElementById('load-banner');
+  if (!el) return;
+  el.classList.toggle('show', !!show);
+  const text = document.getElementById('load-banner-text');
+  if (text) text.textContent = SaveGuard.MSG_LOAD_FAILED;
 }
 
-let saveTimer;
-function debouncedSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveAllData,600); }
+function showLastSync(updatedAt) {
+  const el = document.getElementById('last-sync');
+  if (!el || !updatedAt) return;
+  const ago = Math.round((Date.now() - new Date(updatedAt)) / 60000);
+  el.textContent = ago < 2 ? 'just now' : ago < 60 ? ago + 'm ago' : Math.round(ago / 60) + 'h ago';
+}
 
-async function saveAllData() {
-  const cfg = COMPANIES[co]; const s = state[co];
+async function loadData(company) {
+  if (!company) company = co;
+  const seq = ++loadSeq[company];
+  const seenSave = saveGen[company];
+  const wasReady = memory[company].loadState === 'ready';
+  if (!wasReady) {
+    memory[company].loadState = 'loading';
+    if (company === co) { setSync('loading'); setBanner(false); }
+  }
   try {
-    const {error} = await db.from('dashboard_data').upsert({
-      id: cfg.dbRow, week_data: s.data, history: s.history, tasks: s.tasks, updated_at: new Date().toISOString()
-    }, {onConflict:'id'});
+    const {data, error} = await db.from('dashboard_data').select('week_data, history, tasks, pnl, updated_at').eq('id', COMPANIES[company].dbRow).single();
     if (error) throw error;
-    document.getElementById('last-sync').textContent = 'just now';
-  } catch(e) {
-    toast('Save failed — check connection','err');
+    if (seq !== loadSeq[company]) return;
+    if (saveGen[company] !== seenSave) {
+      if (company === co && memory[company].loadState === 'ready') { setSync('live'); setBanner(false); }
+      return;
+    }
+    const pending = SaveGuard.hasPendingEdits(memory[company]);
+    const info = SaveGuard.absorbLoadedRow(memory[company], state[company], data);
+    if (company === co) {
+      setSync('live');
+      setBanner(false);
+      showLastSync(info.updatedAt);
+      renderAll();
+    }
+    if (pending) saveAllData(company, {silent: true});
+  } catch (e) {
+    if (seq !== loadSeq[company]) return;
+    memory[company].loadState = 'error';
+    if (company === co) {
+      setSync('error');
+      setBanner(true);
+      renderAll();
+    }
+  }
+}
+
+function debouncedSave() {
+  const company = co;
+  if (memory[company].loadState !== 'ready') return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { saveAllData(company); }, 600);
+}
+
+function saveAllData(company, opts) {
+  if (!company) company = co;
+  const options = opts || {};
+  const run = saveTail[company].then(() => saveAllDataNow(company, options));
+  saveTail[company] = run.then(() => {}, () => {});
+  return run;
+}
+
+async function saveAllDataNow(company, opts) {
+  const mem = memory[company];
+  const edits = SaveGuard.snapshotEdits(mem);
+  if (edits.loadState !== 'ready') {
+    if (!opts.silent) toast(edits.loadState === 'loading' ? SaveGuard.MSG_STILL_LOADING : SaveGuard.MSG_LOAD_FAILED, 'err');
+    return false;
+  }
+  if (!SaveGuard.hasPendingEdits(edits)) return true;
+  saveGen[company] += 1;
+  try {
+    const result = await SaveGuard.commitEdits(rowAdapter, COMPANIES[company].dbRow, edits);
+    (result.warnings || []).forEach(message => toast(message, 'err'));
+    if (result.restoreTasks) {
+      state[company].tasks = result.restoreTasks;
+      SaveGuard.discardTaskEdits(mem, edits);
+    }
+    if (result.wrote && result.patch) {
+      SaveGuard.clearWritten(mem, edits, result.patch);
+      if (result.patch.week_data) state[company].data = result.patch.week_data;
+      if (result.patch.history) state[company].history = result.patch.history;
+      if (result.patch.tasks) state[company].tasks = result.patch.tasks;
+      if (company === co) {
+        const stamp = document.getElementById('last-sync');
+        if (stamp) stamp.textContent = 'just now';
+        renderAll();
+      }
+    } else if (result.restoreTasks && company === co) {
+      renderTasks();
+    }
+    if (!result.ok && !result.wrote && result.message && !opts.silent) toast(result.message, 'err');
+    return !!result.ok;
+  } catch (e) {
+    toast('Save failed — check connection', 'err');
+    return false;
   }
 }
 
 ['driven','tb'].forEach(c => {
   db.channel(c+'-cmd-rt').on('postgres_changes',{event:'UPDATE',schema:'public',table:'dashboard_data',filter:'id=eq.'+COMPANIES[c].dbRow}, payload => {
+    if (!payload || !payload.new) return;
+    if (memory[c].loadState !== 'ready') return;
+    const next = SaveGuard.applyRemoteSnapshot(state[c], memory[c], payload.new);
+    state[c].data = next.data;
+    state[c].history = next.history;
+    state[c].tasks = next.tasks;
+    state[c].pnl = next.pnl;
     if (c !== co) return;
-    state[c].data = payload.new.week_data || {};
-    state[c].history = payload.new.history || [];
-    state[c].tasks = payload.new.tasks || [];
-    state[c].pnl = payload.new.pnl || null;
     renderAll();
     document.getElementById('last-sync').textContent = 'just now';
-    toast('Updated by team','ok');
+    toast('Updated by team', 'ok');
   }).subscribe();
 });
 
-function setSync(status){
-  const dot = document.getElementById('sync-dot'); const lbl = document.getElementById('sync-lbl');
-  if (status==='live'){ dot.className='sdot live'; lbl.textContent='Live — synced across the team in real time'; }
-  else { dot.className='sdot off'; lbl.textContent='Offline — changes will retry'; }
+function setSync(status) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-lbl');
+  if (!dot || !lbl) return;
+  if (status === 'live') {
+    dot.className = 'sdot live';
+    lbl.textContent = 'Live — synced across the team in real time';
+  } else if (status === 'loading') {
+    dot.className = 'sdot off';
+    lbl.textContent = 'Loading saved data…';
+  } else {
+    dot.className = 'sdot off';
+    lbl.textContent = "Couldn't load — editing is locked";
+  }
+}
+
+function ensureReady() {
+  const status = memory[co].loadState;
+  if (status === 'ready') return true;
+  toast(status === 'loading' ? SaveGuard.MSG_STILL_LOADING : SaveGuard.MSG_LOAD_FAILED, 'err');
+  return false;
 }
 
 // ══════════════════════════════════════════════════════════
 // COMPANY SWITCH
 // ══════════════════════════════════════════════════════════
-function switchCompany(c) {
-  co = c; const cfg = COMPANIES[c];
-  document.getElementById('co-driven').className = 'co-btn driven' + (c==='driven'?' active':'');
-  document.getElementById('co-tb').className = 'co-btn tb' + (c==='tb'?' active':'');
+function paintCompany(c) {
+  const cfg = COMPANIES[c];
+  document.getElementById('co-driven').className = 'co-btn driven' + (c === 'driven' ? ' active' : '');
+  document.getElementById('co-tb').className = 'co-btn tb' + (c === 'tb' ? ' active' : '');
   document.documentElement.style.setProperty('--g', cfg.color);
   document.documentElement.style.setProperty('--gd', cfg.colorDark);
   document.documentElement.style.setProperty('--gbg', cfg.colorBg);
@@ -426,9 +543,21 @@ function switchCompany(c) {
   document.getElementById('co-title').textContent = cfg.name;
   document.getElementById('co-sub').textContent = cfg.sub;
   const bdg = document.getElementById('co-badge');
-  bdg.textContent = cfg.badge; bdg.className = 'badge ' + cfg.badgeClass;
+  bdg.textContent = cfg.badge;
+  bdg.className = 'badge ' + cfg.badgeClass;
   renderLinks();
-  loadData();
+}
+
+async function switchCompany(c) {
+  if (c === co) return;
+  const token = ++switchToken;
+  const prev = co;
+  clearTimeout(saveTimer);
+  co = c;
+  paintCompany(c);
+  await saveAllData(prev, {silent: true});
+  if (token !== switchToken) return;
+  await loadData(c);
 }
 
 function renderLinks(){
@@ -451,24 +580,51 @@ function showPanel(id, el){
 // STATUS / HELPERS
 // ══════════════════════════════════════════════════════════
 function addTask(){
+  if (!ensureReady()) return;
   const text = document.getElementById('new-task-text').value.trim();
   if (!text) return;
   const owner = document.getElementById('new-task-owner').value.trim();
   const due = document.getElementById('new-task-due').value;
-  state[co].tasks.push({ id: Date.now(), text, owner, due, done:false });
+  const task = { id: Date.now(), text, owner, due, done:false };
+  state[co].tasks.push(task);
+  SaveGuard.noteTaskAdded(memory[co], task);
   document.getElementById('new-task-text').value = '';
   document.getElementById('new-task-owner').value = '';
   document.getElementById('new-task-due').value = '';
-  saveAllData();
+  saveAllData(co);
   renderTasks();
 }
-function toggleTask(id){ const t = state[co].tasks.find(x=>x.id===id); if (t){ t.done = !t.done; saveAllData(); renderTasks(); } }
-function deleteTask(id){ state[co].tasks = state[co].tasks.filter(x=>x.id!==id); saveAllData(); renderTasks(); }
+function toggleTask(id){
+  if (!ensureReady()) return;
+  const t = state[co].tasks.find(x => String(x.id) === String(id));
+  if (!t) return;
+  t.done = !t.done;
+  SaveGuard.noteTaskToggled(memory[co], id, t.done);
+  saveAllData(co);
+  renderTasks();
+}
+function deleteTask(id){
+  if (!ensureReady()) return;
+  const remaining = state[co].tasks.filter(x => String(x.id) !== String(id));
+  if (state[co].tasks.length && !remaining.length) {
+    if (!confirm('Delete the last to-do on this list? If it is the last saved to-do, the list will be cleared for the whole team.')) return;
+    SaveGuard.noteEmptyTasksAllowed(memory[co]);
+  }
+  state[co].tasks = remaining;
+  SaveGuard.noteTaskDeleted(memory[co], id);
+  saveAllData(co);
+  renderTasks();
+}
 function renderTasks(){
   const tasks = state[co].tasks;
   const el = document.getElementById('task-list');
   if (!el) return;
-  if (!tasks.length){ el.innerHTML = '<div style="color:var(--td);font-size:12px;padding:8px 0">No tasks yet.</div>'; return; }
+  if (!tasks.length){
+    const status = memory[co].loadState;
+    const msg = status === 'error' ? "Tasks didn't load. Nothing was changed." : status === 'loading' ? 'Loading tasks…' : 'No tasks yet.';
+    el.innerHTML = '<div style="color:var(--td);font-size:12px;padding:8px 0">' + msg + '</div>';
+    return;
+  }
   el.innerHTML = tasks.map(t=>`
     <div style="display:grid;grid-template-columns:auto 1fr 130px 110px 32px;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:var(--s2)${t.done?';opacity:.45':''}">
       <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
@@ -480,7 +636,12 @@ function renderTasks(){
 }
 
 function getW(key, w){ return parseFloat(state[co].data[`${key}_${w}`]) || 0; }
-function setW(key, w, val){ state[co].data[`${key}_${w}`] = parseFloat(val) || 0; }
+function setW(key, w, val){
+  if (!ensureReady()) return;
+  const n = parseFloat(val) || 0;
+  state[co].data[`${key}_${w}`] = n;
+  SaveGuard.noteWeekEdit(memory[co], `${key}_${w}`, n);
+}
 
 function getStatus(value, kpi){
   const v = parseFloat(value) || 0;
@@ -608,10 +769,10 @@ function renderKPITable(tab){
       <td class="kpi-name">${k.label}</td>
       <td class="kpi-floor">${k.floor.toLocaleString()}</td>
       <td class="kpi-target">${k.target.toLocaleString()}</td>
-      <td><input type="number" class="actual-inp ${w1?getStatus(w1,k):''}" value="${w1||''}" onchange="setW('${k.key}','w1',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w2?getStatus(w2,k):''}" value="${w2||''}" onchange="setW('${k.key}','w2',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w3?getStatus(w3,k):''}" value="${w3||''}" onchange="setW('${k.key}','w3',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w4?getStatus(w4,k):''}" value="${w4||''}" onchange="setW('${k.key}','w4',this.value);debouncedSave();renderAll()"></td>
+      <td><input type="number" class="actual-inp ${w1?getStatus(w1,k):''}" value="${w1||''}" onchange="setW('${k.key}','w1',this.value);debouncedSave();setTimeout(renderAll,0)"></td>
+      <td><input type="number" class="actual-inp ${w2?getStatus(w2,k):''}" value="${w2||''}" onchange="setW('${k.key}','w2',this.value);debouncedSave();setTimeout(renderAll,0)"></td>
+      <td><input type="number" class="actual-inp ${w3?getStatus(w3,k):''}" value="${w3||''}" onchange="setW('${k.key}','w3',this.value);debouncedSave();setTimeout(renderAll,0)"></td>
+      <td><input type="number" class="actual-inp ${w4?getStatus(w4,k):''}" value="${w4||''}" onchange="setW('${k.key}','w4',this.value);debouncedSave();setTimeout(renderAll,0)"></td>
       <td>${sparkline(k.key,k)}</td>
       <td>${chip}</td>
     </tr>`;
@@ -663,36 +824,40 @@ function renderCharts(){
 // SHIFT WEEKS / HISTORY
 // ══════════════════════════════════════════════════════════
 async function shiftWeeks(){
+  if (!ensureReady()) return;
   const allKeys = new Set();
   ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k=>allKeys.add(k.key)));
   allKeys.forEach(key=>{
-    state[co].data[`${key}_w1`] = getW(key,'w2');
-    state[co].data[`${key}_w2`] = getW(key,'w3');
-    state[co].data[`${key}_w3`] = getW(key,'w4');
-    state[co].data[`${key}_w4`] = 0;
+    setW(key, 'w1', getW(key,'w2'));
+    setW(key, 'w2', getW(key,'w3'));
+    setW(key, 'w3', getW(key,'w4'));
+    setW(key, 'w4', 0);
   });
-  await saveAllData();
+  const ok = await saveAllData(co);
   renderAll();
-  toast('Weeks shifted — enter this week into W4','ok');
+  if (ok) toast('Weeks shifted — enter this week into W4','ok');
 }
 
 async function saveToHistory(){
+  if (!ensureReady()) return;
   const allKeys = new Set();
   ['Sales','Ops','Finance'].forEach(tab => KPIS[co][tab].forEach(k=>allKeys.add(k.key)));
   const snapshot = { date: new Date().toISOString().split('T')[0] };
   allKeys.forEach(key => snapshot[key] = getW(key,'w4'));
   state[co].history.push(snapshot);
-  await saveAllData();
+  SaveGuard.noteHistoryAppend(memory[co], snapshot);
+  const ok = await saveAllData(co);
   renderHistory();
-  toast('Saved to history','ok');
+  if (ok) toast('Saved to history','ok');
 }
 
 function clearHistory(){
+  if (!ensureReady()) return;
   if (!confirm('Clear all history for '+COMPANIES[co].name+'?')) return;
   state[co].history = [];
-  saveAllData();
+  SaveGuard.noteHistoryClear(memory[co]);
+  saveAllData(co).then(ok => { if (ok) toast('History cleared','ok'); });
   renderHistory();
-  toast('History cleared','ok');
 }
 
 function renderHistory(){
