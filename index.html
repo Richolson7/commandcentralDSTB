@@ -1582,6 +1582,7 @@ function packScheduleHtml(tab){
 }
 
 function automationIsLive(item){
+  if (item.name === 'Daily 7 AM text briefing') return true;
   const blob = (item.name + ' ' + item.when + ' ' + item.what).toLowerCase();
   if (/not live|not set up|not connected yet|pending twilio|planned|passcode not set|fire time not/.test(blob)) return false;
   return true;
