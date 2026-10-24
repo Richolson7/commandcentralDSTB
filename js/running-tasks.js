@@ -196,7 +196,7 @@ function actionRow(taskId, buttons) {
 function renderAuth() {
   const signUp = state.authMode === 'signup';
   return `<div class="sec-title">Running</div>
-    <div class="sec-sub">Your work and Life OS list. It is separate from the L10 Tasks tab, and it is not filtered by the company switcher.</div>
+    <div class="sec-sub">Your work and Life OS list. It is separate from the L10 Tasks tab. Opening it from Driven, Trailblazers, Life, or Ground Up starts on that area. Today, Work, Personal / Life OS, and All are still here.</div>
     <form class="rt-auth" id="rt-auth-form">
       <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g)">${signUp ? 'Create your login' : 'Sign in'}</div>
       <p class="rt-help">Tasks stay on your account. The public site key cannot read this list. Use email and a password so the list is there on your phone and computer.</p>
@@ -228,7 +228,7 @@ function renderChrome() {
   return `<div class="rt-head">
       <div>
         <div class="sec-title">Running</div>
-        <div class="sec-sub">Work for Driven, Trailblazers, and The Ground Up, plus Life OS. Separate from L10 Tasks. The company switcher does not filter this list.</div>
+        <div class="sec-sub">Work for Driven, Trailblazers, and The Ground Up, plus Life OS. Separate from L10 Tasks. The area you opened sets the first filter. Today, Work, Personal / Life OS, and All still show the whole list.</div>
       </div>
       <div class="rt-row">
         <button type="button" class="tbtn" data-action="hours">Hours & calendar</button>
@@ -1251,6 +1251,21 @@ function onInput(event) {
   }
 }
 
+const AREA_PRESET = {
+  driven: { view: 'work', biz: 'driven' },
+  tb: { view: 'work', biz: 'trailblazers' },
+  life: { view: 'personal', biz: 'all' },
+  ground: { view: 'work', biz: 'ground_up' },
+};
+
+function applyAreaPreset(area) {
+  const preset = AREA_PRESET[area];
+  if (!preset) return;
+  state.view = preset.view;
+  state.biz = preset.biz;
+  if (document.getElementById('rt-main')) renderMain();
+}
+
 function mount() {
   const panel = document.getElementById('panel-running');
   if (!panel || panel.dataset.ready) return;
@@ -1275,6 +1290,9 @@ function mount() {
     state.session = data.session;
     if (state.session) start();
     else renderMain();
+  });
+  window.addEventListener('cc-area', event => {
+    applyAreaPreset(event.detail && event.detail.area);
   });
   db().auth.onAuthStateChange((_event, session) => {
     const previousId = state.session && state.session.user && state.session.user.id;

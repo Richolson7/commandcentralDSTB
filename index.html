@@ -29,6 +29,30 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .co-btn:hover{color:var(--td)}
 .co-btn.driven.active{color:var(--dg);border-bottom-color:var(--dg);background:rgba(57,255,20,0.03)}
 .co-btn.tb.active{color:var(--tg);border-bottom-color:var(--tg);background:rgba(92,184,0,0.03)}
+.co-btn.life.active{color:#7EB6FF;border-bottom-color:#7EB6FF;background:rgba(126,182,255,0.06)}
+.co-btn.ground.active{color:#E6C07B;border-bottom-color:#E6C07B;background:rgba(230,192,123,0.06)}
+.co-switcher{height:auto;min-height:48px;flex-wrap:wrap}
+.co-btn{min-width:150px}
+.header.life-header{background:linear-gradient(135deg,#05080e 0%,#0c1420 60%,#080c12 100%)}
+.header.ground-header{background:linear-gradient(135deg,#100e08 0%,#161208 60%,#0c0a06 100%)}
+.badge.life-badge{background:#7EB6FF;color:#04080e}
+.badge.ground-badge{background:#E6C07B;color:#141008}
+body.area-life .company-only, body.area-ground .company-only{display:none!important}
+.area-home{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.area-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
+.area-card h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.bot-list{display:flex;flex-direction:column;gap:8px}
+.bot-row{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.bot-name{font-family:'DM Mono',monospace;font-size:12px;color:var(--tx)}
+.reconcile-ok{background:rgba(10,26,8,.55);border:1px solid var(--gd);border-radius:4px;padding:10px 14px;margin:0 0 12px;font-size:12px;color:var(--g);line-height:1.45}
+.reconcile-bad{background:var(--rbg);border:1px solid var(--rbr);border-radius:4px;padding:10px 14px;margin:0 0 12px;font-size:12px;font-weight:600;color:var(--red);line-height:1.45}
+.awaiting{background:var(--s2);border:1px dashed var(--br);border-radius:4px;padding:18px 14px;margin:0 0 12px;color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-align:center}
+.chart-card .awaiting{margin:0}
+@media(max-width:860px){
+  .area-home,.chart-grid,.summary-grid{grid-template-columns:1fr}
+  .content,.tabs,.sync-bar,.links-bar{padding-left:12px;padding-right:12px}
+  .header{padding-left:12px;padding-right:12px}
+}
 .co-divider{width:1px;background:var(--br);flex-shrink:0}
 .co-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .co-dot.driven{background:var(--dg)}
@@ -76,7 +100,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--g);margin-bottom:5px;transition:color .3s}
 .sec-sub{font-size:12px;color:var(--td);margin-bottom:16px;line-height:1.6}
 
-.kpi-section{margin-bottom:18px}
+.kpi-section{margin-bottom:18px;overflow-x:auto}
 .kpi-sec-hdr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--br);border-radius:4px 4px 0 0;border-bottom:2px solid var(--g);transition:border-color .3s}
 .kpi-sec-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);transition:color .3s}
 .kpi-table{width:100%;border-collapse:collapse}
@@ -134,15 +158,25 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 <body>
 <div class="toast-wrap" id="toasts"></div>
 
-<div class="co-switcher">
-  <div class="co-btn driven active" id="co-driven" onclick="switchCompany('driven')">
+<div class="co-switcher" id="area-switcher">
+  <div class="co-btn driven active" id="co-driven" onclick="showArea('driven')">
     <div class="co-dot driven"></div>
-    <div><div>DRIVEN SOLUTIONS</div><div class="co-subtitle">Packaging + Logistics</div></div>
+    <div><div>DRIVEN</div><div class="co-subtitle">Packaging + Logistics</div></div>
   </div>
   <div class="co-divider"></div>
-  <div class="co-btn tb" id="co-tb" onclick="switchCompany('tb')">
+  <div class="co-btn tb" id="co-tb" onclick="showArea('tb')">
     <div class="co-dot tb"></div>
-    <div><div>TRAILBLAZERS</div><div class="co-subtitle">Total Outdoor Solutions</div></div>
+    <div><div>TRAILBLAZERS</div><div class="co-subtitle">Total Outdoor</div></div>
+  </div>
+  <div class="co-divider"></div>
+  <div class="co-btn life" id="co-life" onclick="showArea('life')">
+    <div class="co-dot" style="background:#7EB6FF"></div>
+    <div><div>LIFE</div><div class="co-subtitle">Personal / Life OS</div></div>
+  </div>
+  <div class="co-divider"></div>
+  <div class="co-btn ground" id="co-ground" onclick="showArea('ground')">
+    <div class="co-dot" style="background:#E6C07B"></div>
+    <div><div>GROUND UP</div><div class="co-subtitle">Coaching</div></div>
   </div>
 </div>
 
@@ -155,8 +189,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
       <span class="badge driven-badge" id="co-badge">Live</span>
       <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
-        <button class="tbtn green" onclick="shiftWeeks()">➜ Shift Weeks</button>
-        <button class="tbtn" onclick="saveToHistory()">📋 Save to History</button>
+        <button class="tbtn green company-only" onclick="shiftWeeks()">➜ Shift Weeks</button>
+        <button class="tbtn company-only" onclick="saveToHistory()">📋 Save to History</button>
         <button class="tbtn" onclick="window.print()">🖨️ Print</button>
         <span style="font-size:10px;color:var(--td);align-self:center;font-family:'DM Mono',monospace">Last sync: <span id="last-sync">—</span></span>
       </div>
@@ -167,29 +201,57 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
 <div class="sync-bar">
   <div class="sync-txt"><div class="sdot off" id="sync-dot"></div><span id="sync-lbl">Connecting…</span></div>
-  <div style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
+  <div class="company-only" style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
 </div>
 
 <div class="links-bar" id="links-bar"></div>
 
 <div class="tabs" id="main-tabs">
-  <div class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
-  <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
-  <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
-  <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
-  <div class="tab" onclick="showPanel('pnl',this)">🧾 P&amp;L</div>
-  <div class="tab" onclick="showPanel('proj',this)">🧮 Projections</div>
-  <div class="tab" onclick="showPanel('charts',this)">📈 Charts</div>
-  <div class="tab" onclick="showPanel('tasks',this)">✅ Tasks</div>
-  <div class="tab" onclick="showPanel('running',this)">🗂️ Running</div>
-  <div class="tab" onclick="showPanel('history',this)">📅 History</div>
+  <div class="tab active" data-areas="driven tb" data-panel="dashboard" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
+  <div class="tab" data-areas="driven tb" data-panel="Sales" onclick="showPanel('Sales',this)">💵 Sales</div>
+  <div class="tab" data-areas="driven tb" data-panel="marketing" onclick="showPanel('marketing',this)">📣 Marketing</div>
+  <div class="tab" data-areas="driven tb" data-panel="Finance" onclick="showPanel('Finance',this)">💰 Finance</div>
+  <div class="tab" data-areas="driven tb" data-panel="Ops" onclick="showPanel('Ops',this)">⚙️ Operations</div>
+  <div class="tab" data-areas="driven tb" data-panel="l10" onclick="showPanel('l10',this)">📋 L10</div>
+  <div class="tab" data-areas="driven tb" data-panel="pnl" onclick="showPanel('pnl',this)">🧾 P&amp;L</div>
+  <div class="tab" data-areas="driven tb" data-panel="proj" onclick="showPanel('proj',this)">🧮 Projections</div>
+  <div class="tab" data-areas="driven tb" data-panel="charts" onclick="showPanel('charts',this)">📈 Charts</div>
+  <div class="tab" data-areas="driven tb" data-panel="tasks" onclick="showPanel('tasks',this)">✅ Tasks</div>
+  <div class="tab" data-areas="driven tb" data-panel="history" onclick="showPanel('history',this)">📅 History</div>
+  <div class="tab" data-areas="life" data-panel="life-home" onclick="showPanel('life-home',this)">🏠 Life OS</div>
+  <div class="tab" data-areas="ground" data-panel="ground-home" onclick="showPanel('ground-home',this)">🏠 Ground Up</div>
+  <div class="tab" data-areas="driven tb life ground" data-panel="running" onclick="showPanel('running',this)">🗂️ Running</div>
+  <div class="tab" data-areas="driven tb life ground" data-panel="bots" onclick="showPanel('bots',this)">🤖 Bots</div>
 </div>
 
 <div class="content">
   <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
-  <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
-  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
-  <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
+  <div class="panel" id="panel-Sales"><div class="sec-title">💵 Sales</div><div class="sec-sub">Weekly sales numbers for this company. The L10 sales scorecard reads these same fields.</div><div id="kpi-Sales"></div></div>
+  <div class="panel" id="panel-marketing">
+    <div class="sec-title">📣 Marketing</div>
+    <div class="sec-sub" id="marketing-sub">Marketing metrics are not set up yet.</div>
+    <div class="awaiting">Awaiting data</div>
+  </div>
+  <div class="panel" id="panel-Finance">
+    <div class="sec-title">💰 Finance</div>
+    <div class="sec-sub">Finance definitions for this company. Scorecard rows that share a metric read this same week_data field.</div>
+    <div id="finance-reconcile"></div>
+    <div id="kpi-Finance"></div>
+  </div>
+  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Operations</div><div class="sec-sub">Weekly operations numbers for this company. The L10 ops scorecard reads these same fields.</div><div id="kpi-Ops"></div></div>
+  <div class="panel" id="panel-l10">
+    <div class="sec-title" id="l10-title">L10</div>
+    <div class="sec-sub" id="l10-sub">Sales and Ops scorecards with a weekly trend against the L10 goal. Empty weeks stay blank.</div>
+    <div id="l10-reconcile"></div>
+    <div class="sec-title">Sales scorecard</div>
+    <div id="l10-sales"></div>
+    <div class="sec-title">Sales graphs</div>
+    <div class="chart-grid" id="l10-sales-charts"></div>
+    <div class="sec-title">Ops scorecard</div>
+    <div id="l10-ops"></div>
+    <div class="sec-title">Ops graphs</div>
+    <div class="chart-grid" id="l10-ops-charts"></div>
+  </div>
   <div class="panel" id="panel-pnl">
     <div class="sec-title">🧾 P&amp;L — QuickBooks</div>
     <div class="sec-sub" id="pnl-sub"></div>
@@ -198,12 +260,12 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel" id="panel-proj">
     <div class="sec-title">🧮 Projections</div>
     <div id="proj-tb">
-      <div class="sec-sub">Trailblazers Landscaping P&amp;L builder: this month vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="pl-builder.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
-      <iframe src="pl-builder.html" title="Trailblazers P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
+      <div class="sec-sub">Trailblazers Landscaping P&amp;L builder: this month vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="tbpl.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
+      <iframe src="tbpl.html" title="Trailblazers P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
     </div>
     <div id="proj-driven" style="display:none">
-      <div class="sec-sub">Driven Solutions P&amp;L builder: this month (from QuickBooks) vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="driven-pl-builder.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
-      <iframe src="driven-pl-builder.html" title="Driven P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
+      <div class="sec-sub">Driven Solutions P&amp;L builder: this month (from QuickBooks) vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="drivenppl.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
+      <iframe src="drivenppl.html" title="Driven P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
     </div>
   </div>
   <div class="panel" id="panel-charts">
@@ -223,6 +285,43 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div id="task-list"></div>
   </div>
   <div class="panel" id="panel-running"></div>
+  <div class="panel" id="panel-life-home">
+    <div class="sec-title">Life OS</div>
+    <div class="sec-sub">Personal area. Company KPI numbers stay on Driven and Trailblazers. Nothing here writes to those tables.</div>
+    <div class="area-home">
+      <div class="area-card">
+        <h3>Running</h3>
+        <p class="sec-sub">Personal / Life OS tasks open here. Today, Work, and All stay available inside Running.</p>
+        <button class="tbtn green" onclick="showPanel('running', document.querySelector('.tab[data-panel=running]'))">Open Running</button>
+      </div>
+      <div class="area-card">
+        <h3>Personal</h3>
+        <p class="sec-sub">Coaching, recovery, whole body, fitness, and recipe bots would be listed in Bots. None of those names are in the Command Center or in Driven-110.</p>
+        <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel" id="panel-ground-home">
+    <div class="sec-title">The Ground Up</div>
+    <div class="sec-sub">Coaching brand. No Ground Up pages are in the Command Center yet. Work tagged The Ground Up stays in Running, including the starter email task after you sign in.</div>
+    <div class="area-home">
+      <div class="area-card">
+        <h3>Running</h3>
+        <p class="sec-sub">Opens the work list filtered to The Ground Up. The other Running views are still on that screen.</p>
+        <button class="tbtn green" onclick="showPanel('running', document.querySelector('.tab[data-panel=running]'))">Open Running</button>
+      </div>
+      <div class="area-card">
+        <h3>Bots</h3>
+        <p class="sec-sub">Bots whose names start with tgu- would be listed here. None are stored yet.</p>
+        <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel" id="panel-bots">
+    <div class="sec-title" id="bots-title">Bots</div>
+    <div class="sec-sub" id="bots-sub"></div>
+    <div id="bots-content"></div>
+  </div>
   <div class="panel" id="panel-history">
     <div class="sec-title">📅 Weekly History</div>
     <div class="sec-sub">Save a snapshot every Friday to build a permanent record (separate from the W1–W4 rolling window).</div>
@@ -352,6 +451,7 @@ const CHART_KEYS = {
 // STATE
 // ══════════════════════════════════════════════════════════
 let co = 'driven';
+let area = 'driven';
 let currentTab = 'dashboard';
 const state = { driven: { data:{}, history:[], tasks:[], pnl:null }, tb: { data:{}, history:[], tasks:[], pnl:null } };
 let chartInstances = {};
@@ -420,8 +520,12 @@ function setSync(status){
 // ══════════════════════════════════════════════════════════
 function switchCompany(c) {
   co = c; const cfg = COMPANIES[c];
+  area = c;
+  document.body.className = 'area-' + c;
   document.getElementById('co-driven').className = 'co-btn driven' + (c==='driven'?' active':'');
   document.getElementById('co-tb').className = 'co-btn tb' + (c==='tb'?' active':'');
+  document.getElementById('co-life').classList.remove('active');
+  document.getElementById('co-ground').classList.remove('active');
   document.documentElement.style.setProperty('--g', cfg.color);
   document.documentElement.style.setProperty('--gd', cfg.colorDark);
   document.documentElement.style.setProperty('--gbg', cfg.colorBg);
@@ -437,7 +541,107 @@ function switchCompany(c) {
 
 function renderLinks(){
   const cfg = COMPANIES[co];
-  document.getElementById('links-bar').innerHTML = cfg.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+  const pages = co === 'driven'
+    ? [
+        {label:'Weekly KPI entry', url:'submit_driven.html'},
+        {label:'P&L builder', url:'drivenppl.html'},
+        {label:'Call script', url:'callscript.html'},
+        {label:'Email templates', url:'emailtemplate.html'},
+        {label:'Finance accountability', url:'finance-accountability.html'},
+      ]
+    : [
+        {label:'Weekly KPI entry', url:'submit.html'},
+        {label:'P&L builder', url:'tbpl.html'},
+        {label:'Finance accountability', url:'finance-accountability.html'},
+      ];
+  const chips = cfg.links.concat(pages);
+  document.getElementById('links-bar').innerHTML = chips.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+}
+
+// Bots that exist in this repo or in Driven-110. The list is empty on purpose:
+// no tb-, tgu-, or driven- bot, and no personal coaching/recovery/fitness bot, is stored.
+const BOTS = [];
+
+function botArea(bot){
+  const name = String(bot.name || '');
+  if (name.startsWith('tb-')) return 'tb';
+  if (name.startsWith('tgu-')) return 'ground';
+  if (name.startsWith('driven-')) return 'driven';
+  if (/coach|recovery|whole body|fitness|recipe/i.test(name + ' ' + (bot.about || ''))) return 'life';
+  return 'flagged';
+}
+
+function renderBots(){
+  const titles = { driven:'Driven bots', tb:'Trailblazers bots', life:'Personal', ground:'Ground Up bots' };
+  const blurbs = {
+    driven:'Names starting with driven-. None are in the Command Center repo or in Driven-110.',
+    tb:'Names starting with tb-. None are in the Command Center repo or in Driven-110.',
+    life:'Personal section. Coaching, recovery, whole body, fitness, and recipe bots would be listed here. None are stored.',
+    ground:'Names starting with tgu-. None are in the Command Center repo or in Driven-110.',
+  };
+  document.getElementById('bots-title').textContent = titles[area] || 'Bots';
+  document.getElementById('bots-sub').textContent = blurbs[area] || '';
+  const mine = BOTS.filter(bot => botArea(bot) === area);
+  const host = document.getElementById('bots-content');
+  if (!mine.length){
+    host.innerHTML = '<div class="area-card"><h3>No bots yet</h3><p class="sec-sub" style="margin:0">Searched the repo and Driven-110. Nothing matched the bot names, so this list stays empty. Example names such as tb-lead or tgu-social were not added.</p></div>';
+    return;
+  }
+  host.innerHTML = '<div class="bot-list">' + mine.map(bot => `<div class="bot-row"><span class="bot-name">${bot.name}</span><span style="color:var(--td);font-size:12px">${bot.about || ''}</span></div>`).join('') + '</div>';
+}
+
+function notifyRunning(){
+  window.dispatchEvent(new CustomEvent('cc-area', { detail: { area } }));
+}
+
+function renderAreaTabs(){
+  document.querySelectorAll('#main-tabs .tab').forEach(tab => {
+    const areas = (tab.dataset.areas || '').split(/\s+/);
+    tab.style.display = areas.includes(area) ? '' : 'none';
+  });
+}
+
+function paintLifeGround(kind){
+  area = kind;
+  document.body.className = 'area-' + kind;
+  document.getElementById('co-driven').className = 'co-btn driven';
+  document.getElementById('co-tb').className = 'co-btn tb';
+  document.getElementById('co-life').className = 'co-btn life' + (kind==='life'?' active':'');
+  document.getElementById('co-ground').className = 'co-btn ground' + (kind==='ground'?' active':'');
+  const hdr = document.getElementById('main-header');
+  const bdg = document.getElementById('co-badge');
+  if (kind === 'life'){
+    document.documentElement.style.setProperty('--g', '#7EB6FF');
+    document.documentElement.style.setProperty('--gd', '#4C86D6');
+    document.documentElement.style.setProperty('--gbg', '#0A1420');
+    hdr.className = 'header life-header';
+    document.getElementById('co-title').textContent = 'LIFE OS';
+    document.getElementById('co-sub').textContent = 'Personal';
+    bdg.textContent = 'Personal';
+    bdg.className = 'badge life-badge';
+    document.getElementById('links-bar').innerHTML = '<span class="link-chip">No personal pages in the Command Center yet</span>';
+  } else {
+    document.documentElement.style.setProperty('--g', '#E6C07B');
+    document.documentElement.style.setProperty('--gd', '#B8924A');
+    document.documentElement.style.setProperty('--gbg', '#1A1408');
+    hdr.className = 'header ground-header';
+    document.getElementById('co-title').textContent = 'THE GROUND UP';
+    document.getElementById('co-sub').textContent = 'Coaching';
+    bdg.textContent = 'Coaching';
+    bdg.className = 'badge ground-badge';
+    document.getElementById('links-bar').innerHTML = '<span class="link-chip">No Ground Up pages in the Command Center yet</span>';
+  }
+  document.getElementById('h-stats').innerHTML = '';
+}
+
+function showArea(next){
+  const company = next === 'driven' || next === 'tb';
+  if (company) switchCompany(next);
+  else paintLifeGround(next);
+  renderAreaTabs();
+  const visible = [...document.querySelectorAll('#main-tabs .tab')].filter(tab => tab.style.display !== 'none').map(tab => tab.dataset.panel);
+  const keep = visible.includes(currentTab) ? currentTab : visible[0];
+  showPanel(keep, document.querySelector('.tab[data-panel="'+keep+'"]'));
 }
 
 // ══════════════════════════════════════════════════════════
@@ -446,9 +650,18 @@ function renderLinks(){
 function showPanel(id, el){
   currentTab = id;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  if (!el) el = document.querySelector('.tab[data-panel="'+id+'"]');
+  if (el) el.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  if (panel) panel.classList.add('active');
+  if (id === 'bots') renderBots();
+  if (id === 'running') notifyRunning();
+  if (id === 'l10' || id === 'charts') {
+    requestAnimationFrame(() => {
+      Object.values(chartInstances).forEach(chart => { try { chart.resize(); } catch (e) {} });
+    });
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -485,6 +698,19 @@ function renderTasks(){
 
 function getW(key, w){ return parseFloat(state[co].data[`${key}_${w}`]) || 0; }
 function setW(key, w, val){ state[co].data[`${key}_${w}`] = parseFloat(val) || 0; }
+function weekRaw(key, w){
+  const v = state[co].data[`${key}_${w}`];
+  if (v === undefined || v === null || v === '') return null;
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Scorecard rows that are a different field from Finance, with the same meaning.
+// Same-key metrics are one week_data field and cannot diverge.
+const SCORECARD_FINANCE_PAIRS = {
+  driven: [],
+  tb: [{ scorecardKey: 'margin_pct', financeKey: 'gross_margin' }]
+};
 
 function getStatus(value, kpi){
   const v = parseFloat(value) || 0;
@@ -542,16 +768,21 @@ function renderProj(){
 
 function renderAll(){
   const cfg = COMPANIES[co]; const s = state[co];
-  let hs = '';
-  cfg.headerStats.forEach(st=>{
-    const v = getW(st.key,'w4');
-    hs += `<div class="hstat"><div class="val">${v?st.fmt(v):'—'}</div><div class="lbl">${st.label}</div></div>`;
-  });
-  document.getElementById('h-stats').innerHTML = hs;
+  if (area === 'driven' || area === 'tb'){
+    let hs = '';
+    cfg.headerStats.forEach(st=>{
+      const v = getW(st.key,'w4');
+      hs += `<div class="hstat"><div class="val">${v?st.fmt(v):'—'}</div><div class="lbl">${st.label}</div></div>`;
+    });
+    document.getElementById('h-stats').innerHTML = hs;
+  }
 
   renderDashboard();
-  ['Sales','Ops','Finance'].forEach(renderKPITable);
+  renderKPITable('Sales');
+  renderKPITable('Ops', null, 'Operations');
+  renderKPITable('Finance');
   renderCharts();
+  renderL10();
   renderTasks();
   renderPnl();
   renderProj();
@@ -593,36 +824,154 @@ function renderDashboard(){
 }
 
 function sparkline(key, kpi){
-  const trend = ['w1','w2','w3','w4'].map(w=>getW(key,w));
-  const status = getStatus(trend[3], kpi);
-  const color = status==='g' ? '#5CB800' : status==='a' ? '#FFB800' : trend[3] ? '#FF4444' : '#4A5E58';
-  const max = Math.max(kpi.target, ...trend.filter(v=>v>0)) * 1.15 || 1;
-  const w=100,h=32,pts=trend.map((v,i)=> v>0 ? `${(i/3)*w},${h-(v/max)*h}` : null).filter(Boolean).join(' ');
-  return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const trend = ['w1','w2','w3','w4'].map(w => weekRaw(key, w));
+  const present = trend.filter(v => v !== null);
+  if (!present.length) return '';
+  const last = trend[3];
+  const status = last === null ? 'n' : getStatus(last, kpi);
+  const color = status==='g' ? '#5CB800' : status==='a' ? '#FFB800' : '#FF4444';
+  const max = Math.max(kpi.target, ...present) * 1.15 || 1;
+  const w = 100, h = 32;
+  let seg = [];
+  const segs = [];
+  trend.forEach((v, i) => {
+    if (v === null){ if (seg.length) segs.push(seg); seg = []; return; }
+    seg.push(`${(i / 3) * w},${h - (Math.max(v, 0) / max) * h}`);
+  });
+  if (seg.length) segs.push(seg);
+  const lines = segs.map(s => s.length > 1
+    ? `<polyline points="${s.join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+    : `<circle cx="${s[0].split(',')[0]}" cy="${s[0].split(',')[1]}" r="2" fill="${color}"/>`
+  ).join('');
+  return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}">${lines}</svg>`;
 }
 
-function renderKPITable(tab){
+function kpiByKey(tab, key){
+  return (KPIS[co][tab] || []).find(k => k.key === key);
+}
+
+function financeReconcileHtml(){
+  const financeKeys = new Set(KPIS[co].Finance.map(k => k.key));
+  const shared = [];
+  const seen = new Set();
+  ['Sales','Ops'].forEach(tab => {
+    KPIS[co][tab].forEach(k => {
+      if (!financeKeys.has(k.key) || seen.has(k.key)) return;
+      seen.add(k.key);
+      const fin = kpiByKey('Finance', k.key);
+      shared.push(fin ? fin.label : k.label);
+    });
+  });
+  let html = '';
+  if (shared.length){
+    html += `<div class="reconcile-ok">Same source: ${shared.join(', ')}. The scorecard and Finance edit one week_data field, so those numbers stay locked together.</div>`;
+  }
+  (SCORECARD_FINANCE_PAIRS[co] || []).forEach(pair => {
+    const score = kpiByKey('Sales', pair.scorecardKey) || kpiByKey('Ops', pair.scorecardKey);
+    const fin = kpiByKey('Finance', pair.financeKey);
+    const scoreLabel = score ? score.label : pair.scorecardKey;
+    const finLabel = fin ? fin.label : pair.financeKey;
+    const left = weekRaw(pair.scorecardKey, 'w4');
+    const right = weekRaw(pair.financeKey, 'w4');
+    if (left === null || right === null){
+      html += `<div class="awaiting">Awaiting data before ${scoreLabel} can be checked against Finance (${finLabel}).</div>`;
+      return;
+    }
+    if (left !== right){
+      html += `<div class="reconcile-bad">Doesn't reconcile: ${scoreLabel} is ${left} on the scorecard and ${right} on Finance (${finLabel}). These are separate fields. They were not merged.</div>`;
+    } else {
+      html += `<div class="reconcile-ok">${scoreLabel} matches Finance this week (${left}).</div>`;
+    }
+  });
+  return html;
+}
+
+function renderKPITable(tab, hostId, label){
   const kpis = KPIS[co][tab];
-  const el = document.getElementById('kpi-'+tab);
-  let rows = kpis.map(k=>{
-    const w1=getW(k.key,'w1'), w2=getW(k.key,'w2'), w3=getW(k.key,'w3'), w4=getW(k.key,'w4');
-    const status = w4 ? getStatus(w4,k) : 'n';
+  const el = document.getElementById(hostId || ('kpi-' + tab));
+  if (!el || !kpis) return;
+  const title = label || tab;
+  const rows = kpis.map(k => {
+    const weeks = ['w1','w2','w3','w4'].map(w => weekRaw(k.key, w));
+    const w4 = weeks[3];
+    const status = w4 === null ? 'n' : getStatus(w4, k);
     const chip = status==='g'?'<span class="status-chip st-g">On Target</span>':status==='a'?'<span class="status-chip st-a">Watch</span>':status==='r'?'<span class="status-chip st-r">Below Floor</span>':'<span class="status-chip st-n">No Data</span>';
+    const cell = (w, name) => {
+      const v = weeks[['w1','w2','w3','w4'].indexOf(name)];
+      const cls = v === null ? '' : getStatus(v, k);
+      const shown = v === null ? '' : v;
+      return `<td><input type="number" class="actual-inp ${cls}" value="${shown}" onchange="setW('${k.key}','${name}',this.value);debouncedSave();renderAll()"></td>`;
+    };
     return `<tr>
       <td class="kpi-name">${k.label}</td>
       <td class="kpi-floor">${k.floor.toLocaleString()}</td>
       <td class="kpi-target">${k.target.toLocaleString()}</td>
-      <td><input type="number" class="actual-inp ${w1?getStatus(w1,k):''}" value="${w1||''}" onchange="setW('${k.key}','w1',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w2?getStatus(w2,k):''}" value="${w2||''}" onchange="setW('${k.key}','w2',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w3?getStatus(w3,k):''}" value="${w3||''}" onchange="setW('${k.key}','w3',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w4?getStatus(w4,k):''}" value="${w4||''}" onchange="setW('${k.key}','w4',this.value);debouncedSave();renderAll()"></td>
-      <td>${sparkline(k.key,k)}</td>
+      ${cell(weeks[0], 'w1')}${cell(weeks[1], 'w2')}${cell(weeks[2], 'w3')}${cell(weeks[3], 'w4')}
+      <td>${sparkline(k.key, k)}</td>
       <td>${chip}</td>
     </tr>`;
   }).join('');
-  el.innerHTML = `<div class="kpi-section"><div class="kpi-sec-hdr"><div class="kpi-sec-name">${tab}</div></div>
-    <table class="kpi-table"><thead><tr><th>Metric</th><th>Floor</th><th>Target</th><th>W1</th><th>W2</th><th>W3</th><th>W4 (Current)</th><th>Trend</th><th>Status</th></tr></thead>
+  el.innerHTML = `<div class="kpi-section"><div class="kpi-sec-hdr"><div class="kpi-sec-name">${title}</div></div>
+    <table class="kpi-table"><thead><tr><th>Metric</th><th>Floor</th><th>Goal</th><th>W1</th><th>W2</th><th>W3</th><th>W4 (Current)</th><th>Trend</th><th>Status</th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
+}
+
+function renderScorecardCharts(tab, hostId){
+  const host = document.getElementById(hostId);
+  if (!host) return;
+  const pending = [];
+  let html = '';
+  KPIS[co][tab].forEach((kpi, idx) => {
+    const weeks = ['w1','w2','w3','w4'].map(w => weekRaw(kpi.key, w));
+    if (!weeks.some(v => v !== null)){
+      html += `<div class="chart-card"><div class="chart-title"><span>${kpi.label}</span><span>vs goal ${kpi.target.toLocaleString()}</span></div><div class="awaiting">Awaiting data</div></div>`;
+      return;
+    }
+    const chartId = `l10c-${tab}-${idx}-${kpi.key}`;
+    html += `<div class="chart-card"><div class="chart-title"><span>${kpi.label}</span><span>vs goal</span></div><div class="chart-wrap"><canvas id="${chartId}"></canvas></div></div>`;
+    pending.push({ chartId, kpi, weeks });
+  });
+  host.innerHTML = html;
+  pending.forEach(({ chartId, kpi, weeks }) => {
+    const ctx = document.getElementById(chartId);
+    if (!ctx) return;
+    chartInstances[chartId] = new Chart(ctx, {
+      type: 'line',
+      data: { labels: ['W1','W2','W3','W4'], datasets: [
+        { label: kpi.label, data: weeks, spanGaps: false, borderColor: COMPANIES[co].color, backgroundColor: COMPANIES[co].color + '22', tension: .3, fill: true },
+        { label: 'Goal', data: [kpi.target, kpi.target, kpi.target, kpi.target], borderColor: '#7c3aed', borderDash: [4, 3], pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#8FA8A0', font: { size: 10 } } } },
+        scales: { x: { ticks: { color: '#8FA8A0' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#8FA8A0' }, grid: { color: 'rgba(255,255,255,.05)' } } }
+      }
+    });
+  });
+}
+
+function renderMarketing(){
+  const el = document.getElementById('marketing-sub');
+  if (!el) return;
+  const name = co === 'driven' ? 'Driven' : 'Trailblazers';
+  el.textContent = `Marketing tracking for ${name}. No marketing KPIs set up yet.`;
+}
+
+function renderL10(){
+  const name = co === 'driven' ? 'Driven' : 'Trailblazers';
+  const title = document.getElementById('l10-title');
+  const sub = document.getElementById('l10-sub');
+  if (title) title.textContent = name + ' L10';
+  if (sub) sub.textContent = 'Sales and Ops scorecards use the ' + name + ' L10 metric list. Each graph is the stored weekly value against that metric goal. Empty weeks stay blank.';
+  const note = financeReconcileHtml();
+  const fin = document.getElementById('finance-reconcile');
+  const l10 = document.getElementById('l10-reconcile');
+  if (fin) fin.innerHTML = note;
+  if (l10) l10.innerHTML = note;
+  renderMarketing();
+  renderKPITable('Sales', 'l10-sales', 'Sales scorecard');
+  renderKPITable('Ops', 'l10-ops', 'Ops scorecard');
+  renderScorecardCharts('Sales', 'l10-sales-charts');
+  renderScorecardCharts('Ops', 'l10-ops-charts');
 }
 
 function renderCharts(){
@@ -741,6 +1090,8 @@ function toast(msg, type){
 // ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
+document.body.className = 'area-driven';
+renderAreaTabs();
 renderLinks();
 loadData();
 </script>
