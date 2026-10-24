@@ -49,6 +49,16 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
 .awaiting{background:var(--s2);border:1px dashed var(--br);border-radius:4px;padding:18px 14px;margin:0 0 12px;color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-align:center}
 .chart-card .awaiting{margin:0}
 .finance-stack{display:flex;flex-direction:column;gap:14px;margin:0 0 18px}
+.finance-beside{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+@media(min-width:1100px){.finance-beside{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}}
+.qbr-draft{display:inline-block;margin-left:8px;background:var(--abg);border:1px solid var(--abr);color:var(--amb);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px;vertical-align:middle}
+.qbr-item{border-top:1px solid rgba(255,255,255,.05);padding:10px 0 2px}
+.qbr-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.3px;color:var(--tx);text-transform:none}
+.qbr-points{margin:6px 0 8px 18px;padding:0;color:var(--tx);font-size:13px;line-height:1.45}
+.qbr-points li{margin:3px 0}
+.qbr-link{display:inline-block;margin-top:8px;color:var(--g);font-size:12px;font-weight:600;text-decoration:none}
+.qbr-link:hover{text-decoration:underline}
+#card-qbr-agenda{scroll-margin-top:12px}
 .finance-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
 .finance-card h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
 .finance-note{font-size:12px;color:var(--td);margin:0 0 10px;line-height:1.5}
@@ -257,7 +267,70 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
     <div id="finance-reconcile"></div>
     <div class="finance-stack">
       <div id="finance-team"></div>
-      <div id="finance-meetings"></div>
+      <div class="finance-beside">
+        <div id="finance-meetings"></div>
+        <div class="finance-card" id="card-qbr-agenda">
+          <h3>Quarterly Business Review Agenda <span class="qbr-draft">DRAFT</span></h3>
+          <p class="finance-note">Driven Solutions + Trailblazers. High-level review, not an L10. About 90 minutes.</p>
+          <p class="finance-note">Attendees: Rich, CFO, Bookkeeper, Accountant (cleanup).</p>
+          <div class="qbr-item">
+            <div class="qbr-title">1. SBA loan (15 min)</div>
+            <ul class="qbr-points">
+              <li>Current status and the next milestone.</li>
+              <li>What the lender still needs (documents, financials, signatures), who owns each item, and by when.</li>
+              <li>Are the books clean enough to support the application? Ties to item 5.</li>
+              <li>Decision: what has to happen before next quarter to keep it moving.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">2. Finance spend, about $132K a year (15 min)</div>
+            <ul class="qbr-points">
+              <li>What we spent this quarter on accounting (CFO, bookkeeper, accountant, tie-outs), compared with the $132K annual run rate.</li>
+              <li>Is it coming down? What's been automated, and what's still manual.</li>
+              <li>Target run rate for next quarter and the plan to get there.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">3. Bryce: comp re-split and numbers (15 min)</div>
+            <ul class="qbr-points">
+              <li>Where the change landed: 7.5% of sales moving to 6% of gross margin, on top of the $80K base. Is it signed, and when does it take effect?</li>
+              <li>Current numbers: as of Oct 23 he had sourced about $57.6K, about 15% of $397K in Jobber won sales since May. His pace since July is about $76K a year, roughly $51K a year short of break-even on the new plan.</li>
+              <li>Weekly numbers (quotes sent, follow-ups, quotes open more than 7 days, won work and who sourced it, collections, self-sourced leads, top 3 deals): are they coming in by Friday?</li>
+              <li>Decision: on track, adjust, or reset expectations.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">4. Pipeline health (15 min)</div>
+            <ul class="qbr-points">
+              <li>GoHighLevel: 109 opportunities, $186K total, $154K open. Note: GoHighLevel holds Trailblazers only. Most of the open value is three large estimates, and 85 of the 109 opportunities are marked lost.</li>
+              <li>Driven pipeline: review from the Command Center Sales tab, since it isn't in GoHighLevel.</li>
+              <li>Win rate, aging of open estimates, and next steps on the big three.</li>
+              <li>Lead sources: what's actually producing.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">5. Books cleanup progress (15 min)</div>
+            <ul class="qbr-points">
+              <li>Walk the Fixed and Still Open lists from the Books Cleanup Log.</li>
+              <li>Open now: late reconciliations and tie-outs; a wrong general ledger and balance sheet; the Trailblazers A/R mismatch (about $9.9K in QuickBooks vs about $20.3K in Jobber); no defined process for bill pay and money moves.</li>
+              <li>What closed this quarter, what's blocked, and the target date for clean books.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">6. Meetings rhythm adherence (10 min)</div>
+            <ul class="qbr-points">
+              <li>Did these happen as planned? Weekly Rich + CFO; weekly Rich + Bookkeeper; monthly CFO + Bookkeeper; this quarterly review.</li>
+              <li>What got skipped and why. Keep, change, or drop any of them.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">7. Decisions and owners (5 min)</div>
+            <ul class="qbr-points">
+              <li>Top 3 priorities for next quarter, each with an owner and a date.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
       <div id="finance-cleanup"></div>
     </div>
     <div class="sec-title">Finance metrics</div>
@@ -1213,8 +1286,12 @@ function renderFinanceMeetings(){
     const agenda = String(meeting.agenda || '').split('\n').filter(Boolean).map(line => `<li>${escHtml(line)}</li>`).join('');
     const badge = meeting.not_l10 ? '<span class="not-l10">not an L10 meeting</span>' : '';
     const when = meeting.next_date ? '' : '<div class="finance-note">next date: not scheduled</div>';
+    const agendaLink = meeting.id === 'quarterly-business-review'
+      ? '<a class="qbr-link" href="#card-qbr-agenda">Quarterly Business Review Agenda</a>'
+      : '';
     return `<div class="meet-card">
       <div class="fin-role">${escHtml(meeting.cadence)}: ${escHtml(meeting.attendees)} ${badge}</div>
+      ${agendaLink}
       <div class="meet-k">Purpose</div>
       <div style="font-size:13px;color:var(--tx)">${escHtml(meeting.purpose)}</div>
       <div class="meet-k">Suggested standing agenda</div>
