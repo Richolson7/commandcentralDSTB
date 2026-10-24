@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="css/running-tasks.css">
 <style>
 :root{
   --dk:#060808;--s:#0C1010;--s2:#121818;--s3:#1A2020;
@@ -28,6 +29,71 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .co-btn:hover{color:var(--td)}
 .co-btn.driven.active{color:var(--dg);border-bottom-color:var(--dg);background:rgba(57,255,20,0.03)}
 .co-btn.tb.active{color:var(--tg);border-bottom-color:var(--tg);background:rgba(92,184,0,0.03)}
+.co-btn.life.active{color:#7EB6FF;border-bottom-color:#7EB6FF;background:rgba(126,182,255,0.06)}
+.co-btn.ground.active{color:#E6C07B;border-bottom-color:#E6C07B;background:rgba(230,192,123,0.06)}
+.co-switcher{height:auto;min-height:48px;flex-wrap:wrap}
+.co-btn{min-width:150px}
+.header.life-header{background:linear-gradient(135deg,#05080e 0%,#0c1420 60%,#080c12 100%)}
+.header.ground-header{background:linear-gradient(135deg,#100e08 0%,#161208 60%,#0c0a06 100%)}
+.badge.life-badge{background:#7EB6FF;color:#04080e}
+.badge.ground-badge{background:#E6C07B;color:#141008}
+body.area-life .company-only, body.area-ground .company-only{display:none!important}
+.area-home{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.area-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
+.area-card h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.bot-list{display:flex;flex-direction:column;gap:8px}
+.bot-row{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.bot-name{font-family:'DM Mono',monospace;font-size:12px;color:var(--tx)}
+.reconcile-ok{background:rgba(10,26,8,.55);border:1px solid var(--gd);border-radius:4px;padding:10px 14px;margin:0 0 12px;font-size:12px;color:var(--g);line-height:1.45}
+.reconcile-bad{background:var(--rbg);border:1px solid var(--rbr);border-radius:4px;padding:10px 14px;margin:0 0 12px;font-size:12px;font-weight:600;color:var(--red);line-height:1.45}
+.awaiting{background:var(--s2);border:1px dashed var(--br);border-radius:4px;padding:18px 14px;margin:0 0 12px;color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-align:center}
+.chart-card .awaiting{margin:0}
+.finance-stack{display:flex;flex-direction:column;gap:14px;margin:0 0 18px}
+.finance-beside{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+@media(min-width:1100px){.finance-beside{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}}
+.qbr-draft{display:inline-block;margin-left:8px;background:var(--abg);border:1px solid var(--abr);color:var(--amb);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px;vertical-align:middle}
+.qbr-item{border-top:1px solid rgba(255,255,255,.05);padding:10px 0 2px}
+.qbr-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.3px;color:var(--tx);text-transform:none}
+.qbr-points{margin:6px 0 8px 18px;padding:0;color:var(--tx);font-size:13px;line-height:1.45}
+.qbr-points li{margin:3px 0}
+.qbr-link{display:inline-block;margin-top:8px;color:var(--g);font-size:12px;font-weight:600;text-decoration:none}
+.qbr-link:hover{text-decoration:underline}
+#card-qbr-agenda{scroll-margin-top:12px}
+.pack-block{margin:14px 0}
+.pack-task{border:1px solid var(--br);border-radius:4px;padding:10px 12px;margin:0 0 8px;background:var(--s)}
+.pack-task.is-stale{border-color:var(--abr)}
+.pack-title{font-size:13px;font-weight:600;color:var(--tx);line-height:1.35}
+.pack-meta{font-size:11px;color:var(--td);margin-top:4px}
+.pack-notes{font-size:12px;color:var(--tx);margin-top:6px;white-space:pre-wrap;line-height:1.45}
+.pack-badge{display:inline-block;margin-left:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:2px;vertical-align:middle}
+.pack-stale{background:var(--abg);border:1px solid var(--abr);color:var(--amb)}
+.pack-onlist{background:var(--s3);border:1px solid var(--br);color:var(--td)}
+.pack-live{background:var(--gbg);border:1px solid var(--gd);color:var(--g)}
+.pack-off{background:var(--rbg);border:1px solid var(--rbr);color:var(--red)}
+.pack-metric{border-bottom:1px solid rgba(255,255,255,.05);padding:8px 0}
+.pack-metric .awaiting{margin:6px 0 0;padding:10px}
+.finance-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
+.finance-card h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.finance-note{font-size:12px;color:var(--td);margin:0 0 10px;line-height:1.5}
+.fin-row{display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.fin-role{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g)}
+.fin-name{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px}
+.fin-name .actual-inp{flex:1}
+.meet-card,.cleanup-item{border:1px solid var(--br);border-radius:4px;padding:12px;margin-bottom:10px;background:var(--s)}
+.meet-k{display:block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--td);margin:8px 0 4px}
+.fin-agenda{margin:0 0 8px 18px;color:var(--tx);font-size:12px}
+.fin-agenda li{margin:2px 0}
+.not-l10{display:inline-block;margin-left:8px;background:var(--abg);border:1px solid var(--abr);color:var(--amb);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px;vertical-align:middle}
+.cleanup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fin-select{width:100%;height:28px}
+.fin-area{width:100%;min-height:58px;height:auto;resize:vertical}
+.fin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+@media(max-width:860px){
+  .area-home,.chart-grid,.summary-grid,.cleanup-grid{grid-template-columns:1fr}
+  .fin-row{grid-template-columns:1fr}
+  .content,.tabs,.sync-bar,.links-bar{padding-left:12px;padding-right:12px}
+  .header{padding-left:12px;padding-right:12px}
+}
 .co-divider{width:1px;background:var(--br);flex-shrink:0}
 .co-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .co-dot.driven{background:var(--dg)}
@@ -75,7 +141,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--g);margin-bottom:5px;transition:color .3s}
 .sec-sub{font-size:12px;color:var(--td);margin-bottom:16px;line-height:1.6}
 
-.kpi-section{margin-bottom:18px}
+.kpi-section{margin-bottom:18px;overflow-x:auto}
 .kpi-sec-hdr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--br);border-radius:4px 4px 0 0;border-bottom:2px solid var(--g);transition:border-color .3s}
 .kpi-sec-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);transition:color .3s}
 .kpi-table{width:100%;border-collapse:collapse}
@@ -86,6 +152,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .kpi-floor{font-size:11px;color:var(--red);font-family:'DM Mono',monospace}
 .kpi-target{font-size:11px;color:var(--g);font-weight:600;font-family:'DM Mono',monospace;transition:color .3s}
 .actual-inp{width:74px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'DM Mono',monospace;font-size:12px;padding:4px 6px;transition:border .15s}
+.finance-card .actual-inp{width:100%}
 .actual-inp:focus{outline:none;border-color:var(--g)}
 .actual-inp.g{color:var(--g);border-color:rgba(92,184,0,.4)}
 .actual-inp.a{color:var(--amb);border-color:rgba(255,184,0,.4)}
@@ -133,15 +200,25 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 <body>
 <div class="toast-wrap" id="toasts"></div>
 
-<div class="co-switcher">
-  <div class="co-btn driven active" id="co-driven" onclick="switchCompany('driven')">
+<div class="co-switcher" id="area-switcher">
+  <div class="co-btn driven active" id="co-driven" onclick="showArea('driven')">
     <div class="co-dot driven"></div>
-    <div><div>DRIVEN SOLUTIONS</div><div class="co-subtitle">Packaging + Logistics</div></div>
+    <div><div>DRIVEN</div><div class="co-subtitle">Packaging + Logistics</div></div>
   </div>
   <div class="co-divider"></div>
-  <div class="co-btn tb" id="co-tb" onclick="switchCompany('tb')">
+  <div class="co-btn tb" id="co-tb" onclick="showArea('tb')">
     <div class="co-dot tb"></div>
-    <div><div>TRAILBLAZERS</div><div class="co-subtitle">Total Outdoor Solutions</div></div>
+    <div><div>TRAILBLAZERS</div><div class="co-subtitle">Total Outdoor</div></div>
+  </div>
+  <div class="co-divider"></div>
+  <div class="co-btn life" id="co-life" onclick="showArea('life')">
+    <div class="co-dot" style="background:#7EB6FF"></div>
+    <div><div>LIFE</div><div class="co-subtitle">Personal / Life OS</div></div>
+  </div>
+  <div class="co-divider"></div>
+  <div class="co-btn ground" id="co-ground" onclick="showArea('ground')">
+    <div class="co-dot" style="background:#E6C07B"></div>
+    <div><div>GROUND UP</div><div class="co-subtitle">Coaching</div></div>
   </div>
 </div>
 
@@ -154,8 +231,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
       <span class="badge driven-badge" id="co-badge">Live</span>
       <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
-        <button class="tbtn green" onclick="shiftWeeks()">➜ Shift Weeks</button>
-        <button class="tbtn" onclick="saveToHistory()">📋 Save to History</button>
+        <button class="tbtn green company-only" onclick="shiftWeeks()">➜ Shift Weeks</button>
+        <button class="tbtn company-only" onclick="saveToHistory()">📋 Save to History</button>
         <button class="tbtn" onclick="window.print()">🖨️ Print</button>
         <span style="font-size:10px;color:var(--td);align-self:center;font-family:'DM Mono',monospace">Last sync: <span id="last-sync">—</span></span>
       </div>
@@ -166,28 +243,137 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
 <div class="sync-bar">
   <div class="sync-txt"><div class="sdot off" id="sync-dot"></div><span id="sync-lbl">Connecting…</span></div>
-  <div style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
+  <div class="company-only" style="margin-left:auto;font-size:10px;color:var(--td);font-family:'DM Mono',monospace">W1–W4 = last 4 weeks · W4 is current</div>
 </div>
 
 <div class="links-bar" id="links-bar"></div>
 
 <div class="tabs" id="main-tabs">
-  <div class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
-  <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
-  <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
-  <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
-  <div class="tab" onclick="showPanel('pnl',this)">🧾 P&amp;L</div>
-  <div class="tab" onclick="showPanel('proj',this)">🧮 Projections</div>
-  <div class="tab" onclick="showPanel('charts',this)">📈 Charts</div>
-  <div class="tab" onclick="showPanel('tasks',this)">✅ Tasks</div>
-  <div class="tab" onclick="showPanel('history',this)">📅 History</div>
+  <div class="tab active" data-areas="driven tb" data-panel="dashboard" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
+  <div class="tab" data-areas="driven tb" data-panel="Sales" onclick="showPanel('Sales',this)">💵 Sales</div>
+  <div class="tab" data-areas="driven tb" data-panel="marketing" onclick="showPanel('marketing',this)">📣 Marketing</div>
+  <div class="tab" data-areas="driven tb" data-panel="Finance" onclick="showPanel('Finance',this)">💰 Finance</div>
+  <div class="tab" data-areas="driven tb" data-panel="Ops" onclick="showPanel('Ops',this)">⚙️ Operations</div>
+  <div class="tab" data-areas="driven tb" data-panel="l10" onclick="showPanel('l10',this)">📋 L10</div>
+  <div class="tab" data-areas="driven tb" data-panel="pnl" onclick="showPanel('pnl',this)">🧾 P&amp;L</div>
+  <div class="tab" data-areas="driven tb" data-panel="proj" onclick="showPanel('proj',this)">🧮 Projections</div>
+  <div class="tab" data-areas="driven tb" data-panel="charts" onclick="showPanel('charts',this)">📈 Charts</div>
+  <div class="tab" data-areas="driven tb" data-panel="tasks" onclick="showPanel('tasks',this)">✅ Tasks</div>
+  <div class="tab" data-areas="driven tb" data-panel="history" onclick="showPanel('history',this)">📅 History</div>
+  <div class="tab" data-areas="life" data-panel="life-home" onclick="showPanel('life-home',this)">🏠 Life OS</div>
+  <div class="tab" data-areas="ground" data-panel="ground-home" onclick="showPanel('ground-home',this)">🏠 Ground Up</div>
+  <div class="tab" data-areas="driven tb life ground" data-panel="running" onclick="showPanel('running',this)">🗂️ Running</div>
+  <div class="tab" data-areas="driven tb life ground" data-panel="bots" onclick="showPanel('bots',this)">🤖 Bots</div>
 </div>
 
 <div class="content">
-  <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
-  <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
-  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
-  <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
+  <div class="panel active" id="panel-dashboard"><div id="dash-content"></div><div id="pack-dash"></div></div>
+  <div class="panel" id="panel-Sales"><div class="sec-title">💵 Sales</div><div class="sec-sub">Weekly sales numbers for this company. The L10 sales scorecard reads these same fields.</div><div id="kpi-Sales"></div><div id="pack-tasks-Sales"></div></div>
+  <div class="panel" id="panel-marketing">
+    <div class="sec-title">📣 Marketing</div>
+    <div class="sec-sub" id="marketing-sub">Marketing metrics are not set up yet.</div>
+    <div class="awaiting">Awaiting data</div>
+    <div id="pack-tasks-Marketing"></div>
+  </div>
+  <div class="panel" id="panel-Finance">
+    <div class="sec-title">💰 Finance</div>
+    <div class="sec-sub" id="finance-sub">Finance definitions for this company. Scorecard rows that share a metric read this same week_data field.</div>
+    <div id="finance-reconcile"></div>
+    <div id="finance-flags"></div>
+    <div class="finance-stack">
+      <div id="finance-team"></div>
+      <div class="finance-beside">
+        <div id="finance-meetings"></div>
+        <div class="finance-card" id="card-qbr-agenda">
+          <h3>Quarterly Business Review Agenda <span class="qbr-draft">DRAFT</span></h3>
+          <p class="finance-note">Driven Solutions + Trailblazers. High-level review, not an L10. About 90 minutes.</p>
+          <p class="finance-note">Attendees: Rich, CFO, Bookkeeper, Accountant (cleanup).</p>
+          <div class="qbr-item">
+            <div class="qbr-title">1. SBA loan (15 min)</div>
+            <ul class="qbr-points">
+              <li>Current status and the next milestone.</li>
+              <li>What the lender still needs (documents, financials, signatures), who owns each item, and by when.</li>
+              <li>Are the books clean enough to support the application? Ties to item 5.</li>
+              <li>Decision: what has to happen before next quarter to keep it moving.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">2. Finance spend, about $132K a year (15 min)</div>
+            <ul class="qbr-points">
+              <li>What we spent this quarter on accounting (CFO, bookkeeper, accountant, tie-outs), compared with the $132K annual run rate.</li>
+              <li>Is it coming down? What's been automated, and what's still manual.</li>
+              <li>Target run rate for next quarter and the plan to get there.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">3. Bryce: comp re-split and numbers (15 min)</div>
+            <ul class="qbr-points">
+              <li>Where the change landed: 7.5% of sales moving to 6% of gross margin, on top of the $80K base. Is it signed, and when does it take effect?</li>
+              <li>Current numbers: as of Oct 23 he had sourced about $57.6K, about 15% of $397K in Jobber won sales since May. His pace since July is about $76K a year, roughly $51K a year short of break-even on the new plan.</li>
+              <li>Weekly numbers (quotes sent, follow-ups, quotes open more than 7 days, won work and who sourced it, collections, self-sourced leads, top 3 deals): are they coming in by Friday?</li>
+              <li>Decision: on track, adjust, or reset expectations.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">4. Pipeline health (15 min)</div>
+            <ul class="qbr-points">
+              <li>GoHighLevel: 109 opportunities, $186K total, $154K open. Note: GoHighLevel holds Trailblazers only. Most of the open value is three large estimates, and 85 of the 109 opportunities are marked lost.</li>
+              <li>Driven pipeline: review from the Command Center Sales tab, since it isn't in GoHighLevel.</li>
+              <li>Win rate, aging of open estimates, and next steps on the big three.</li>
+              <li>Lead sources: what's actually producing.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">5. Books cleanup progress (15 min)</div>
+            <ul class="qbr-points">
+              <li>Walk the Fixed and Still Open lists from the Books Cleanup Log.</li>
+              <li>Open now: late reconciliations and tie-outs; a wrong general ledger and balance sheet; the Trailblazers A/R mismatch (about $9.9K in QuickBooks vs about $20.3K in Jobber); no defined process for bill pay and money moves.</li>
+              <li>What closed this quarter, what's blocked, and the target date for clean books.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">6. Meetings rhythm adherence (10 min)</div>
+            <ul class="qbr-points">
+              <li>Did these happen as planned? Weekly Rich + CFO; weekly Rich + Bookkeeper; monthly CFO + Bookkeeper; this quarterly review.</li>
+              <li>What got skipped and why. Keep, change, or drop any of them.</li>
+            </ul>
+          </div>
+          <div class="qbr-item">
+            <div class="qbr-title">7. Decisions and owners (5 min)</div>
+            <ul class="qbr-points">
+              <li>Top 3 priorities for next quarter, each with an owner and a date.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div id="finance-cleanup"></div>
+    </div>
+    <div class="sec-title">Finance metrics</div>
+    <div class="sec-sub">Same week_data fields the L10 scorecard uses when a metric is shared with Finance.</div>
+    <div id="kpi-Finance"></div>
+    <div id="pack-tasks-Finance"></div>
+  </div>
+  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Operations</div><div class="sec-sub">Weekly operations numbers for this company. The L10 ops scorecard reads these same fields.</div><div id="kpi-Ops"></div><div id="pack-tasks-Ops"></div></div>
+  <div class="panel" id="panel-l10">
+    <div class="sec-title" id="l10-title">L10</div>
+    <div class="sec-sub" id="l10-sub">Sales and Ops scorecards with a weekly trend against the L10 goal. Empty weeks stay blank.</div>
+    <div id="l10-reconcile"></div>
+    <div class="sec-title">Sales scorecard</div>
+    <div id="l10-sales"></div>
+    <div class="sec-title">Sales graphs</div>
+    <div class="chart-grid" id="l10-sales-charts"></div>
+    <div class="sec-title">Ops scorecard</div>
+    <div id="l10-ops"></div>
+    <div class="sec-title">Ops graphs</div>
+    <div class="chart-grid" id="l10-ops-charts"></div>
+    <div class="sec-title">Finance scorecard</div>
+    <div class="sec-sub">Same week_data fields as the Finance section. Extra finance metrics from the content pack are in the catalog below.</div>
+    <div id="l10-finance"></div>
+    <div id="l10-flags"></div>
+    <div class="sec-title">Scorecard catalog</div>
+    <div class="sec-sub" id="l10-catalog-sub">Metrics from the content pack. A row tied to a week_data field uses that field. Empty rows say Awaiting data.</div>
+    <div id="l10-catalog"></div>
+  </div>
   <div class="panel" id="panel-pnl">
     <div class="sec-title">🧾 P&amp;L — QuickBooks</div>
     <div class="sec-sub" id="pnl-sub"></div>
@@ -196,12 +382,12 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel" id="panel-proj">
     <div class="sec-title">🧮 Projections</div>
     <div id="proj-tb">
-      <div class="sec-sub">Trailblazers Landscaping P&amp;L builder: this month vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="pl-builder.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
-      <iframe src="pl-builder.html" title="Trailblazers P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
+      <div class="sec-sub">Trailblazers Landscaping P&amp;L builder: this month vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="tbpl.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
+      <iframe src="tbpl.html" title="Trailblazers P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
     </div>
     <div id="proj-driven" style="display:none">
-      <div class="sec-sub">Driven Solutions P&amp;L builder: this month (from QuickBooks) vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="driven-pl-builder.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
-      <iframe src="driven-pl-builder.html" title="Driven P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
+      <div class="sec-sub">Driven Solutions P&amp;L builder: this month (from QuickBooks) vs a scenario you adjust vs target. It is a what-if tool. Nothing on it saves. <a href="drivenppl.html" target="_blank" rel="noopener" style="color:var(--g)">Open full page ↗</a></div>
+      <iframe src="drivenppl.html" title="Driven P&L Builder" loading="lazy" style="width:100%;height:82vh;min-height:700px;border:1px solid var(--br);border-radius:4px;background:#111"></iframe>
     </div>
   </div>
   <div class="panel" id="panel-charts">
@@ -219,6 +405,46 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
       <button class="tbtn green" onclick="addTask()">+ Add</button>
     </div>
     <div id="task-list"></div>
+  </div>
+  <div class="panel" id="panel-running"></div>
+  <div class="panel" id="panel-life-home">
+    <div class="sec-title">Life OS</div>
+    <div class="sec-sub">Personal area. Company KPI numbers stay on Driven and Trailblazers. Nothing here writes to those tables.</div>
+    <div class="area-home">
+      <div class="area-card">
+        <h3>Running</h3>
+        <p class="sec-sub">Personal / Life OS tasks open here. Today, Work, and All stay available inside Running.</p>
+        <button class="tbtn green" onclick="showPanel('running', document.querySelector('.tab[data-panel=running]'))">Open Running</button>
+      </div>
+      <div class="area-card">
+        <h3>Personal</h3>
+        <p class="sec-sub">Personal bots (coaching, recovery, whole body, fitness, recipes) are not registered. Frank is listed under Command Center and agents.</p>
+        <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
+      </div>
+    </div>
+    <div id="pack-life"></div>
+  </div>
+  <div class="panel" id="panel-ground-home">
+    <div class="sec-title">The Ground Up</div>
+    <div class="sec-sub">Coaching brand. Section tasks from the content pack are below. Work tagged The Ground Up stays in Running, including the starter email task after you sign in.</div>
+    <div class="area-home">
+      <div class="area-card">
+        <h3>Running</h3>
+        <p class="sec-sub">Opens the work list filtered to The Ground Up. The other Running views are still on that screen.</p>
+        <button class="tbtn green" onclick="showPanel('running', document.querySelector('.tab[data-panel=running]'))">Open Running</button>
+      </div>
+      <div class="area-card">
+        <h3>Bots</h3>
+        <p class="sec-sub">Bots whose names start with tgu- are on the Bots tab.</p>
+        <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
+      </div>
+    </div>
+    <div id="pack-ground"></div>
+  </div>
+  <div class="panel" id="panel-bots">
+    <div class="sec-title" id="bots-title">Bots</div>
+    <div class="sec-sub" id="bots-sub"></div>
+    <div id="bots-content"></div>
   </div>
   <div class="panel" id="panel-history">
     <div class="sec-title">📅 Weekly History</div>
@@ -241,6 +467,7 @@ const db = createClient(
   'https://igaylyhkssahczubiztb.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo'
 );
+window.db = db;
 
 // ══════════════════════════════════════════════════════════
 // COMPANY + KPI CONFIG (simplified schema — one flat key store per company,
@@ -348,6 +575,7 @@ const CHART_KEYS = {
 // STATE
 // ══════════════════════════════════════════════════════════
 let co = 'driven';
+let area = 'driven';
 let currentTab = 'dashboard';
 const state = { driven: { data:{}, history:[], tasks:[], pnl:null }, tb: { data:{}, history:[], tasks:[], pnl:null } };
 let chartInstances = {};
@@ -373,6 +601,7 @@ async function loadData() {
     state[co].data = {}; state[co].history = []; state[co].tasks = []; state[co].pnl = null;
     setSync('error');
   }
+  await loadFinanceOffice();
   renderAll();
 }
 
@@ -416,8 +645,12 @@ function setSync(status){
 // ══════════════════════════════════════════════════════════
 function switchCompany(c) {
   co = c; const cfg = COMPANIES[c];
+  area = c;
+  document.body.className = 'area-' + c;
   document.getElementById('co-driven').className = 'co-btn driven' + (c==='driven'?' active':'');
   document.getElementById('co-tb').className = 'co-btn tb' + (c==='tb'?' active':'');
+  document.getElementById('co-life').classList.remove('active');
+  document.getElementById('co-ground').classList.remove('active');
   document.documentElement.style.setProperty('--g', cfg.color);
   document.documentElement.style.setProperty('--gd', cfg.colorDark);
   document.documentElement.style.setProperty('--gbg', cfg.colorBg);
@@ -433,7 +666,122 @@ function switchCompany(c) {
 
 function renderLinks(){
   const cfg = COMPANIES[co];
-  document.getElementById('links-bar').innerHTML = cfg.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+  const pages = co === 'driven'
+    ? [
+        {label:'Weekly KPI entry', url:'submit_driven.html'},
+        {label:'P&L builder', url:'drivenppl.html'},
+        {label:'Call script', url:'callscript.html'},
+        {label:'Email templates', url:'emailtemplate.html'},
+        {label:'Finance accountability', url:'finance-accountability.html'},
+      ]
+    : [
+        {label:'Weekly KPI entry', url:'submit.html'},
+        {label:'P&L builder', url:'tbpl.html'},
+        {label:'Finance accountability', url:'finance-accountability.html'},
+      ];
+  const chips = cfg.links.concat(pages);
+  document.getElementById('links-bar').innerHTML = chips.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+}
+
+// Bots that exist in this repo or in Driven-110. The list is empty on purpose:
+// no tb-, tgu-, or driven- bot, and no personal coaching/recovery/fitness bot, is stored.
+const BOTS = [];
+
+function botArea(bot){
+  const name = String(bot.name || '');
+  if (name.startsWith('tb-')) return 'tb';
+  if (name.startsWith('tgu-')) return 'ground';
+  if (name.startsWith('driven-')) return 'driven';
+  if (/coach|recovery|whole body|fitness|recipe/i.test(name + ' ' + (bot.about || ''))) return 'life';
+  return 'flagged';
+}
+
+function renderBots(){
+  const titles = { driven:'Driven bots', tb:'Trailblazers bots', life:'Life bots', ground:'Ground Up bots' };
+  document.getElementById('bots-title').textContent = titles[area] || 'Bots';
+  const host = document.getElementById('bots-content');
+  const sub = document.getElementById('bots-sub');
+  if (!contentPack){
+    sub.textContent = 'Loading the content pack.';
+    host.innerHTML = '';
+    return;
+  }
+  const tab = packBiz();
+  const mine = (contentPack.bots || []).filter(bot => bot.tab === tab);
+  if (area === 'driven'){
+    sub.textContent = 'Names starting with driven-. None are registered.';
+    host.innerHTML = '<div class="area-card"><h3>No driven- bots</h3><p class="sec-sub" style="margin:0">No driven- bots exist yet. None were added.</p></div>';
+    return;
+  }
+  if (area === 'life'){
+    sub.textContent = 'Frank is the Command Center assistant. Personal bots are a separate empty group.';
+    const frank = mine.map(bot => `<div class="bot-row"><span class="bot-name">${escHtml(bot.name)}</span><span style="color:var(--td);font-size:12px">${escHtml(bot.section || '')}. ${escHtml(bot.role || '')}</span></div>`).join('');
+    host.innerHTML = `<div class="sec-title" style="margin-top:0">Command Center & agents</div><div class="bot-list">${frank || ''}</div>
+      <div class="area-card" style="margin-top:12px"><h3>Personal</h3><p class="sec-sub" style="margin:0">No personal bots yet. Coaching, recovery, whole body, fitness, and recipe bots were not added.</p></div>`;
+    return;
+  }
+  sub.textContent = tab === 'Trailblazers' ? 'Names starting with tb-.' : 'Names starting with tgu-.';
+  const sections = [];
+  mine.forEach(bot => { if (!sections.includes(bot.section)) sections.push(bot.section); });
+  host.innerHTML = sections.map(section => {
+    const rows = mine.filter(bot => bot.section === section).map(bot => `<div class="bot-row"><span class="bot-name">${escHtml(bot.name)}</span><span style="color:var(--td);font-size:12px">${escHtml(bot.role || '')}</span></div>`).join('');
+    return `<div class="sec-title">${escHtml(section || 'Bots')}</div><div class="bot-list">${rows}</div>`;
+  }).join('');
+}
+
+function notifyRunning(){
+  window.dispatchEvent(new CustomEvent('cc-area', { detail: { area } }));
+}
+
+function renderAreaTabs(){
+  document.querySelectorAll('#main-tabs .tab').forEach(tab => {
+    const areas = (tab.dataset.areas || '').split(/\s+/);
+    tab.style.display = areas.includes(area) ? '' : 'none';
+  });
+}
+
+function paintLifeGround(kind){
+  area = kind;
+  document.body.className = 'area-' + kind;
+  document.getElementById('co-driven').className = 'co-btn driven';
+  document.getElementById('co-tb').className = 'co-btn tb';
+  document.getElementById('co-life').className = 'co-btn life' + (kind==='life'?' active':'');
+  document.getElementById('co-ground').className = 'co-btn ground' + (kind==='ground'?' active':'');
+  const hdr = document.getElementById('main-header');
+  const bdg = document.getElementById('co-badge');
+  if (kind === 'life'){
+    document.documentElement.style.setProperty('--g', '#7EB6FF');
+    document.documentElement.style.setProperty('--gd', '#4C86D6');
+    document.documentElement.style.setProperty('--gbg', '#0A1420');
+    hdr.className = 'header life-header';
+    document.getElementById('co-title').textContent = 'LIFE OS';
+    document.getElementById('co-sub').textContent = 'Personal';
+    bdg.textContent = 'Personal';
+    bdg.className = 'badge life-badge';
+    document.getElementById('links-bar').innerHTML = '<span class="link-chip">No personal pages in the Command Center yet</span>';
+  } else {
+    document.documentElement.style.setProperty('--g', '#E6C07B');
+    document.documentElement.style.setProperty('--gd', '#B8924A');
+    document.documentElement.style.setProperty('--gbg', '#1A1408');
+    hdr.className = 'header ground-header';
+    document.getElementById('co-title').textContent = 'THE GROUND UP';
+    document.getElementById('co-sub').textContent = 'Coaching';
+    bdg.textContent = 'Coaching';
+    bdg.className = 'badge ground-badge';
+    document.getElementById('links-bar').innerHTML = '<span class="link-chip">No Ground Up pages in the Command Center yet</span>';
+  }
+  document.getElementById('h-stats').innerHTML = '';
+  renderContentPack();
+}
+
+function showArea(next){
+  const company = next === 'driven' || next === 'tb';
+  if (company) switchCompany(next);
+  else paintLifeGround(next);
+  renderAreaTabs();
+  const visible = [...document.querySelectorAll('#main-tabs .tab')].filter(tab => tab.style.display !== 'none').map(tab => tab.dataset.panel);
+  const keep = visible.includes(currentTab) ? currentTab : visible[0];
+  showPanel(keep, document.querySelector('.tab[data-panel="'+keep+'"]'));
 }
 
 // ══════════════════════════════════════════════════════════
@@ -442,9 +790,18 @@ function renderLinks(){
 function showPanel(id, el){
   currentTab = id;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  if (!el) el = document.querySelector('.tab[data-panel="'+id+'"]');
+  if (el) el.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  if (panel) panel.classList.add('active');
+  if (id === 'bots') renderBots();
+  if (id === 'running') notifyRunning();
+  if (id === 'l10' || id === 'charts') {
+    requestAnimationFrame(() => {
+      Object.values(chartInstances).forEach(chart => { try { chart.resize(); } catch (e) {} });
+    });
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -481,6 +838,19 @@ function renderTasks(){
 
 function getW(key, w){ return parseFloat(state[co].data[`${key}_${w}`]) || 0; }
 function setW(key, w, val){ state[co].data[`${key}_${w}`] = parseFloat(val) || 0; }
+function weekRaw(key, w){
+  const v = state[co].data[`${key}_${w}`];
+  if (v === undefined || v === null || v === '') return null;
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Scorecard rows that are a different field from Finance, with the same meaning.
+// Same-key metrics are one week_data field and cannot diverge.
+const SCORECARD_FINANCE_PAIRS = {
+  driven: [],
+  tb: [{ scorecardKey: 'margin_pct', financeKey: 'gross_margin' }]
+};
 
 function getStatus(value, kpi){
   const v = parseFloat(value) || 0;
@@ -538,20 +908,27 @@ function renderProj(){
 
 function renderAll(){
   const cfg = COMPANIES[co]; const s = state[co];
-  let hs = '';
-  cfg.headerStats.forEach(st=>{
-    const v = getW(st.key,'w4');
-    hs += `<div class="hstat"><div class="val">${v?st.fmt(v):'—'}</div><div class="lbl">${st.label}</div></div>`;
-  });
-  document.getElementById('h-stats').innerHTML = hs;
+  if (area === 'driven' || area === 'tb'){
+    let hs = '';
+    cfg.headerStats.forEach(st=>{
+      const v = getW(st.key,'w4');
+      hs += `<div class="hstat"><div class="val">${v?st.fmt(v):'—'}</div><div class="lbl">${st.label}</div></div>`;
+    });
+    document.getElementById('h-stats').innerHTML = hs;
+  }
 
   renderDashboard();
-  ['Sales','Ops','Finance'].forEach(renderKPITable);
+  renderKPITable('Sales');
+  renderKPITable('Ops', null, 'Operations');
+  renderKPITable('Finance');
   renderCharts();
+  renderL10();
   renderTasks();
   renderPnl();
   renderProj();
   renderHistory();
+  renderFinanceOffice();
+  renderContentPack();
 }
 
 function renderDashboard(){
@@ -589,36 +966,155 @@ function renderDashboard(){
 }
 
 function sparkline(key, kpi){
-  const trend = ['w1','w2','w3','w4'].map(w=>getW(key,w));
-  const status = getStatus(trend[3], kpi);
-  const color = status==='g' ? '#5CB800' : status==='a' ? '#FFB800' : trend[3] ? '#FF4444' : '#4A5E58';
-  const max = Math.max(kpi.target, ...trend.filter(v=>v>0)) * 1.15 || 1;
-  const w=100,h=32,pts=trend.map((v,i)=> v>0 ? `${(i/3)*w},${h-(v/max)*h}` : null).filter(Boolean).join(' ');
-  return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const trend = ['w1','w2','w3','w4'].map(w => weekRaw(key, w));
+  const present = trend.filter(v => v !== null);
+  if (!present.length) return '';
+  const last = trend[3];
+  const status = last === null ? 'n' : getStatus(last, kpi);
+  const color = status==='g' ? '#5CB800' : status==='a' ? '#FFB800' : '#FF4444';
+  const max = Math.max(kpi.target, ...present) * 1.15 || 1;
+  const w = 100, h = 32;
+  let seg = [];
+  const segs = [];
+  trend.forEach((v, i) => {
+    if (v === null){ if (seg.length) segs.push(seg); seg = []; return; }
+    seg.push(`${(i / 3) * w},${h - (Math.max(v, 0) / max) * h}`);
+  });
+  if (seg.length) segs.push(seg);
+  const lines = segs.map(s => s.length > 1
+    ? `<polyline points="${s.join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+    : `<circle cx="${s[0].split(',')[0]}" cy="${s[0].split(',')[1]}" r="2" fill="${color}"/>`
+  ).join('');
+  return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}">${lines}</svg>`;
 }
 
-function renderKPITable(tab){
+function kpiByKey(tab, key){
+  return (KPIS[co][tab] || []).find(k => k.key === key);
+}
+
+function financeReconcileHtml(){
+  const financeKeys = new Set(KPIS[co].Finance.map(k => k.key));
+  const shared = [];
+  const seen = new Set();
+  ['Sales','Ops'].forEach(tab => {
+    KPIS[co][tab].forEach(k => {
+      if (!financeKeys.has(k.key) || seen.has(k.key)) return;
+      seen.add(k.key);
+      const fin = kpiByKey('Finance', k.key);
+      shared.push(fin ? fin.label : k.label);
+    });
+  });
+  let html = '';
+  if (shared.length){
+    html += `<div class="reconcile-ok">Same source: ${shared.join(', ')}. The scorecard and Finance edit one week_data field, so those numbers stay locked together.</div>`;
+  }
+  (SCORECARD_FINANCE_PAIRS[co] || []).forEach(pair => {
+    const score = kpiByKey('Sales', pair.scorecardKey) || kpiByKey('Ops', pair.scorecardKey);
+    const fin = kpiByKey('Finance', pair.financeKey);
+    const scoreLabel = score ? score.label : pair.scorecardKey;
+    const finLabel = fin ? fin.label : pair.financeKey;
+    const left = weekRaw(pair.scorecardKey, 'w4');
+    const right = weekRaw(pair.financeKey, 'w4');
+    if (left === null || right === null){
+      html += `<div class="awaiting">Awaiting data before ${scoreLabel} can be checked against Finance (${finLabel}).</div>`;
+      return;
+    }
+    if (left !== right){
+      html += `<div class="reconcile-bad">Doesn't reconcile: ${scoreLabel} is ${left} on the scorecard and ${right} on Finance (${finLabel}). These are separate fields. They were not merged.</div>`;
+    } else {
+      html += `<div class="reconcile-ok">${scoreLabel} matches Finance this week (${left}).</div>`;
+    }
+  });
+  return html;
+}
+
+function renderKPITable(tab, hostId, label){
   const kpis = KPIS[co][tab];
-  const el = document.getElementById('kpi-'+tab);
-  let rows = kpis.map(k=>{
-    const w1=getW(k.key,'w1'), w2=getW(k.key,'w2'), w3=getW(k.key,'w3'), w4=getW(k.key,'w4');
-    const status = w4 ? getStatus(w4,k) : 'n';
+  const el = document.getElementById(hostId || ('kpi-' + tab));
+  if (!el || !kpis) return;
+  const title = label || tab;
+  const rows = kpis.map(k => {
+    const weeks = ['w1','w2','w3','w4'].map(w => weekRaw(k.key, w));
+    const w4 = weeks[3];
+    const status = w4 === null ? 'n' : getStatus(w4, k);
     const chip = status==='g'?'<span class="status-chip st-g">On Target</span>':status==='a'?'<span class="status-chip st-a">Watch</span>':status==='r'?'<span class="status-chip st-r">Below Floor</span>':'<span class="status-chip st-n">No Data</span>';
+    const cell = (w, name) => {
+      const v = weeks[['w1','w2','w3','w4'].indexOf(name)];
+      const cls = v === null ? '' : getStatus(v, k);
+      const shown = v === null ? '' : v;
+      return `<td><input type="number" class="actual-inp ${cls}" value="${shown}" onchange="setW('${k.key}','${name}',this.value);debouncedSave();renderAll()"></td>`;
+    };
     return `<tr>
       <td class="kpi-name">${k.label}</td>
       <td class="kpi-floor">${k.floor.toLocaleString()}</td>
       <td class="kpi-target">${k.target.toLocaleString()}</td>
-      <td><input type="number" class="actual-inp ${w1?getStatus(w1,k):''}" value="${w1||''}" onchange="setW('${k.key}','w1',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w2?getStatus(w2,k):''}" value="${w2||''}" onchange="setW('${k.key}','w2',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w3?getStatus(w3,k):''}" value="${w3||''}" onchange="setW('${k.key}','w3',this.value);debouncedSave();renderAll()"></td>
-      <td><input type="number" class="actual-inp ${w4?getStatus(w4,k):''}" value="${w4||''}" onchange="setW('${k.key}','w4',this.value);debouncedSave();renderAll()"></td>
-      <td>${sparkline(k.key,k)}</td>
+      ${cell(weeks[0], 'w1')}${cell(weeks[1], 'w2')}${cell(weeks[2], 'w3')}${cell(weeks[3], 'w4')}
+      <td>${sparkline(k.key, k)}</td>
       <td>${chip}</td>
     </tr>`;
   }).join('');
-  el.innerHTML = `<div class="kpi-section"><div class="kpi-sec-hdr"><div class="kpi-sec-name">${tab}</div></div>
-    <table class="kpi-table"><thead><tr><th>Metric</th><th>Floor</th><th>Target</th><th>W1</th><th>W2</th><th>W3</th><th>W4 (Current)</th><th>Trend</th><th>Status</th></tr></thead>
+  el.innerHTML = `<div class="kpi-section"><div class="kpi-sec-hdr"><div class="kpi-sec-name">${title}</div></div>
+    <table class="kpi-table"><thead><tr><th>Metric</th><th>Floor</th><th>Goal</th><th>W1</th><th>W2</th><th>W3</th><th>W4 (Current)</th><th>Trend</th><th>Status</th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
+}
+
+function renderScorecardCharts(tab, hostId){
+  const host = document.getElementById(hostId);
+  if (!host) return;
+  const pending = [];
+  let html = '';
+  KPIS[co][tab].forEach((kpi, idx) => {
+    const weeks = ['w1','w2','w3','w4'].map(w => weekRaw(kpi.key, w));
+    if (!weeks.some(v => v !== null)){
+      html += `<div class="chart-card"><div class="chart-title"><span>${kpi.label}</span><span>vs goal ${kpi.target.toLocaleString()}</span></div><div class="awaiting">Awaiting data</div></div>`;
+      return;
+    }
+    const chartId = `l10c-${tab}-${idx}-${kpi.key}`;
+    html += `<div class="chart-card"><div class="chart-title"><span>${kpi.label}</span><span>vs goal</span></div><div class="chart-wrap"><canvas id="${chartId}"></canvas></div></div>`;
+    pending.push({ chartId, kpi, weeks });
+  });
+  host.innerHTML = html;
+  pending.forEach(({ chartId, kpi, weeks }) => {
+    const ctx = document.getElementById(chartId);
+    if (!ctx) return;
+    chartInstances[chartId] = new Chart(ctx, {
+      type: 'line',
+      data: { labels: ['W1','W2','W3','W4'], datasets: [
+        { label: kpi.label, data: weeks, spanGaps: false, borderColor: COMPANIES[co].color, backgroundColor: COMPANIES[co].color + '22', tension: .3, fill: true },
+        { label: 'Goal', data: [kpi.target, kpi.target, kpi.target, kpi.target], borderColor: '#7c3aed', borderDash: [4, 3], pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#8FA8A0', font: { size: 10 } } } },
+        scales: { x: { ticks: { color: '#8FA8A0' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#8FA8A0' }, grid: { color: 'rgba(255,255,255,.05)' } } }
+      }
+    });
+  });
+}
+
+function renderMarketing(){
+  const el = document.getElementById('marketing-sub');
+  if (!el) return;
+  const name = co === 'driven' ? 'Driven' : 'Trailblazers';
+  el.textContent = `Marketing tracking for ${name}. No marketing KPIs set up yet.`;
+}
+
+function renderL10(){
+  const name = co === 'driven' ? 'Driven' : 'Trailblazers';
+  const title = document.getElementById('l10-title');
+  const sub = document.getElementById('l10-sub');
+  if (title) title.textContent = name + ' L10';
+  if (sub) sub.textContent = 'Sales, Ops, and Finance scorecards use the ' + name + ' week_data fields. Each graph is the stored weekly value against that metric goal. Empty weeks stay blank.';
+  const note = financeReconcileHtml();
+  const fin = document.getElementById('finance-reconcile');
+  const l10 = document.getElementById('l10-reconcile');
+  if (fin) fin.innerHTML = note;
+  if (l10) l10.innerHTML = note;
+  renderMarketing();
+  renderKPITable('Sales', 'l10-sales', 'Sales scorecard');
+  renderKPITable('Ops', 'l10-ops', 'Ops scorecard');
+  renderKPITable('Finance', 'l10-finance', 'Finance scorecard');
+  renderScorecardCharts('Sales', 'l10-sales-charts');
+  renderScorecardCharts('Ops', 'l10-ops-charts');
 }
 
 function renderCharts(){
@@ -724,6 +1220,258 @@ function exportHistoryCSV(){
 }
 
 // ══════════════════════════════════════════════════════════
+// FINANCE OFFICE (shared by Driven and Trailblazers)
+// Scorecard metrics stay in week_data. This document does not write them.
+// ══════════════════════════════════════════════════════════
+const FINANCE_ROW_ID = 'finance_shared';
+const FINANCE_ROLES = ['Owner', 'CFO', 'Bookkeeper', 'Accountant', 'TBD'];
+const FINANCE_COMPANIES = [
+  { value: 'driven', label: 'Driven' },
+  { value: 'trailblazers', label: 'Trailblazers' },
+  { value: 'both', label: 'Both' }
+];
+const FINANCE_DEFAULT = {
+  team: [
+    { role: 'Owner', name: 'Rich', detail: '' },
+    { role: 'CFO', name: 'TBD', detail: '' },
+    { role: 'Bookkeeper', name: 'TBD', detail: 'Uses QuickBooks Online' },
+    { role: 'Accountant', name: 'TBD', detail: 'Hired to clean up the books' }
+  ],
+  meetings: [
+    { id: 'weekly-rich-cfo', cadence: 'Weekly', attendees: 'Rich + CFO', purpose: 'Cash position, A/R and A/P, open items in the books, decisions needed.', agenda: 'Cash position\nA/R and A/P\nOpen items in the books\nDecisions needed', next_date: '', not_l10: false },
+    { id: 'weekly-rich-bookkeeper', cadence: 'Weekly', attendees: 'Rich + Bookkeeper', purpose: 'Reconciliation status, bills to approve, missing documents, questions.', agenda: 'Reconciliation status\nBills to approve\nMissing documents\nQuestions', next_date: '', not_l10: false },
+    { id: 'monthly-cfo-bookkeeper', cadence: 'Monthly', attendees: 'CFO + Bookkeeper', purpose: 'Month-end close, reconciliations, tie-outs, review of the cleanup list with the accountant.', agenda: 'Month-end close\nReconciliations\nTie-outs\nReview of the cleanup list with the accountant', next_date: '', not_l10: false },
+    { id: 'quarterly-business-review', cadence: 'Quarterly', attendees: 'Not named yet', purpose: 'High-level business review. P&L and margin trends by company, cash and debt, strategy, hiring/comp (e.g. sales rep comp), annual goals.', agenda: 'P&L and margin trends by company\nCash and debt\nStrategy\nHiring/comp (e.g. sales rep comp)\nAnnual goals', next_date: '', not_l10: true }
+  ],
+  cleanup: [
+    { id: 'both-books-not-reconciled', company: 'both', description: 'Books not reconciled on time; tie-outs run late.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'both-gl-balance-sheet', company: 'both', description: 'General ledger and balance sheet are wrong / numbers inaccurate.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'tb-ar-mismatch', company: 'trailblazers', description: 'A/R mismatch — about $9.9K in QuickBooks vs about $20.3K in Jobber; needs reconciling.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'both-bookkeeping-routines', company: 'both', description: 'Bookkeeping routines (moving money between accounts, paying bills) need a defined process — owner prepares, nothing paid or moved without Rich\'s approval.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' }
+  ]
+};
+let financeOffice = null;
+let financeSaveTimer;
+
+function escHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+}
+function financeCompanyLabel(value){
+  const found = FINANCE_COMPANIES.find(c => c.value === value);
+  return found ? found.label : value;
+}
+function freshFinanceOffice(){ return JSON.parse(JSON.stringify(FINANCE_DEFAULT)); }
+function financeViewName(){ return co === 'tb' ? 'Trailblazers' : 'Driven'; }
+
+async function loadFinanceOffice(){
+  try {
+    const { data, error } = await db.from('dashboard_data').select('finance_office').eq('id', FINANCE_ROW_ID).maybeSingle();
+    if (error) throw error;
+    if (!data || !data.finance_office) {
+      financeOffice = freshFinanceOffice();
+      await saveFinanceOffice();
+      return;
+    }
+    financeOffice = data.finance_office;
+  } catch (e) {
+    if (!financeOffice) financeOffice = freshFinanceOffice();
+    toast('Finance list did not load', 'err');
+  }
+}
+
+function debouncedFinanceSave(){ clearTimeout(financeSaveTimer); financeSaveTimer = setTimeout(saveFinanceOffice, 600); }
+
+async function saveFinanceOffice(){
+  if (!financeOffice) return;
+  try {
+    const { error } = await db.from('dashboard_data').upsert({
+      id: FINANCE_ROW_ID,
+      finance_office: financeOffice,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+    if (error) throw error;
+  } catch (e) {
+    toast('Finance list did not save', 'err');
+  }
+}
+
+function renderFinanceOffice(){
+  renderFinanceTeam();
+  renderFinanceMeetings();
+  renderFinanceCleanup();
+}
+
+function renderFinanceTeam(){
+  const el = document.getElementById('finance-team');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = '<div class="awaiting">Loading shared finance list</div>'; return; }
+  const rows = financeOffice.team.map(person => `
+    <div class="fin-row">
+      <div>
+        <div class="fin-role">${escHtml(person.role)}</div>
+        ${person.detail ? `<div class="sec-sub" style="margin:2px 0 0">${escHtml(person.detail)}</div>` : ''}
+      </div>
+      <label class="fin-name">name: <input class="actual-inp" data-fin="team-name" data-role="${escHtml(person.role)}" value="${escHtml(person.name)}" maxlength="80" placeholder="TBD"></label>
+    </div>`).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-team">
+    <h3>Finance Team</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Role labels only.</p>
+    ${rows}
+  </div>`;
+}
+
+function renderFinanceMeetings(){
+  const el = document.getElementById('finance-meetings');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = ''; return; }
+  const cards = financeOffice.meetings.map(meeting => {
+    const agenda = String(meeting.agenda || '').split('\n').filter(Boolean).map(line => `<li>${escHtml(line)}</li>`).join('');
+    const badge = meeting.not_l10 ? '<span class="not-l10">not an L10 meeting</span>' : '';
+    const when = meeting.next_date ? '' : '<div class="finance-note">next date: not scheduled</div>';
+    const agendaLink = meeting.id === 'quarterly-business-review'
+      ? '<a class="qbr-link" href="#card-qbr-agenda">Quarterly Business Review Agenda</a>'
+      : '';
+    return `<div class="meet-card">
+      <div class="fin-role">${escHtml(meeting.cadence)}: ${escHtml(meeting.attendees)} ${badge}</div>
+      ${agendaLink}
+      <div class="meet-k">Purpose</div>
+      <div style="font-size:13px;color:var(--tx)">${escHtml(meeting.purpose)}</div>
+      <div class="meet-k">Suggested standing agenda</div>
+      <ul class="fin-agenda">${agenda}</ul>
+      <label class="meet-k">Next date <input type="date" class="actual-inp" data-fin="meet-date" data-id="${escHtml(meeting.id)}" value="${escHtml(meeting.next_date || '')}"></label>
+      ${when}
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-meetings">
+    <h3>Finance Meetings Rhythm</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Four recurring meetings. The next date is editable.</p>
+    ${cards}
+  </div>`;
+}
+
+function cleanupFields(item){
+  const companyOpts = FINANCE_COMPANIES.map(c => `<option value="${c.value}"${item.company === c.value ? ' selected' : ''}>${c.label}</option>`).join('');
+  const roleOpts = FINANCE_ROLES.map(role => `<option value="${role}"${item.owner === role ? ' selected' : ''}>${role}</option>`).join('');
+  const move = item.status === 'fixed'
+    ? `<button type="button" class="tbtn" data-act="mark-open" data-id="${escHtml(item.id)}">Mark still open</button>`
+    : `<button type="button" class="tbtn green" data-act="mark-fixed" data-id="${escHtml(item.id)}">Mark fixed</button>`;
+  return `<div class="cleanup-item">
+    <div class="fin-row">
+      <label class="meet-k">Company <select class="actual-inp fin-select" data-fin="item-company" data-id="${escHtml(item.id)}">${companyOpts}</select></label>
+      <label class="meet-k">Owner (role) <select class="actual-inp fin-select" data-fin="item-owner" data-id="${escHtml(item.id)}">${roleOpts}</select></label>
+    </div>
+    <label class="meet-k">Description <textarea class="actual-inp fin-area" data-fin="item-description" data-id="${escHtml(item.id)}" maxlength="500">${escHtml(item.description)}</textarea></label>
+    <div class="fin-row">
+      <label class="meet-k">Date found <input type="date" class="actual-inp" data-fin="item-found" data-id="${escHtml(item.id)}" value="${escHtml(item.date_found || '')}"></label>
+      <label class="meet-k">Date fixed <input type="date" class="actual-inp" data-fin="item-fixed" data-id="${escHtml(item.id)}" value="${escHtml(item.date_fixed || '')}"></label>
+    </div>
+    <label class="meet-k">Notes <textarea class="actual-inp fin-area" data-fin="item-notes" data-id="${escHtml(item.id)}" maxlength="2000">${escHtml(item.notes || '')}</textarea></label>
+    <div class="fin-actions">${move}<button type="button" class="tbtn red" data-act="remove-item" data-id="${escHtml(item.id)}">Remove</button></div>
+  </div>`;
+}
+
+function renderFinanceCleanup(){
+  const el = document.getElementById('finance-cleanup');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = ''; return; }
+  const items = financeOffice.cleanup || [];
+  const open = items.filter(item => item.status !== 'fixed');
+  const fixed = items.filter(item => item.status === 'fixed');
+  const openHtml = open.length ? open.map(cleanupFields).join('') : '<div class="finance-note">Nothing still open.</div>';
+  const fixedHtml = fixed.length ? fixed.map(cleanupFields).join('') : '<div class="finance-note">Nothing confirmed fixed yet — add items as the accountant closes them</div>';
+  const companyOpts = FINANCE_COMPANIES.map(c => `<option value="${c.value}"${c.value === 'both' ? ' selected' : ''}>${c.label}</option>`).join('');
+  const roleOpts = FINANCE_ROLES.map(role => `<option value="${role}"${role === 'TBD' ? ' selected' : ''}>${role}</option>`).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-cleanup">
+    <h3>Books Cleanup Log</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Each item names Driven, Trailblazers, or both. The accountant can pick up from Still open.</p>
+    <div class="cleanup-grid">
+      <div>
+        <div class="fin-role">Still open</div>
+        ${openHtml}
+        <div class="cleanup-item">
+          <div class="meet-k">Add an open item</div>
+          <div class="fin-row">
+            <label class="meet-k">Company <select id="fin-new-company" class="actual-inp fin-select">${companyOpts}</select></label>
+            <label class="meet-k">Owner (role) <select id="fin-new-owner" class="actual-inp fin-select">${roleOpts}</select></label>
+          </div>
+          <label class="meet-k">Description <textarea id="fin-new-description" class="actual-inp fin-area" maxlength="500" placeholder="What needs cleanup"></textarea></label>
+          <div class="fin-row">
+            <label class="meet-k">Date found <input id="fin-new-found" type="date" class="actual-inp"></label>
+            <label class="meet-k">Date fixed <input id="fin-new-fixed" type="date" class="actual-inp"></label>
+          </div>
+          <label class="meet-k">Notes <textarea id="fin-new-notes" class="actual-inp fin-area" maxlength="2000"></textarea></label>
+          <div class="fin-actions"><button type="button" class="tbtn green" data-act="add-item">Add to Still open</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="fin-role">Fixed</div>
+        ${fixedHtml}
+      </div>
+    </div>
+  </div>`;
+}
+
+function onFinanceField(event){
+  const el = event.target;
+  const kind = el.dataset && el.dataset.fin;
+  if (!kind || !financeOffice) return;
+  if (kind === 'team-name') {
+    const person = financeOffice.team.find(p => p.role === el.dataset.role);
+    if (!person) return;
+    person.name = el.value.trim() || 'TBD';
+    el.value = person.name;
+  } else if (kind === 'meet-date') {
+    const meeting = financeOffice.meetings.find(m => m.id === el.dataset.id);
+    if (!meeting) return;
+    meeting.next_date = el.value;
+    renderFinanceMeetings();
+  } else if (kind.indexOf('item-') === 0) {
+    const item = (financeOffice.cleanup || []).find(row => row.id === el.dataset.id);
+    if (!item) return;
+    const field = { 'item-company':'company', 'item-owner':'owner', 'item-description':'description', 'item-found':'date_found', 'item-fixed':'date_fixed', 'item-notes':'notes' }[kind];
+    if (!field) return;
+    item[field] = el.value;
+  } else return;
+  debouncedFinanceSave();
+}
+
+function onFinanceClick(event){
+  const btn = event.target.closest('[data-act]');
+  if (!btn || !financeOffice) return;
+  const act = btn.dataset.act;
+  if (act === 'add-item') {
+    const description = document.getElementById('fin-new-description').value.trim();
+    if (!description) { toast('Add a description first', 'err'); return; }
+    financeOffice.cleanup.push({
+      id: 'item-' + Date.now(),
+      company: document.getElementById('fin-new-company').value,
+      description,
+      owner: document.getElementById('fin-new-owner').value,
+      date_found: document.getElementById('fin-new-found').value,
+      date_fixed: document.getElementById('fin-new-fixed').value,
+      notes: document.getElementById('fin-new-notes').value.trim(),
+      status: 'open'
+    });
+  } else if (act === 'mark-fixed' || act === 'mark-open') {
+    const item = financeOffice.cleanup.find(row => row.id === btn.dataset.id);
+    if (!item) return;
+    item.status = act === 'mark-fixed' ? 'fixed' : 'open';
+  } else if (act === 'remove-item') {
+    financeOffice.cleanup = financeOffice.cleanup.filter(row => row.id !== btn.dataset.id);
+  } else return;
+  renderFinanceCleanup();
+  debouncedFinanceSave();
+}
+
+db.channel('finance-office-rt').on('postgres_changes', {
+  event: '*', schema: 'public', table: 'dashboard_data', filter: 'id=eq.' + FINANCE_ROW_ID
+}, payload => {
+  if (!payload.new || !payload.new.finance_office) return;
+  financeOffice = payload.new.finance_office;
+  renderFinanceOffice();
+}).subscribe();
+
+// ══════════════════════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════════════════════
 function toast(msg, type){
@@ -734,11 +1482,230 @@ function toast(msg, type){
   setTimeout(()=>t.remove(), 3000);
 }
 
+// Content pack: read-only lists from data/command-center-content.json.
+// Existing L10 rows are shown in their section and are not written again.
+// Nothing here calls saveAllData.
+let contentPack = null;
+
+function packBiz(){
+  if (area === 'life') return 'Life';
+  if (area === 'ground') return 'Ground Up';
+  if (area === 'tb' || co === 'tb') return 'Trailblazers';
+  return 'Driven';
+}
+
+function packCompany(){
+  return packBiz() === 'Trailblazers' ? 'trailblazers' : 'driven';
+}
+
+function taskIsOpen(task){
+  const status = String(task.status || '').toLowerCase();
+  return status !== 'done' && status !== 'complete' && status !== 'completed';
+}
+
+function taskIsStale(task){
+  return String(task.notes || '').indexOf('STALE:') !== -1;
+}
+
+function taskOnL10(task){
+  const source = String(task.source || '');
+  return /existing/i.test(source) && /L10/i.test(source);
+}
+
+function taskAlreadyStored(task){
+  if (taskOnL10(task)) return false;
+  const source = String(task.source || '');
+  return /Supabase Driven-110/.test(source) && /public\.(tasks|driven_tasks|dashboard_data)/.test(source);
+}
+
+function packTasksFor(tab, section){
+  if (!contentPack) return [];
+  return (contentPack.tasks || []).filter(task => taskIsOpen(task) && task.tab === tab && task.section === section);
+}
+
+function packTaskCard(task){
+  const stale = taskIsStale(task);
+  const onList = taskOnL10(task);
+  const stored = taskAlreadyStored(task);
+  const badges = (stale ? '<span class="pack-badge pack-stale">STALE</span>' : '')
+    + (onList ? '<span class="pack-badge pack-onlist">On the L10 list</span>' : '')
+    + (stored ? '<span class="pack-badge pack-onlist">Already in Command Center</span>' : '');
+  const who = task.owner ? escHtml(task.owner) : 'Owner not named';
+  const due = task.due_date ? escHtml(task.due_date) : 'No due date';
+  const notes = task.notes ? `<div class="pack-notes">${escHtml(task.notes)}</div>` : '';
+  return `<div class="pack-task${stale ? ' is-stale' : ''}">
+    <div class="pack-title">${escHtml(task.title)}${badges}</div>
+    <div class="pack-meta">${who} · due ${due}</div>
+    ${notes}
+  </div>`;
+}
+
+function packSectionHtml(tab, section){
+  const rows = packTasksFor(tab, section);
+  if (!rows.length) return '';
+  const stale = rows.filter(taskIsStale).length;
+  const onList = rows.filter(taskOnL10).length;
+  const stored = rows.filter(taskAlreadyStored).length;
+  return `<div class="pack-block">
+    <div class="sec-title">${escHtml(section)}</div>
+    <p class="finance-note">${rows.length} open. ${onList} already on the L10 list. ${stored} already in Command Center. ${stale} marked STALE. Shown here only. Not written again.</p>
+    ${rows.map(packTaskCard).join('')}
+  </div>`;
+}
+
+function renderPackTasks(){
+  const biz = packBiz();
+  const sales = document.getElementById('pack-tasks-Sales');
+  const marketing = document.getElementById('pack-tasks-Marketing');
+  const finance = document.getElementById('pack-tasks-Finance');
+  const ops = document.getElementById('pack-tasks-Ops');
+  if (sales) sales.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Sales') : '';
+  if (marketing) marketing.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Marketing') : '';
+  if (finance) finance.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Finance') : '';
+  if (ops) ops.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Operations') : '';
+  const life = document.getElementById('pack-life');
+  const ground = document.getElementById('pack-ground');
+  if (life){
+    const sections = ['Command Center & agents', 'Health & fitness', 'Life OS', 'Personal', 'Personal admin'];
+    life.innerHTML = biz === 'Life' ? sections.map(section => packSectionHtml('Life', section)).join('') + packScheduleHtml('Life') + packAutomationHtml('Life') : '';
+  }
+  if (ground){
+    const sections = ['AI agents', 'Business', 'Content', 'Email', 'GHL setup', 'Launch', 'Revenue', 'Setup'];
+    ground.innerHTML = biz === 'Ground Up' ? sections.map(section => packSectionHtml('Ground Up', section)).join('') + packScheduleHtml('Ground Up') + packAutomationHtml('Ground Up') : '';
+  }
+}
+
+function packScheduleHtml(tab){
+  const rows = (contentPack.schedules || []).filter(item => item.tab === tab);
+  if (!rows.length) return '<div class="pack-block"><div class="sec-title">Schedule</div><div class="awaiting">Awaiting data</div></div>';
+  return `<div class="pack-block"><div class="sec-title">Schedule</div>${rows.map(item => `<div class="pack-task"><div class="pack-title">${escHtml(item.title)}</div><div class="pack-meta">${escHtml(item.when || '')}</div>${item.details ? `<div class="pack-notes">${escHtml(item.details)}</div>` : ''}</div>`).join('')}</div>`;
+}
+
+function automationIsLive(item){
+  if (item.name === 'Daily 7 AM text briefing') return true;
+  const blob = (item.name + ' ' + item.when + ' ' + item.what).toLowerCase();
+  if (/not live|not set up|not connected yet|pending twilio|planned|passcode not set|fire time not/.test(blob)) return false;
+  return true;
+}
+
+function packAutomationHtml(tab){
+  const rows = (contentPack.automations || []).filter(item => item.tab === tab);
+  if (!rows.length) return '<div class="pack-block"><div class="sec-title">Automations</div><p class="finance-note">None in the content pack for this area.</p></div>';
+  return `<div class="pack-block"><div class="sec-title">Automations</div>${rows.map(item => {
+    const live = automationIsLive(item);
+    const badge = live ? '<span class="pack-badge pack-live">Live</span>' : '<span class="pack-badge pack-off">Not live</span>';
+    return `<div class="pack-task"><div class="pack-title">${escHtml(item.name)}${badge}</div><div class="pack-meta">${escHtml(item.when || '')}</div><div class="pack-notes">${escHtml(item.what || '')}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function renderPackSchedules(){
+  const host = document.getElementById('pack-dash');
+  if (!host) return;
+  const biz = packBiz();
+  if (biz !== 'Driven' && biz !== 'Trailblazers'){ host.innerHTML = ''; return; }
+  host.innerHTML = packScheduleHtml(biz) + packAutomationHtml(biz);
+}
+
+function flagMatches(item, biz){
+  const blob = (item.item + ' ' + (item.scorecard_or_ops || '') + ' ' + (item.finance || '') + ' ' + (item.gap || '')).toLowerCase();
+  if (/kpi_weekly vs kpi_defs/.test(String(item.item || '').toLowerCase())) return true;
+  if (biz === 'Driven') return /driven/.test(blob);
+  return /trailblazers|\btb\b|bryce/.test(blob);
+}
+
+function packFlagHtml(item){
+  return `<div class="reconcile-bad">Doesn't reconcile: ${escHtml(item.item)}. Scorecard or ops: ${escHtml(item.scorecard_or_ops || '')}. Finance: ${escHtml(item.finance || '')}. ${escHtml(item.gap || '')}</div>`;
+}
+
+function renderPackFlags(){
+  const biz = packBiz();
+  const company = biz === 'Driven' || biz === 'Trailblazers';
+  const flags = company ? (contentPack.scorecard_finance_disagreements || []).filter(item => flagMatches(item, biz)) : [];
+  const html = flags.map(packFlagHtml).join('');
+  const fin = document.getElementById('finance-flags');
+  const l10 = document.getElementById('l10-flags');
+  if (fin) fin.innerHTML = company ? html : '';
+  if (l10) l10.innerHTML = company ? html : '';
+}
+
+function metricDefKey(metric){
+  const match = String(metric.data_source || '').match(/kpi_defs \((driven|tb)\/([a-z0-9_]+)\)/);
+  if (!match) return null;
+  return { company: match[1] === 'tb' ? 'trailblazers' : 'driven', key: match[2] };
+}
+
+function sharedKpi(metric){
+  const parsed = metricDefKey(metric);
+  if (!parsed || parsed.company !== packCompany()) return null;
+  const lists = KPIS[co] || {};
+  for (const tab of ['Sales', 'Ops', 'Finance']){
+    const hit = (lists[tab] || []).find(row => row.key === parsed.key);
+    if (hit) return { tab, key: parsed.key, label: hit.label };
+  }
+  return null;
+}
+
+function renderPackCatalog(){
+  const host = document.getElementById('l10-catalog');
+  if (!host) return;
+  const biz = packBiz();
+  if (biz !== 'Driven' && biz !== 'Trailblazers'){ host.innerHTML = ''; return; }
+  const company = packCompany();
+  const metrics = (contentPack.scorecards || []).filter(row => row.business === company);
+  const areas = ['Sales', 'Ops', 'Finance'];
+  host.innerHTML = areas.map(areaName => {
+    const rows = metrics.filter(row => row.l10_area === areaName);
+    const body = rows.map(row => {
+      const shared = sharedKpi(row);
+      if (shared){
+        const current = weekRaw(shared.key, 'w4');
+        const shown = current === null ? '<div class="awaiting">Awaiting data</div>' : `<div class="pack-notes">Current week: ${escHtml(String(current))}</div>`;
+        const goal = row.goal ? `Goal: ${escHtml(row.goal)}` : '';
+        return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div><div class="pack-meta">Same source as ${escHtml(shared.tab)} · ${escHtml(shared.key)}. ${goal}</div>${shown}</div>`;
+      }
+      const values = Array.isArray(row.values) ? row.values : [];
+      const goal = row.goal ? `<div class="pack-meta">Goal: ${escHtml(row.goal)}</div>` : '';
+      if (!values.length){
+        return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div>${goal}<div class="awaiting">Awaiting data</div></div>`;
+      }
+      const lines = values.map(point => `<div class="pack-notes">${escHtml(String(point.week))}: ${escHtml(String(point.value))}</div>`).join('');
+      return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div>${goal}${lines}</div>`;
+    }).join('');
+    return `<div class="pack-block"><div class="fin-role">${escHtml(areaName)}</div>${body}</div>`;
+  }).join('');
+}
+
+function renderContentPack(){
+  if (!contentPack) return;
+  renderPackTasks();
+  renderPackSchedules();
+  renderPackFlags();
+  renderPackCatalog();
+  if (currentTab === 'bots') renderBots();
+}
+
+async function loadContentPack(){
+  try {
+    const response = await fetch('data/command-center-content.json');
+    if (!response.ok) throw new Error('content pack ' + response.status);
+    contentPack = await response.json();
+    renderContentPack();
+  } catch (err) {
+    toast('Content pack did not load', 'err');
+  }
+}
+
 // ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
+document.body.className = 'area-driven';
+renderAreaTabs();
 renderLinks();
+document.getElementById('panel-Finance').addEventListener('change', onFinanceField);
+document.getElementById('panel-Finance').addEventListener('click', onFinanceClick);
 loadData();
+loadContentPack();
 </script>
+<script type="module" src="js/running-tasks.js"></script>
 </body>
 </html>
