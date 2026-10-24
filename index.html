@@ -59,6 +59,19 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
 .qbr-link{display:inline-block;margin-top:8px;color:var(--g);font-size:12px;font-weight:600;text-decoration:none}
 .qbr-link:hover{text-decoration:underline}
 #card-qbr-agenda{scroll-margin-top:12px}
+.pack-block{margin:14px 0}
+.pack-task{border:1px solid var(--br);border-radius:4px;padding:10px 12px;margin:0 0 8px;background:var(--s)}
+.pack-task.is-stale{border-color:var(--abr)}
+.pack-title{font-size:13px;font-weight:600;color:var(--tx);line-height:1.35}
+.pack-meta{font-size:11px;color:var(--td);margin-top:4px}
+.pack-notes{font-size:12px;color:var(--tx);margin-top:6px;white-space:pre-wrap;line-height:1.45}
+.pack-badge{display:inline-block;margin-left:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:2px;vertical-align:middle}
+.pack-stale{background:var(--abg);border:1px solid var(--abr);color:var(--amb)}
+.pack-onlist{background:var(--s3);border:1px solid var(--br);color:var(--td)}
+.pack-live{background:var(--gbg);border:1px solid var(--gd);color:var(--g)}
+.pack-off{background:var(--rbg);border:1px solid var(--rbr);color:var(--red)}
+.pack-metric{border-bottom:1px solid rgba(255,255,255,.05);padding:8px 0}
+.pack-metric .awaiting{margin:6px 0 0;padding:10px}
 .finance-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
 .finance-card h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
 .finance-note{font-size:12px;color:var(--td);margin:0 0 10px;line-height:1.5}
@@ -254,17 +267,19 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
 </div>
 
 <div class="content">
-  <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
-  <div class="panel" id="panel-Sales"><div class="sec-title">💵 Sales</div><div class="sec-sub">Weekly sales numbers for this company. The L10 sales scorecard reads these same fields.</div><div id="kpi-Sales"></div></div>
+  <div class="panel active" id="panel-dashboard"><div id="dash-content"></div><div id="pack-dash"></div></div>
+  <div class="panel" id="panel-Sales"><div class="sec-title">💵 Sales</div><div class="sec-sub">Weekly sales numbers for this company. The L10 sales scorecard reads these same fields.</div><div id="kpi-Sales"></div><div id="pack-tasks-Sales"></div></div>
   <div class="panel" id="panel-marketing">
     <div class="sec-title">📣 Marketing</div>
     <div class="sec-sub" id="marketing-sub">Marketing metrics are not set up yet.</div>
     <div class="awaiting">Awaiting data</div>
+    <div id="pack-tasks-Marketing"></div>
   </div>
   <div class="panel" id="panel-Finance">
     <div class="sec-title">💰 Finance</div>
     <div class="sec-sub" id="finance-sub">Finance definitions for this company. Scorecard rows that share a metric read this same week_data field.</div>
     <div id="finance-reconcile"></div>
+    <div id="finance-flags"></div>
     <div class="finance-stack">
       <div id="finance-team"></div>
       <div class="finance-beside">
@@ -336,8 +351,9 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
     <div class="sec-title">Finance metrics</div>
     <div class="sec-sub">Same week_data fields the L10 scorecard uses when a metric is shared with Finance.</div>
     <div id="kpi-Finance"></div>
+    <div id="pack-tasks-Finance"></div>
   </div>
-  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Operations</div><div class="sec-sub">Weekly operations numbers for this company. The L10 ops scorecard reads these same fields.</div><div id="kpi-Ops"></div></div>
+  <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Operations</div><div class="sec-sub">Weekly operations numbers for this company. The L10 ops scorecard reads these same fields.</div><div id="kpi-Ops"></div><div id="pack-tasks-Ops"></div></div>
   <div class="panel" id="panel-l10">
     <div class="sec-title" id="l10-title">L10</div>
     <div class="sec-sub" id="l10-sub">Sales and Ops scorecards with a weekly trend against the L10 goal. Empty weeks stay blank.</div>
@@ -350,6 +366,13 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
     <div id="l10-ops"></div>
     <div class="sec-title">Ops graphs</div>
     <div class="chart-grid" id="l10-ops-charts"></div>
+    <div class="sec-title">Finance scorecard</div>
+    <div class="sec-sub">Same week_data fields as the Finance section. Extra finance metrics from the content pack are in the catalog below.</div>
+    <div id="l10-finance"></div>
+    <div id="l10-flags"></div>
+    <div class="sec-title">Scorecard catalog</div>
+    <div class="sec-sub" id="l10-catalog-sub">Metrics from the content pack. A row tied to a week_data field uses that field. Empty rows say Awaiting data.</div>
+    <div id="l10-catalog"></div>
   </div>
   <div class="panel" id="panel-pnl">
     <div class="sec-title">🧾 P&amp;L — QuickBooks</div>
@@ -395,14 +418,15 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
       </div>
       <div class="area-card">
         <h3>Personal</h3>
-        <p class="sec-sub">Coaching, recovery, whole body, fitness, and recipe bots would be listed in Bots. None of those names are in the Command Center or in Driven-110.</p>
+        <p class="sec-sub">Personal bots (coaching, recovery, whole body, fitness, recipes) are not registered. Frank is listed under Command Center and agents.</p>
         <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
       </div>
     </div>
+    <div id="pack-life"></div>
   </div>
   <div class="panel" id="panel-ground-home">
     <div class="sec-title">The Ground Up</div>
-    <div class="sec-sub">Coaching brand. No Ground Up pages are in the Command Center yet. Work tagged The Ground Up stays in Running, including the starter email task after you sign in.</div>
+    <div class="sec-sub">Coaching brand. Section tasks from the content pack are below. Work tagged The Ground Up stays in Running, including the starter email task after you sign in.</div>
     <div class="area-home">
       <div class="area-card">
         <h3>Running</h3>
@@ -411,10 +435,11 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
       </div>
       <div class="area-card">
         <h3>Bots</h3>
-        <p class="sec-sub">Bots whose names start with tgu- would be listed here. None are stored yet.</p>
+        <p class="sec-sub">Bots whose names start with tgu- are on the Bots tab.</p>
         <button class="tbtn" onclick="showPanel('bots', document.querySelector('.tab[data-panel=bots]'))">Open Bots</button>
       </div>
     </div>
+    <div id="pack-ground"></div>
   </div>
   <div class="panel" id="panel-bots">
     <div class="sec-title" id="bots-title">Bots</div>
@@ -672,22 +697,36 @@ function botArea(bot){
 }
 
 function renderBots(){
-  const titles = { driven:'Driven bots', tb:'Trailblazers bots', life:'Personal', ground:'Ground Up bots' };
-  const blurbs = {
-    driven:'Names starting with driven-. None are in the Command Center repo or in Driven-110.',
-    tb:'Names starting with tb-. None are in the Command Center repo or in Driven-110.',
-    life:'Personal section. Coaching, recovery, whole body, fitness, and recipe bots would be listed here. None are stored.',
-    ground:'Names starting with tgu-. None are in the Command Center repo or in Driven-110.',
-  };
+  const titles = { driven:'Driven bots', tb:'Trailblazers bots', life:'Life bots', ground:'Ground Up bots' };
   document.getElementById('bots-title').textContent = titles[area] || 'Bots';
-  document.getElementById('bots-sub').textContent = blurbs[area] || '';
-  const mine = BOTS.filter(bot => botArea(bot) === area);
   const host = document.getElementById('bots-content');
-  if (!mine.length){
-    host.innerHTML = '<div class="area-card"><h3>No bots yet</h3><p class="sec-sub" style="margin:0">Searched the repo and Driven-110. Nothing matched the bot names, so this list stays empty. Example names such as tb-lead or tgu-social were not added.</p></div>';
+  const sub = document.getElementById('bots-sub');
+  if (!contentPack){
+    sub.textContent = 'Loading the content pack.';
+    host.innerHTML = '';
     return;
   }
-  host.innerHTML = '<div class="bot-list">' + mine.map(bot => `<div class="bot-row"><span class="bot-name">${bot.name}</span><span style="color:var(--td);font-size:12px">${bot.about || ''}</span></div>`).join('') + '</div>';
+  const tab = packBiz();
+  const mine = (contentPack.bots || []).filter(bot => bot.tab === tab);
+  if (area === 'driven'){
+    sub.textContent = 'Names starting with driven-. None are registered.';
+    host.innerHTML = '<div class="area-card"><h3>No driven- bots</h3><p class="sec-sub" style="margin:0">No driven- bots exist yet. None were added.</p></div>';
+    return;
+  }
+  if (area === 'life'){
+    sub.textContent = 'Frank is the Command Center assistant. Personal bots are a separate empty group.';
+    const frank = mine.map(bot => `<div class="bot-row"><span class="bot-name">${escHtml(bot.name)}</span><span style="color:var(--td);font-size:12px">${escHtml(bot.section || '')}. ${escHtml(bot.role || '')}</span></div>`).join('');
+    host.innerHTML = `<div class="sec-title" style="margin-top:0">Command Center & agents</div><div class="bot-list">${frank || ''}</div>
+      <div class="area-card" style="margin-top:12px"><h3>Personal</h3><p class="sec-sub" style="margin:0">No personal bots yet. Coaching, recovery, whole body, fitness, and recipe bots were not added.</p></div>`;
+    return;
+  }
+  sub.textContent = tab === 'Trailblazers' ? 'Names starting with tb-.' : 'Names starting with tgu-.';
+  const sections = [];
+  mine.forEach(bot => { if (!sections.includes(bot.section)) sections.push(bot.section); });
+  host.innerHTML = sections.map(section => {
+    const rows = mine.filter(bot => bot.section === section).map(bot => `<div class="bot-row"><span class="bot-name">${escHtml(bot.name)}</span><span style="color:var(--td);font-size:12px">${escHtml(bot.role || '')}</span></div>`).join('');
+    return `<div class="sec-title">${escHtml(section || 'Bots')}</div><div class="bot-list">${rows}</div>`;
+  }).join('');
 }
 
 function notifyRunning(){
@@ -732,6 +771,7 @@ function paintLifeGround(kind){
     document.getElementById('links-bar').innerHTML = '<span class="link-chip">No Ground Up pages in the Command Center yet</span>';
   }
   document.getElementById('h-stats').innerHTML = '';
+  renderContentPack();
 }
 
 function showArea(next){
@@ -888,6 +928,7 @@ function renderAll(){
   renderProj();
   renderHistory();
   renderFinanceOffice();
+  renderContentPack();
 }
 
 function renderDashboard(){
@@ -1062,7 +1103,7 @@ function renderL10(){
   const title = document.getElementById('l10-title');
   const sub = document.getElementById('l10-sub');
   if (title) title.textContent = name + ' L10';
-  if (sub) sub.textContent = 'Sales and Ops scorecards use the ' + name + ' L10 metric list. Each graph is the stored weekly value against that metric goal. Empty weeks stay blank.';
+  if (sub) sub.textContent = 'Sales, Ops, and Finance scorecards use the ' + name + ' week_data fields. Each graph is the stored weekly value against that metric goal. Empty weeks stay blank.';
   const note = financeReconcileHtml();
   const fin = document.getElementById('finance-reconcile');
   const l10 = document.getElementById('l10-reconcile');
@@ -1071,6 +1112,7 @@ function renderL10(){
   renderMarketing();
   renderKPITable('Sales', 'l10-sales', 'Sales scorecard');
   renderKPITable('Ops', 'l10-ops', 'Ops scorecard');
+  renderKPITable('Finance', 'l10-finance', 'Finance scorecard');
   renderScorecardCharts('Sales', 'l10-sales-charts');
   renderScorecardCharts('Ops', 'l10-ops-charts');
 }
@@ -1440,6 +1482,218 @@ function toast(msg, type){
   setTimeout(()=>t.remove(), 3000);
 }
 
+// Content pack: read-only lists from data/command-center-content.json.
+// Existing L10 rows are shown in their section and are not written again.
+// Nothing here calls saveAllData.
+let contentPack = null;
+
+function packBiz(){
+  if (area === 'life') return 'Life';
+  if (area === 'ground') return 'Ground Up';
+  if (area === 'tb' || co === 'tb') return 'Trailblazers';
+  return 'Driven';
+}
+
+function packCompany(){
+  return packBiz() === 'Trailblazers' ? 'trailblazers' : 'driven';
+}
+
+function taskIsOpen(task){
+  const status = String(task.status || '').toLowerCase();
+  return status !== 'done' && status !== 'complete' && status !== 'completed';
+}
+
+function taskIsStale(task){
+  return String(task.notes || '').indexOf('STALE:') !== -1;
+}
+
+function taskOnL10(task){
+  const source = String(task.source || '');
+  return /existing/i.test(source) && /L10/i.test(source);
+}
+
+function taskAlreadyStored(task){
+  if (taskOnL10(task)) return false;
+  const source = String(task.source || '');
+  return /Supabase Driven-110/.test(source) && /public\.(tasks|driven_tasks|dashboard_data)/.test(source);
+}
+
+function packTasksFor(tab, section){
+  if (!contentPack) return [];
+  return (contentPack.tasks || []).filter(task => taskIsOpen(task) && task.tab === tab && task.section === section);
+}
+
+function packTaskCard(task){
+  const stale = taskIsStale(task);
+  const onList = taskOnL10(task);
+  const stored = taskAlreadyStored(task);
+  const badges = (stale ? '<span class="pack-badge pack-stale">STALE</span>' : '')
+    + (onList ? '<span class="pack-badge pack-onlist">On the L10 list</span>' : '')
+    + (stored ? '<span class="pack-badge pack-onlist">Already in Command Center</span>' : '');
+  const who = task.owner ? escHtml(task.owner) : 'Owner not named';
+  const due = task.due_date ? escHtml(task.due_date) : 'No due date';
+  const notes = task.notes ? `<div class="pack-notes">${escHtml(task.notes)}</div>` : '';
+  return `<div class="pack-task${stale ? ' is-stale' : ''}">
+    <div class="pack-title">${escHtml(task.title)}${badges}</div>
+    <div class="pack-meta">${who} · due ${due}</div>
+    ${notes}
+  </div>`;
+}
+
+function packSectionHtml(tab, section){
+  const rows = packTasksFor(tab, section);
+  if (!rows.length) return '';
+  const stale = rows.filter(taskIsStale).length;
+  const onList = rows.filter(taskOnL10).length;
+  const stored = rows.filter(taskAlreadyStored).length;
+  return `<div class="pack-block">
+    <div class="sec-title">${escHtml(section)}</div>
+    <p class="finance-note">${rows.length} open. ${onList} already on the L10 list. ${stored} already in Command Center. ${stale} marked STALE. Shown here only. Not written again.</p>
+    ${rows.map(packTaskCard).join('')}
+  </div>`;
+}
+
+function renderPackTasks(){
+  const biz = packBiz();
+  const sales = document.getElementById('pack-tasks-Sales');
+  const marketing = document.getElementById('pack-tasks-Marketing');
+  const finance = document.getElementById('pack-tasks-Finance');
+  const ops = document.getElementById('pack-tasks-Ops');
+  if (sales) sales.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Sales') : '';
+  if (marketing) marketing.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Marketing') : '';
+  if (finance) finance.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Finance') : '';
+  if (ops) ops.innerHTML = (biz === 'Driven' || biz === 'Trailblazers') ? packSectionHtml(biz, 'Operations') : '';
+  const life = document.getElementById('pack-life');
+  const ground = document.getElementById('pack-ground');
+  if (life){
+    const sections = ['Command Center & agents', 'Health & fitness', 'Life OS', 'Personal', 'Personal admin'];
+    life.innerHTML = biz === 'Life' ? sections.map(section => packSectionHtml('Life', section)).join('') + packScheduleHtml('Life') + packAutomationHtml('Life') : '';
+  }
+  if (ground){
+    const sections = ['AI agents', 'Business', 'Content', 'Email', 'GHL setup', 'Launch', 'Revenue', 'Setup'];
+    ground.innerHTML = biz === 'Ground Up' ? sections.map(section => packSectionHtml('Ground Up', section)).join('') + packScheduleHtml('Ground Up') + packAutomationHtml('Ground Up') : '';
+  }
+}
+
+function packScheduleHtml(tab){
+  const rows = (contentPack.schedules || []).filter(item => item.tab === tab);
+  if (!rows.length) return '<div class="pack-block"><div class="sec-title">Schedule</div><div class="awaiting">Awaiting data</div></div>';
+  return `<div class="pack-block"><div class="sec-title">Schedule</div>${rows.map(item => `<div class="pack-task"><div class="pack-title">${escHtml(item.title)}</div><div class="pack-meta">${escHtml(item.when || '')}</div>${item.details ? `<div class="pack-notes">${escHtml(item.details)}</div>` : ''}</div>`).join('')}</div>`;
+}
+
+function automationIsLive(item){
+  const blob = (item.name + ' ' + item.when + ' ' + item.what).toLowerCase();
+  if (/not live|not set up|not connected yet|pending twilio|planned|passcode not set|fire time not/.test(blob)) return false;
+  return true;
+}
+
+function packAutomationHtml(tab){
+  const rows = (contentPack.automations || []).filter(item => item.tab === tab);
+  if (!rows.length) return '<div class="pack-block"><div class="sec-title">Automations</div><p class="finance-note">None in the content pack for this area.</p></div>';
+  return `<div class="pack-block"><div class="sec-title">Automations</div>${rows.map(item => {
+    const live = automationIsLive(item);
+    const badge = live ? '<span class="pack-badge pack-live">Live</span>' : '<span class="pack-badge pack-off">Not live</span>';
+    return `<div class="pack-task"><div class="pack-title">${escHtml(item.name)}${badge}</div><div class="pack-meta">${escHtml(item.when || '')}</div><div class="pack-notes">${escHtml(item.what || '')}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function renderPackSchedules(){
+  const host = document.getElementById('pack-dash');
+  if (!host) return;
+  const biz = packBiz();
+  if (biz !== 'Driven' && biz !== 'Trailblazers'){ host.innerHTML = ''; return; }
+  host.innerHTML = packScheduleHtml(biz) + packAutomationHtml(biz);
+}
+
+function flagMatches(item, biz){
+  const blob = (item.item + ' ' + (item.scorecard_or_ops || '') + ' ' + (item.finance || '') + ' ' + (item.gap || '')).toLowerCase();
+  if (/kpi_weekly vs kpi_defs/.test(String(item.item || '').toLowerCase())) return true;
+  if (biz === 'Driven') return /driven/.test(blob);
+  return /trailblazers|\btb\b|bryce/.test(blob);
+}
+
+function packFlagHtml(item){
+  return `<div class="reconcile-bad">Doesn't reconcile: ${escHtml(item.item)}. Scorecard or ops: ${escHtml(item.scorecard_or_ops || '')}. Finance: ${escHtml(item.finance || '')}. ${escHtml(item.gap || '')}</div>`;
+}
+
+function renderPackFlags(){
+  const biz = packBiz();
+  const company = biz === 'Driven' || biz === 'Trailblazers';
+  const flags = company ? (contentPack.scorecard_finance_disagreements || []).filter(item => flagMatches(item, biz)) : [];
+  const html = flags.map(packFlagHtml).join('');
+  const fin = document.getElementById('finance-flags');
+  const l10 = document.getElementById('l10-flags');
+  if (fin) fin.innerHTML = company ? html : '';
+  if (l10) l10.innerHTML = company ? html : '';
+}
+
+function metricDefKey(metric){
+  const match = String(metric.data_source || '').match(/kpi_defs \((driven|tb)\/([a-z0-9_]+)\)/);
+  if (!match) return null;
+  return { company: match[1] === 'tb' ? 'trailblazers' : 'driven', key: match[2] };
+}
+
+function sharedKpi(metric){
+  const parsed = metricDefKey(metric);
+  if (!parsed || parsed.company !== packCompany()) return null;
+  const lists = KPIS[co] || {};
+  for (const tab of ['Sales', 'Ops', 'Finance']){
+    const hit = (lists[tab] || []).find(row => row.key === parsed.key);
+    if (hit) return { tab, key: parsed.key, label: hit.label };
+  }
+  return null;
+}
+
+function renderPackCatalog(){
+  const host = document.getElementById('l10-catalog');
+  if (!host) return;
+  const biz = packBiz();
+  if (biz !== 'Driven' && biz !== 'Trailblazers'){ host.innerHTML = ''; return; }
+  const company = packCompany();
+  const metrics = (contentPack.scorecards || []).filter(row => row.business === company);
+  const areas = ['Sales', 'Ops', 'Finance'];
+  host.innerHTML = areas.map(areaName => {
+    const rows = metrics.filter(row => row.l10_area === areaName);
+    const body = rows.map(row => {
+      const shared = sharedKpi(row);
+      if (shared){
+        const current = weekRaw(shared.key, 'w4');
+        const shown = current === null ? '<div class="awaiting">Awaiting data</div>' : `<div class="pack-notes">Current week: ${escHtml(String(current))}</div>`;
+        const goal = row.goal ? `Goal: ${escHtml(row.goal)}` : '';
+        return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div><div class="pack-meta">Same source as ${escHtml(shared.tab)} · ${escHtml(shared.key)}. ${goal}</div>${shown}</div>`;
+      }
+      const values = Array.isArray(row.values) ? row.values : [];
+      const goal = row.goal ? `<div class="pack-meta">Goal: ${escHtml(row.goal)}</div>` : '';
+      if (!values.length){
+        return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div>${goal}<div class="awaiting">Awaiting data</div></div>`;
+      }
+      const lines = values.map(point => `<div class="pack-notes">${escHtml(String(point.week))}: ${escHtml(String(point.value))}</div>`).join('');
+      return `<div class="pack-metric"><div class="pack-title">${escHtml(row.metric)}</div>${goal}${lines}</div>`;
+    }).join('');
+    return `<div class="pack-block"><div class="fin-role">${escHtml(areaName)}</div>${body}</div>`;
+  }).join('');
+}
+
+function renderContentPack(){
+  if (!contentPack) return;
+  renderPackTasks();
+  renderPackSchedules();
+  renderPackFlags();
+  renderPackCatalog();
+  if (currentTab === 'bots') renderBots();
+}
+
+async function loadContentPack(){
+  try {
+    const response = await fetch('data/command-center-content.json');
+    if (!response.ok) throw new Error('content pack ' + response.status);
+    contentPack = await response.json();
+    renderContentPack();
+  } catch (err) {
+    toast('Content pack did not load', 'err');
+  }
+}
+
 // ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
@@ -1449,6 +1703,7 @@ renderLinks();
 document.getElementById('panel-Finance').addEventListener('change', onFinanceField);
 document.getElementById('panel-Finance').addEventListener('click', onFinanceClick);
 loadData();
+loadContentPack();
 </script>
 <script type="module" src="js/running-tasks.js"></script>
 </body>
