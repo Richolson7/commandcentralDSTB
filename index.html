@@ -48,8 +48,26 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
 .reconcile-bad{background:var(--rbg);border:1px solid var(--rbr);border-radius:4px;padding:10px 14px;margin:0 0 12px;font-size:12px;font-weight:600;color:var(--red);line-height:1.45}
 .awaiting{background:var(--s2);border:1px dashed var(--br);border-radius:4px;padding:18px 14px;margin:0 0 12px;color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-align:center}
 .chart-card .awaiting{margin:0}
+.finance-stack{display:flex;flex-direction:column;gap:14px;margin:0 0 18px}
+.finance-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px}
+.finance-card h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.finance-note{font-size:12px;color:var(--td);margin:0 0 10px;line-height:1.5}
+.fin-row{display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.fin-role{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g)}
+.fin-name{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px}
+.fin-name .actual-inp{flex:1}
+.meet-card,.cleanup-item{border:1px solid var(--br);border-radius:4px;padding:12px;margin-bottom:10px;background:var(--s)}
+.meet-k{display:block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--td);margin:8px 0 4px}
+.fin-agenda{margin:0 0 8px 18px;color:var(--tx);font-size:12px}
+.fin-agenda li{margin:2px 0}
+.not-l10{display:inline-block;margin-left:8px;background:var(--abg);border:1px solid var(--abr);color:var(--amb);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px;vertical-align:middle}
+.cleanup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fin-select{width:100%;height:28px}
+.fin-area{width:100%;min-height:58px;height:auto;resize:vertical}
+.fin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 @media(max-width:860px){
-  .area-home,.chart-grid,.summary-grid{grid-template-columns:1fr}
+  .area-home,.chart-grid,.summary-grid,.cleanup-grid{grid-template-columns:1fr}
+  .fin-row{grid-template-columns:1fr}
   .content,.tabs,.sync-bar,.links-bar{padding-left:12px;padding-right:12px}
   .header{padding-left:12px;padding-right:12px}
 }
@@ -111,6 +129,7 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
 .kpi-floor{font-size:11px;color:var(--red);font-family:'DM Mono',monospace}
 .kpi-target{font-size:11px;color:var(--g);font-weight:600;font-family:'DM Mono',monospace;transition:color .3s}
 .actual-inp{width:74px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'DM Mono',monospace;font-size:12px;padding:4px 6px;transition:border .15s}
+.finance-card .actual-inp{width:100%}
 .actual-inp:focus{outline:none;border-color:var(--g)}
 .actual-inp.g{color:var(--g);border-color:rgba(92,184,0,.4)}
 .actual-inp.a{color:var(--amb);border-color:rgba(255,184,0,.4)}
@@ -234,8 +253,15 @@ body.area-life .company-only, body.area-ground .company-only{display:none!import
   </div>
   <div class="panel" id="panel-Finance">
     <div class="sec-title">💰 Finance</div>
-    <div class="sec-sub">Finance definitions for this company. Scorecard rows that share a metric read this same week_data field.</div>
+    <div class="sec-sub" id="finance-sub">Finance definitions for this company. Scorecard rows that share a metric read this same week_data field.</div>
     <div id="finance-reconcile"></div>
+    <div class="finance-stack">
+      <div id="finance-team"></div>
+      <div id="finance-meetings"></div>
+      <div id="finance-cleanup"></div>
+    </div>
+    <div class="sec-title">Finance metrics</div>
+    <div class="sec-sub">Same week_data fields the L10 scorecard uses when a metric is shared with Finance.</div>
     <div id="kpi-Finance"></div>
   </div>
   <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Operations</div><div class="sec-sub">Weekly operations numbers for this company. The L10 ops scorecard reads these same fields.</div><div id="kpi-Ops"></div></div>
@@ -477,6 +503,7 @@ async function loadData() {
     state[co].data = {}; state[co].history = []; state[co].tasks = []; state[co].pnl = null;
     setSync('error');
   }
+  await loadFinanceOffice();
   renderAll();
 }
 
@@ -787,6 +814,7 @@ function renderAll(){
   renderPnl();
   renderProj();
   renderHistory();
+  renderFinanceOffice();
 }
 
 function renderDashboard(){
@@ -1077,6 +1105,254 @@ function exportHistoryCSV(){
 }
 
 // ══════════════════════════════════════════════════════════
+// FINANCE OFFICE (shared by Driven and Trailblazers)
+// Scorecard metrics stay in week_data. This document does not write them.
+// ══════════════════════════════════════════════════════════
+const FINANCE_ROW_ID = 'finance_shared';
+const FINANCE_ROLES = ['Owner', 'CFO', 'Bookkeeper', 'Accountant', 'TBD'];
+const FINANCE_COMPANIES = [
+  { value: 'driven', label: 'Driven' },
+  { value: 'trailblazers', label: 'Trailblazers' },
+  { value: 'both', label: 'Both' }
+];
+const FINANCE_DEFAULT = {
+  team: [
+    { role: 'Owner', name: 'Rich', detail: '' },
+    { role: 'CFO', name: 'TBD', detail: '' },
+    { role: 'Bookkeeper', name: 'TBD', detail: 'Uses QuickBooks Online' },
+    { role: 'Accountant', name: 'TBD', detail: 'Hired to clean up the books' }
+  ],
+  meetings: [
+    { id: 'weekly-rich-cfo', cadence: 'Weekly', attendees: 'Rich + CFO', purpose: 'Cash position, A/R and A/P, open items in the books, decisions needed.', agenda: 'Cash position\nA/R and A/P\nOpen items in the books\nDecisions needed', next_date: '', not_l10: false },
+    { id: 'weekly-rich-bookkeeper', cadence: 'Weekly', attendees: 'Rich + Bookkeeper', purpose: 'Reconciliation status, bills to approve, missing documents, questions.', agenda: 'Reconciliation status\nBills to approve\nMissing documents\nQuestions', next_date: '', not_l10: false },
+    { id: 'monthly-cfo-bookkeeper', cadence: 'Monthly', attendees: 'CFO + Bookkeeper', purpose: 'Month-end close, reconciliations, tie-outs, review of the cleanup list with the accountant.', agenda: 'Month-end close\nReconciliations\nTie-outs\nReview of the cleanup list with the accountant', next_date: '', not_l10: false },
+    { id: 'quarterly-business-review', cadence: 'Quarterly', attendees: 'Not named yet', purpose: 'High-level business review. P&L and margin trends by company, cash and debt, strategy, hiring/comp (e.g. sales rep comp), annual goals.', agenda: 'P&L and margin trends by company\nCash and debt\nStrategy\nHiring/comp (e.g. sales rep comp)\nAnnual goals', next_date: '', not_l10: true }
+  ],
+  cleanup: [
+    { id: 'both-books-not-reconciled', company: 'both', description: 'Books not reconciled on time; tie-outs run late.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'both-gl-balance-sheet', company: 'both', description: 'General ledger and balance sheet are wrong / numbers inaccurate.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'tb-ar-mismatch', company: 'trailblazers', description: 'A/R mismatch — about $9.9K in QuickBooks vs about $20.3K in Jobber; needs reconciling.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' },
+    { id: 'both-bookkeeping-routines', company: 'both', description: 'Bookkeeping routines (moving money between accounts, paying bills) need a defined process — owner prepares, nothing paid or moved without Rich\'s approval.', owner: 'TBD', date_found: '', date_fixed: '', notes: '', status: 'open' }
+  ]
+};
+let financeOffice = null;
+let financeSaveTimer;
+
+function escHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+}
+function financeCompanyLabel(value){
+  const found = FINANCE_COMPANIES.find(c => c.value === value);
+  return found ? found.label : value;
+}
+function freshFinanceOffice(){ return JSON.parse(JSON.stringify(FINANCE_DEFAULT)); }
+function financeViewName(){ return co === 'tb' ? 'Trailblazers' : 'Driven'; }
+
+async function loadFinanceOffice(){
+  try {
+    const { data, error } = await db.from('dashboard_data').select('finance_office').eq('id', FINANCE_ROW_ID).maybeSingle();
+    if (error) throw error;
+    if (!data || !data.finance_office) {
+      financeOffice = freshFinanceOffice();
+      await saveFinanceOffice();
+      return;
+    }
+    financeOffice = data.finance_office;
+  } catch (e) {
+    if (!financeOffice) financeOffice = freshFinanceOffice();
+    toast('Finance list did not load', 'err');
+  }
+}
+
+function debouncedFinanceSave(){ clearTimeout(financeSaveTimer); financeSaveTimer = setTimeout(saveFinanceOffice, 600); }
+
+async function saveFinanceOffice(){
+  if (!financeOffice) return;
+  try {
+    const { error } = await db.from('dashboard_data').upsert({
+      id: FINANCE_ROW_ID,
+      finance_office: financeOffice,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+    if (error) throw error;
+  } catch (e) {
+    toast('Finance list did not save', 'err');
+  }
+}
+
+function renderFinanceOffice(){
+  renderFinanceTeam();
+  renderFinanceMeetings();
+  renderFinanceCleanup();
+}
+
+function renderFinanceTeam(){
+  const el = document.getElementById('finance-team');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = '<div class="awaiting">Loading shared finance list</div>'; return; }
+  const rows = financeOffice.team.map(person => `
+    <div class="fin-row">
+      <div>
+        <div class="fin-role">${escHtml(person.role)}</div>
+        ${person.detail ? `<div class="sec-sub" style="margin:2px 0 0">${escHtml(person.detail)}</div>` : ''}
+      </div>
+      <label class="fin-name">name: <input class="actual-inp" data-fin="team-name" data-role="${escHtml(person.role)}" value="${escHtml(person.name)}" maxlength="80" placeholder="TBD"></label>
+    </div>`).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-team">
+    <h3>Finance Team</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Role labels only.</p>
+    ${rows}
+  </div>`;
+}
+
+function renderFinanceMeetings(){
+  const el = document.getElementById('finance-meetings');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = ''; return; }
+  const cards = financeOffice.meetings.map(meeting => {
+    const agenda = String(meeting.agenda || '').split('\n').filter(Boolean).map(line => `<li>${escHtml(line)}</li>`).join('');
+    const badge = meeting.not_l10 ? '<span class="not-l10">not an L10 meeting</span>' : '';
+    const when = meeting.next_date ? '' : '<div class="finance-note">next date: not scheduled</div>';
+    return `<div class="meet-card">
+      <div class="fin-role">${escHtml(meeting.cadence)}: ${escHtml(meeting.attendees)} ${badge}</div>
+      <div class="meet-k">Purpose</div>
+      <div style="font-size:13px;color:var(--tx)">${escHtml(meeting.purpose)}</div>
+      <div class="meet-k">Suggested standing agenda</div>
+      <ul class="fin-agenda">${agenda}</ul>
+      <label class="meet-k">Next date <input type="date" class="actual-inp" data-fin="meet-date" data-id="${escHtml(meeting.id)}" value="${escHtml(meeting.next_date || '')}"></label>
+      ${when}
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-meetings">
+    <h3>Finance Meetings Rhythm</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Four recurring meetings. The next date is editable.</p>
+    ${cards}
+  </div>`;
+}
+
+function cleanupFields(item){
+  const companyOpts = FINANCE_COMPANIES.map(c => `<option value="${c.value}"${item.company === c.value ? ' selected' : ''}>${c.label}</option>`).join('');
+  const roleOpts = FINANCE_ROLES.map(role => `<option value="${role}"${item.owner === role ? ' selected' : ''}>${role}</option>`).join('');
+  const move = item.status === 'fixed'
+    ? `<button type="button" class="tbtn" data-act="mark-open" data-id="${escHtml(item.id)}">Mark still open</button>`
+    : `<button type="button" class="tbtn green" data-act="mark-fixed" data-id="${escHtml(item.id)}">Mark fixed</button>`;
+  return `<div class="cleanup-item">
+    <div class="fin-row">
+      <label class="meet-k">Company <select class="actual-inp fin-select" data-fin="item-company" data-id="${escHtml(item.id)}">${companyOpts}</select></label>
+      <label class="meet-k">Owner (role) <select class="actual-inp fin-select" data-fin="item-owner" data-id="${escHtml(item.id)}">${roleOpts}</select></label>
+    </div>
+    <label class="meet-k">Description <textarea class="actual-inp fin-area" data-fin="item-description" data-id="${escHtml(item.id)}" maxlength="500">${escHtml(item.description)}</textarea></label>
+    <div class="fin-row">
+      <label class="meet-k">Date found <input type="date" class="actual-inp" data-fin="item-found" data-id="${escHtml(item.id)}" value="${escHtml(item.date_found || '')}"></label>
+      <label class="meet-k">Date fixed <input type="date" class="actual-inp" data-fin="item-fixed" data-id="${escHtml(item.id)}" value="${escHtml(item.date_fixed || '')}"></label>
+    </div>
+    <label class="meet-k">Notes <textarea class="actual-inp fin-area" data-fin="item-notes" data-id="${escHtml(item.id)}" maxlength="2000">${escHtml(item.notes || '')}</textarea></label>
+    <div class="fin-actions">${move}<button type="button" class="tbtn red" data-act="remove-item" data-id="${escHtml(item.id)}">Remove</button></div>
+  </div>`;
+}
+
+function renderFinanceCleanup(){
+  const el = document.getElementById('finance-cleanup');
+  if (!el) return;
+  if (!financeOffice) { el.innerHTML = ''; return; }
+  const items = financeOffice.cleanup || [];
+  const open = items.filter(item => item.status !== 'fixed');
+  const fixed = items.filter(item => item.status === 'fixed');
+  const openHtml = open.length ? open.map(cleanupFields).join('') : '<div class="finance-note">Nothing still open.</div>';
+  const fixedHtml = fixed.length ? fixed.map(cleanupFields).join('') : '<div class="finance-note">Nothing confirmed fixed yet — add items as the accountant closes them</div>';
+  const companyOpts = FINANCE_COMPANIES.map(c => `<option value="${c.value}"${c.value === 'both' ? ' selected' : ''}>${c.label}</option>`).join('');
+  const roleOpts = FINANCE_ROLES.map(role => `<option value="${role}"${role === 'TBD' ? ' selected' : ''}>${role}</option>`).join('');
+  el.innerHTML = `<div class="finance-card" id="card-finance-cleanup">
+    <h3>Books Cleanup Log</h3>
+    <p class="finance-note">Shared by Driven and Trailblazers. Shown on the ${escHtml(financeViewName())} Finance section. Each item names Driven, Trailblazers, or both. The accountant can pick up from Still open.</p>
+    <div class="cleanup-grid">
+      <div>
+        <div class="fin-role">Still open</div>
+        ${openHtml}
+        <div class="cleanup-item">
+          <div class="meet-k">Add an open item</div>
+          <div class="fin-row">
+            <label class="meet-k">Company <select id="fin-new-company" class="actual-inp fin-select">${companyOpts}</select></label>
+            <label class="meet-k">Owner (role) <select id="fin-new-owner" class="actual-inp fin-select">${roleOpts}</select></label>
+          </div>
+          <label class="meet-k">Description <textarea id="fin-new-description" class="actual-inp fin-area" maxlength="500" placeholder="What needs cleanup"></textarea></label>
+          <div class="fin-row">
+            <label class="meet-k">Date found <input id="fin-new-found" type="date" class="actual-inp"></label>
+            <label class="meet-k">Date fixed <input id="fin-new-fixed" type="date" class="actual-inp"></label>
+          </div>
+          <label class="meet-k">Notes <textarea id="fin-new-notes" class="actual-inp fin-area" maxlength="2000"></textarea></label>
+          <div class="fin-actions"><button type="button" class="tbtn green" data-act="add-item">Add to Still open</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="fin-role">Fixed</div>
+        ${fixedHtml}
+      </div>
+    </div>
+  </div>`;
+}
+
+function onFinanceField(event){
+  const el = event.target;
+  const kind = el.dataset && el.dataset.fin;
+  if (!kind || !financeOffice) return;
+  if (kind === 'team-name') {
+    const person = financeOffice.team.find(p => p.role === el.dataset.role);
+    if (!person) return;
+    person.name = el.value.trim() || 'TBD';
+    el.value = person.name;
+  } else if (kind === 'meet-date') {
+    const meeting = financeOffice.meetings.find(m => m.id === el.dataset.id);
+    if (!meeting) return;
+    meeting.next_date = el.value;
+    renderFinanceMeetings();
+  } else if (kind.indexOf('item-') === 0) {
+    const item = (financeOffice.cleanup || []).find(row => row.id === el.dataset.id);
+    if (!item) return;
+    const field = { 'item-company':'company', 'item-owner':'owner', 'item-description':'description', 'item-found':'date_found', 'item-fixed':'date_fixed', 'item-notes':'notes' }[kind];
+    if (!field) return;
+    item[field] = el.value;
+  } else return;
+  debouncedFinanceSave();
+}
+
+function onFinanceClick(event){
+  const btn = event.target.closest('[data-act]');
+  if (!btn || !financeOffice) return;
+  const act = btn.dataset.act;
+  if (act === 'add-item') {
+    const description = document.getElementById('fin-new-description').value.trim();
+    if (!description) { toast('Add a description first', 'err'); return; }
+    financeOffice.cleanup.push({
+      id: 'item-' + Date.now(),
+      company: document.getElementById('fin-new-company').value,
+      description,
+      owner: document.getElementById('fin-new-owner').value,
+      date_found: document.getElementById('fin-new-found').value,
+      date_fixed: document.getElementById('fin-new-fixed').value,
+      notes: document.getElementById('fin-new-notes').value.trim(),
+      status: 'open'
+    });
+  } else if (act === 'mark-fixed' || act === 'mark-open') {
+    const item = financeOffice.cleanup.find(row => row.id === btn.dataset.id);
+    if (!item) return;
+    item.status = act === 'mark-fixed' ? 'fixed' : 'open';
+  } else if (act === 'remove-item') {
+    financeOffice.cleanup = financeOffice.cleanup.filter(row => row.id !== btn.dataset.id);
+  } else return;
+  renderFinanceCleanup();
+  debouncedFinanceSave();
+}
+
+db.channel('finance-office-rt').on('postgres_changes', {
+  event: '*', schema: 'public', table: 'dashboard_data', filter: 'id=eq.' + FINANCE_ROW_ID
+}, payload => {
+  if (!payload.new || !payload.new.finance_office) return;
+  financeOffice = payload.new.finance_office;
+  renderFinanceOffice();
+}).subscribe();
+
+// ══════════════════════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════════════════════
 function toast(msg, type){
@@ -1093,6 +1369,8 @@ function toast(msg, type){
 document.body.className = 'area-driven';
 renderAreaTabs();
 renderLinks();
+document.getElementById('panel-Finance').addEventListener('change', onFinanceField);
+document.getElementById('panel-Finance').addEventListener('click', onFinanceClick);
 loadData();
 </script>
 <script type="module" src="js/running-tasks.js"></script>
