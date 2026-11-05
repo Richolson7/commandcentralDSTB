@@ -110,6 +110,94 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .export-chart-btn{font-size:10px;padding:2px 7px;border-radius:2px;border:1px solid var(--br);background:none;color:var(--tm);cursor:pointer;font-family:'Barlow Condensed',sans-serif}
 .export-chart-btn:hover{color:var(--g);border-color:var(--g)}
 
+.path-lead{font-size:14px;color:var(--tx);line-height:1.55;max-width:860px;margin-bottom:16px}
+.path-block{margin-bottom:22px}
+.goal-layout{display:grid;grid-template-columns:1.35fr .65fr;gap:14px}
+.goal-card,.path-card,.role-card,.sale-card{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:14px 16px;position:relative;overflow:hidden}
+.goal-card::before,.path-card::before,.sale-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g)}
+.goal-flag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amb);background:var(--abg);border:1px solid var(--abr);border-radius:2px;padding:2px 7px;margin-bottom:12px}
+.goal-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.goal-mark{background:var(--s);border:1px solid var(--br);border-radius:4px;padding:12px 12px 14px}
+.goal-year{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--td)}
+.goal-amt{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;letter-spacing:1px;color:var(--g);line-height:1;margin:6px 0 4px}
+.goal-desc{font-size:12px;color:var(--tx);line-height:1.45}
+.goal-scale{display:flex;flex-direction:column;gap:10px}
+.goal-bar-row{display:grid;grid-template-columns:148px 1fr;gap:10px;align-items:center}
+.goal-bar-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--td)}
+.goal-track{height:12px;background:var(--s3);border-radius:99px;overflow:hidden}
+.goal-fill{height:100%;background:var(--g);border-radius:99px}
+.goal-note,.path-note{font-size:12px;color:var(--td);line-height:1.55;margin-top:12px}
+.sale-kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--td)}
+.sale-date{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;color:var(--tx);line-height:1;margin:8px 0 6px}
+.sale-card p,.path-card p{font-size:12.5px;line-height:1.55;color:var(--tx)}
+.slogan{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:1px;color:var(--tx);line-height:1.05;margin:2px 0 8px}
+.values{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.value-chip{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--g);border:1px solid var(--gd);background:var(--gbg);border-radius:2px;padding:5px 10px}
+.path-rule{background:var(--gbg);border:1px solid var(--gd);border-radius:4px;padding:10px 14px;font-size:13px;color:var(--tx);line-height:1.5;margin-bottom:12px}
+.role-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.role-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx)}
+.role-title{font-size:12px;color:var(--td);margin-top:2px}
+.role-mail{font-family:'DM Mono',monospace;font-size:11px;margin-top:3px}
+.role-mail a{color:var(--td);text-decoration:none}
+.role-mail a:hover{color:var(--g)}
+.keep-chip{flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#040804;background:var(--g);border-radius:2px;padding:3px 8px}
+.role-list{display:flex;flex-direction:column;gap:10px}
+.role-split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.split-col{background:var(--s);border-radius:3px;padding:10px 12px;border-left:3px solid var(--br)}
+.split-col.rev{border-left-color:var(--g)}
+.split-col.bot{border-left-color:var(--amb)}
+.tab[hidden]{display:none !important}
+.split-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:6px}
+.split-col.rev .split-label{color:var(--g)}
+.split-col.bot .split-label{color:var(--amb)}
+.split-col p{font-size:12.5px;line-height:1.5;color:var(--tx)}
+.identity-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.org-steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.org-step{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--td);border:1px solid var(--br);border-radius:2px;padding:4px 8px;background:var(--s)}
+.org-step em{font-style:normal;color:var(--g)}
+.org-today{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:stretch;background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:16px;position:relative;overflow:hidden;margin-bottom:12px}
+.org-today::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g)}
+.org-top{display:flex;justify-content:center}
+.org-rich{width:min(100%,280px);background:var(--s);border:1px solid var(--br);border-top:2px solid var(--g);border-radius:4px;padding:10px 12px;text-align:center}
+.org-stem{width:2px;height:16px;background:var(--gd);margin:0 auto}
+.org-row{display:flex;align-items:stretch}
+.org-seat{flex:1;min-width:0;position:relative;padding:16px 5px 0}
+.org-seat::before{content:'';position:absolute;top:0;left:0;right:0;border-top:2px solid var(--gd)}
+.org-seat:first-child::before{left:50%}
+.org-seat:last-child::before{right:50%}
+.org-seat::after{content:'';position:absolute;top:0;left:50%;width:2px;height:16px;background:var(--gd);transform:translateX(-1px)}
+.org-box{background:var(--s);border:1px solid var(--br);border-radius:4px;padding:8px 8px 10px;text-align:center;height:100%}
+.org-role{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--g)}
+.org-nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.8px;text-transform:uppercase;color:var(--tx);line-height:1.1;margin-top:2px}
+.org-job{font-size:11.5px;color:var(--td);line-height:1.35;margin-top:4px}
+.org-bots{border:1px dashed var(--abr);background:var(--abg);border-radius:4px;padding:12px 12px 10px}
+.org-bots h3,.org-botbox h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amb);margin-bottom:4px}
+.org-bots p,.org-botbox p,.org-acq p,.org-rev{font-size:12px;line-height:1.45;color:var(--tx)}
+.org-bots ul,.org-botbox ul,.org-acq ul{margin:6px 0 0;padding-left:16px}
+.org-bots li,.org-botbox li,.org-acq li{font-size:12px;line-height:1.45;color:var(--tx);margin:3px 0}
+.org-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.org-stage{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:12px;position:relative;overflow:hidden}
+.org-stage::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g)}
+.org-stage-amt{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:1px;color:var(--g);line-height:1;margin:4px 0}
+.mini-rich{background:var(--s);border:1px solid var(--br);border-top:2px solid var(--g);border-radius:4px;padding:8px 10px;text-align:center}
+.mini-rich span{display:block;font-size:11px;color:var(--td);font-family:'Barlow',sans-serif;letter-spacing:0;text-transform:none;font-weight:500;margin-top:2px}
+.mini-stem{width:2px;height:10px;background:var(--gd);margin:0 auto}
+.mini-kids{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--gd)}
+.mini-kids li{position:relative;padding:4px 0 4px 12px;font-size:12px;line-height:1.35;color:var(--tx)}
+.mini-kids li::before{content:'';position:absolute;left:0;top:.85em;width:12px;border-top:2px solid var(--gd)}
+.mini-kids b{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.org-botbox,.org-acq{border-radius:4px;padding:8px 10px;margin-top:10px}
+.org-botbox{border:1px dashed var(--abr);background:var(--abg)}
+.org-acq{border:1px solid var(--br);background:var(--s)}
+.org-rev{margin-top:10px;padding-top:8px;border-top:1px solid var(--br)}
+.org-rev strong,.org-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--g)}
+@media (max-width:980px){
+  .goal-layout,.goal-pair,.role-split,.identity-grid,.goal-bar-row,.org-today,.org-stages{grid-template-columns:1fr}
+  .org-row{flex-direction:column;gap:8px;margin-left:18px;padding-left:12px;border-left:2px solid var(--gd)}
+  .org-seat{padding-top:0}
+  .org-seat::before,.org-seat::after,.org-stem{display:none}
+}
+
 .history-table{width:100%;border-collapse:collapse;font-size:11px}
 .history-table th{background:var(--s);color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--br);white-space:nowrap}
 .history-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);font-family:'DM Mono',monospace;white-space:nowrap}
@@ -173,6 +261,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
 <div class="tabs" id="main-tabs">
   <div class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
+  <div class="tab" id="tab-path" onclick="showPanel('path',this)">🎯 Path</div>
   <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
   <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
   <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
@@ -185,6 +274,342 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
 <div class="content">
   <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
+  <div class="panel" id="panel-path">
+    <div class="sec-title">🎯 Growth Path</div>
+    <div class="sec-sub">Driven Solutions only. For showing Amber and the team how the company grows with the people it already has.</div>
+    <p class="path-lead">Teammates produce revenue. Bots and AI do the backend. The path below is what Rich stated on November 5, 2026. The dollar marks are his goals. They are not a forecast from the books.</p>
+
+    <div class="path-block">
+      <div class="goal-layout">
+        <div class="goal-card">
+          <div class="goal-flag">Rich's stated goals</div>
+          <div class="goal-pair">
+            <div class="goal-mark">
+              <div class="goal-year">Calendar 2027</div>
+              <div class="goal-amt">$5M</div>
+              <div class="goal-desc">Next year, counted from November 2026. The path is $5 million.</div>
+            </div>
+            <div class="goal-mark">
+              <div class="goal-year">About 2029</div>
+              <div class="goal-amt">$10M</div>
+              <div class="goal-desc">Double that $5 million goal in 3 years. Rich's stated goal.</div>
+            </div>
+          </div>
+          <div class="goal-scale" role="img" aria-label="Goal markers only. Calendar 2027 goal is 5 million dollars. About 2029 goal is 10 million dollars, double the 2027 goal. No current-year revenue is shown.">
+            <div class="goal-bar-row">
+              <div class="goal-bar-name">2027 · $5M goal</div>
+              <div class="goal-track"><div class="goal-fill" style="width:50%"></div></div>
+            </div>
+            <div class="goal-bar-row">
+              <div class="goal-bar-name">~2029 · $10M goal</div>
+              <div class="goal-track"><div class="goal-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+          <p class="goal-note">Bar length compares these two goals only. The longer bar is double the shorter one because $10 million is double the $5 million goal. This page does not show current-year revenue, margin, cash, or headcount cost, and it does not draw a slope from the books.</p>
+        </div>
+        <div class="sale-card">
+          <div class="sale-kicker">Beside the path</div>
+          <div class="sale-date">Jul 21, 2029</div>
+          <p>Rich's goal is to sell within 1,000 days of October 25, 2026. That day is Saturday, July 21, 2029. No sale price and no valuation are stated here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="path-block">
+      <div class="identity-grid">
+        <div class="path-card">
+          <div class="sale-kicker">Who we are</div>
+          <div class="slogan">"Create the fun and they will come."</div>
+          <p>Driven Solutions is a packaging company (drivensol.com). It delivers its own packaging to its own customers on its own truck. Call that delivery. Do not call Driven a freight brokerage.</p>
+          <p style="margin-top:8px">The $5 million and $10 million goals stay inside this. Same company, same truck, same customers, same people. Growth keeps Driven on this track.</p>
+        </div>
+        <div class="path-card">
+          <div class="sale-kicker">Six core values</div>
+          <p>These are the filter for the path. A tool, a hire, or a shortcut that breaks one of them is off the plan.</p>
+          <div class="values">
+            <span class="value-chip">Integrity</span>
+            <span class="value-chip">Discipline</span>
+            <span class="value-chip">Growth</span>
+            <span class="value-chip">Loyalty</span>
+            <span class="value-chip">Good-Natured</span>
+            <span class="value-chip">Persistence</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="path-block" id="org-chart">
+      <div class="sec-title" style="font-size:1.2rem">Org chart</div>
+      <div class="sec-sub">Today's team, then the same people at $6 million, $10 million, and $100 million. Rich asked for these stages. They are stated stages, not a forecast from the books. Today's revenue is not shown. No salaries.</div>
+      <p class="path-lead">The path goals above stay: $5 million in calendar 2027, and double that goal to $10 million by about 2029. This chart is who carries the work. Teammates produce revenue. Bots do the backend. That is how Rich gets back to just doing sales. The six people stay at every stage. Companies Rich plans to buy are in the $10 to $15 million range. No target is named, and no price or terms are on this chart. Same company the whole way: own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
+      <div class="org-steps" aria-hidden="true">
+        <span class="org-step">1 · <em>Today</em></span>
+        <span class="org-step">2 · <em>$6M</em></span>
+        <span class="org-step">3 · <em>$10M</em></span>
+        <span class="org-step">4 · <em>$100M</em></span>
+      </div>
+
+      <div class="org-today">
+        <div>
+          <div class="sale-kicker">Today's team · keep all six</div>
+          <div class="org-top" style="margin-top:10px">
+            <div class="org-rich">
+              <div class="org-role">President / sales</div>
+              <div class="org-nm">Rich Olson</div>
+              <div class="org-job">The sales rep. He builds tools on the road and hands them off. This chart is how he gets back to just doing sales.</div>
+            </div>
+          </div>
+          <div class="org-stem"></div>
+          <div class="org-row">
+            <div class="org-seat"><div class="org-box"><div class="org-role">Orders / CS</div><div class="org-nm">Annie</div><div class="org-job">Customer service and orders. She sets up vendors the bot finds.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Delivery</div><div class="org-nm">Patrick</div><div class="org-job">Delivery truck, plus sales calls between loads.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Finance</div><div class="org-nm">Amber</div><div class="org-job">Finance / admin. The seat stays.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Sales</div><div class="org-nm">Landon</div><div class="org-job">Sales, commission only. He is coming up on that.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">CFO</div><div class="org-nm">Dan Young</div><div class="org-job">Finance judgment stays with Dan.</div></div></div>
+          </div>
+          <p class="org-rev"><span class="org-label">Stays revenue producing · </span>Rich and Landon sell. Patrick delivers Driven packaging and sells between loads. Annie runs orders and customer service. Amber and Dan hold finance. Lines show Rich as President and these five seats under him.</p>
+        </div>
+        <aside class="org-bots">
+          <h3>AI / bots beside them</h3>
+          <p>Backend only. They sit beside the six. They are not an added seat, and they are not a seat to cut.</p>
+          <ul>
+            <li>A bot finds vendors. Annie sets up what it finds.</li>
+            <li>Beside Amber: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated.</li>
+            <li>Dan stays CFO. The finance bots do not replace him.</li>
+            <li>Patrick's truck and the calls between loads stay his. Landon's sales stay his. Rich's sales stay his.</li>
+          </ul>
+        </aside>
+      </div>
+
+      <div class="org-stages">
+        <article class="org-stage">
+          <div class="goal-flag">Stated stage</div>
+          <div class="sale-kicker">Same six people</div>
+          <div class="org-stage-amt">$6M</div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · back to just sales</span></div>
+          <div class="mini-stem"></div>
+          <ul class="mini-kids">
+            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Amber</b> — Finance</li>
+            <li><b>Landon</b> — Sales, commission only</li>
+            <li><b>Dan Young</b> — CFO</li>
+          </ul>
+          <div class="org-botbox">
+            <h3>Bots cover</h3>
+            <ul>
+              <li>Vendor finding. Annie still sets up what the bot finds.</li>
+              <li>Finance backend beside Amber: payments by PO, ACH, bank and card matching. Commission stays automated.</li>
+              <li>No new back-office seat. Dan stays CFO.</li>
+            </ul>
+          </div>
+          <div class="org-acq">
+            <div class="org-label">Acquisitions</div>
+            <p style="margin-top:4px">Rich plans to buy companies in the $10 to $15 million range. That range is above this stage, so none is folded in here. The six and the bots carry this stage.</p>
+          </div>
+          <p class="org-rev"><span class="org-label">Revenue · </span>The same seats produce it. Rich and Landon sell, Patrick delivers and sells between loads, Annie runs orders and customer service. Bots do not sell.</p>
+        </article>
+
+        <article class="org-stage">
+          <div class="goal-flag">Stated stage · same $10M goal</div>
+          <div class="sale-kicker">Six stay · one fold-in pattern</div>
+          <div class="org-stage-amt">$10M</div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · still just sales</span></div>
+          <div class="mini-stem"></div>
+          <ul class="mini-kids">
+            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Amber</b> — Finance, for the whole</li>
+            <li><b>Landon</b> — Sales, commission only</li>
+            <li><b>Dan Young</b> — CFO, the only CFO on this chart</li>
+          </ul>
+          <div class="org-acq">
+            <div class="org-label">Folds in · a $10–15M company</div>
+            <p style="margin-top:4px">No name, no price, no terms. Revenue roles that come with it:</p>
+            <ul>
+              <li>Sales</li>
+              <li>Orders / customer service</li>
+              <li>Delivery, when they deliver their own goods on their own truck</li>
+            </ul>
+          </div>
+          <div class="org-botbox">
+            <h3>Bots absorb</h3>
+            <ul>
+              <li>That company's vendor finding. The orders seat sets up what the bot finds, same as Annie.</li>
+              <li>Vendor payments by PO, ACH, and bank and card matching. A second finance back office is not added.</li>
+              <li>Commission stays on the automation already in place.</li>
+            </ul>
+          </div>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Driven's seats keep producing. The sales, orders, and delivery roles that came with the company keep producing. The combined team stays lean: one president, one CFO, Amber's finance seat, and bots on the backend.</p>
+        </article>
+
+        <article class="org-stage">
+          <div class="goal-flag">Stated stage</div>
+          <div class="sale-kicker">Six stay · fold-in repeats</div>
+          <div class="org-stage-amt">$100M</div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · still just sales</span></div>
+          <div class="mini-stem"></div>
+          <ul class="mini-kids">
+            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Amber</b> — Finance, for the whole</li>
+            <li><b>Landon</b> — Sales, commission only</li>
+            <li><b>Dan Young</b> — CFO of the whole</li>
+          </ul>
+          <div class="org-acq">
+            <div class="org-label">Folds in · more $10–15M companies</div>
+            <p style="margin-top:4px">The same fold-in repeats. This chart does not count the companies. Each one brings the same revenue roles: sales, orders / customer service, and delivery of their own goods when that is what they do.</p>
+          </div>
+          <div class="org-botbox">
+            <h3>Bots absorb</h3>
+            <ul>
+              <li>Each company's vendor finding, vendor payments by PO, ACH, and bank and card matching.</li>
+              <li>The back office does not multiply per company. Dan stays the CFO. Amber stays finance. No second president.</li>
+            </ul>
+          </div>
+          <p class="org-rev"><span class="org-label">Revenue · </span>People still produce it: the original six in these seats, plus the revenue roles that arrive with each company. Bots cover the backend for the whole, which is how the combined team stays lean.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="path-block">
+      <div class="sec-title" style="font-size:1.2rem">Roles after automation</div>
+      <div class="sec-sub">Seat detail for the people on the chart. Those seats stay at $6 million, $10 million, and $100 million. People do the work that produces revenue. Bots and AI take the backend rest.</div>
+      <div class="path-rule">This plan keeps Annie, Patrick, Amber, Landon, Rich, and Dan. It does not cut any of them. Left is the work that stays with that person. Right is the backend for bots and AI. Revenue seats: Rich and Landon sell, Patrick delivers and sells on the route, Annie runs orders and customer service. Amber and Dan stay on finance.</div>
+      <div class="role-list">
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Rich Olson</div>
+              <div class="role-title">President / sales</div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Revenue</div>
+              <p>He is the sales rep. On the road he builds the tools the company needs, then hands them off.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>The handoff is the point. What he builds on the road becomes something the company runs, so the backend does not sit on his sales time.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Annie</div>
+              <div class="role-title">Customer service / orders</div>
+              <div class="role-mail"><a href="mailto:orders@drivensol.com">orders@drivensol.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Revenue</div>
+              <p>Customer service and orders stay with Annie. She is how customers get taken care of.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>A bot already finds vendors. Annie sets up the vendors that bot finds. This page does not add a vendor-finding tool.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Patrick</div>
+              <div class="role-title">Delivery truck and sales calls on the route</div>
+              <div class="role-mail"><a href="mailto:logistics@drivensol.com">logistics@drivensol.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Revenue</div>
+              <p>He runs Driven's delivery truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between stops he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>The truck, the calls, and the route counts stay with Patrick. Backend bots do not replace the route.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Amber</div>
+              <div class="role-title">Finance / admin</div>
+              <div class="role-mail"><a href="mailto:amber@drivensol.com">amber@drivensol.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Finance seat</div>
+              <p>Finance and admin stay with Amber. The hours goal is about 25 a week down to about 10. The seat stays.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>Automate the backend that fills those hours: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching rules. Commission is already fully automated.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Landon</div>
+              <div class="role-title">Sales</div>
+              <div class="role-mail"><a href="mailto:landon@drivensol.com">landon@drivensol.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Revenue</div>
+              <p>Sales, commission only. He is coming up on that.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>No backend seat. His work is revenue.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Dan Young</div>
+              <div class="role-title">CFO</div>
+              <div class="role-mail"><a href="mailto:drdanyoung79@gmail.com">drdanyoung79@gmail.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Finance seat</div>
+              <p>CFO. Finance judgment stays with Dan.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>Payment, ACH, and matching automation under Amber's line supports the finance work. It does not replace Dan.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="path-card">
+      <div class="sale-kicker">How this stays on track</div>
+      <p style="margin-top:8px">Rich and Landon sell. Patrick delivers Driven packaging on Driven's truck and sells between stops. Annie runs orders and customer service, and she sets up vendors the bot already finds. Amber and Dan hold finance, with bots taking vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
+      <p style="margin-top:8px">That is the whole build: this team produces the revenue, AI does the backend rest, and the company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
+    </div>
+  </div>
   <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
   <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
   <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
@@ -418,6 +843,7 @@ function switchCompany(c) {
   co = c; const cfg = COMPANIES[c];
   document.getElementById('co-driven').className = 'co-btn driven' + (c==='driven'?' active':'');
   document.getElementById('co-tb').className = 'co-btn tb' + (c==='tb'?' active':'');
+  syncPathTab();
   document.documentElement.style.setProperty('--g', cfg.color);
   document.documentElement.style.setProperty('--gd', cfg.colorDark);
   document.documentElement.style.setProperty('--gbg', cfg.colorBg);
@@ -439,12 +865,29 @@ function renderLinks(){
 // ══════════════════════════════════════════════════════════
 // TABS
 // ══════════════════════════════════════════════════════════
+function syncPathTab(){
+  const tab = document.getElementById('tab-path');
+  if (!tab) return;
+  tab.hidden = co !== 'driven';
+  if (co !== 'driven' && currentTab === 'path') {
+    const dash = document.querySelector('#main-tabs .tab');
+    showPanel('dashboard', dash);
+  }
+}
+
 function showPanel(id, el){
+  if (id === 'path' && co !== 'driven') return;
   currentTab = id;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  if (panel) panel.classList.add('active');
+  if (id === 'path') {
+    if (location.hash !== '#path') history.replaceState(null, '', '#path');
+  } else if (location.hash === '#path') {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -738,6 +1181,8 @@ function toast(msg, type){
 // INIT
 // ══════════════════════════════════════════════════════════
 renderLinks();
+syncPathTab();
+if (location.hash === '#path') showPanel('path', document.getElementById('tab-path'));
 loadData();
 </script>
 </body>
