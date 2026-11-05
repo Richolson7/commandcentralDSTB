@@ -170,9 +170,14 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .org-role{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--g)}
 .org-nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.8px;text-transform:uppercase;color:var(--tx);line-height:1.1;margin-top:2px}
 .org-job{font-size:11.5px;color:var(--td);line-height:1.35;margin-top:4px}
+.org-advisor{border:1px solid var(--abr);background:var(--s);border-radius:4px;padding:12px;margin-bottom:10px}
+.org-advisor h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amb);margin-bottom:4px}
+.org-pay{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;color:var(--tx);line-height:1;margin:6px 0 4px}
 .org-bots{border:1px dashed var(--abr);background:var(--abg);border-radius:4px;padding:12px 12px 10px}
+.org-seat .org-box{height:auto}
+.org-seat .org-stem{margin:8px auto}
 .org-bots h3,.org-botbox h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amb);margin-bottom:4px}
-.org-bots p,.org-botbox p,.org-acq p,.org-rev{font-size:12px;line-height:1.45;color:var(--tx)}
+.org-bots p,.org-botbox p,.org-acq p,.org-rev,.org-advisor p{font-size:12px;line-height:1.45;color:var(--tx)}
 .org-bots ul,.org-botbox ul,.org-acq ul{margin:6px 0 0;padding-left:16px}
 .org-bots li,.org-botbox li,.org-acq li{font-size:12px;line-height:1.45;color:var(--tx);margin:3px 0}
 .org-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -276,8 +281,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
   <div class="panel" id="panel-path">
     <div class="sec-title">🎯 Growth Path</div>
-    <div class="sec-sub">Driven Solutions only. For showing Amber and the team how the company grows with the people it already has.</div>
-    <p class="path-lead">Teammates produce revenue. Bots and AI do the backend. The path below is what Rich stated on November 5, 2026. The dollar marks are his goals. They are not a forecast from the books.</p>
+    <div class="sec-sub">Driven Solutions only. Final structure Rich stated on November 5, 2026. Rich on vision. Amber on day-to-day operations and systems.</div>
+    <p class="path-lead">No employees needed right now, or very few. Bots cover almost everything. The people still here produce the revenue. The dollar marks are Rich's stated goals. They are not a forecast from the books.</p>
 
     <div class="path-block">
       <div class="goal-layout">
@@ -340,8 +345,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
     <div class="path-block" id="org-chart">
       <div class="sec-title" style="font-size:1.2rem">Org chart</div>
-      <div class="sec-sub">Today's team, then the same people at $6 million, $10 million, and $100 million. Rich asked for these stages. They are stated stages, not a forecast from the books. Today's revenue is not shown. No salaries.</div>
-      <p class="path-lead">The path goals above stay: $5 million in calendar 2027, and double that goal to $10 million by about 2029. This chart is who carries the work. Teammates produce revenue. Bots do the backend. That is how Rich gets back to just doing sales. The six people stay at every stage. Companies Rich plans to buy are in the $10 to $15 million range. No target is named, and no price or terms are on this chart. Same company the whole way: own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
+      <div class="sec-sub">Today, then the same people at $6 million, $10 million, and $100 million. Stated stages, not a forecast from the books. Today's revenue is not shown. The only pay figure on this chart is Dan Young's advisor fee.</div>
+      <p class="path-lead">The path goals above stay: $5 million in calendar 2027, and double that goal to $10 million by about 2029. Rich handles vision. Amber owns day-to-day operations and systems and stays at 25 hours a week. Annie, Patrick, and Landon are the very few people. Dan stays on as an advisor at $30,000 per year, not as a full-time CFO seat. Bots cover almost all backend. Companies Rich plans to buy are in the $10 to $15 million range and fold in at the $10 million and $100 million stages. No target is named, and no price or terms are on this chart. Own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
       <div class="org-steps" aria-hidden="true">
         <span class="org-step">1 · <em>Today</em></span>
         <span class="org-step">2 · <em>$6M</em></span>
@@ -351,78 +356,107 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
       <div class="org-today">
         <div>
-          <div class="sale-kicker">Today's team · keep all six</div>
+          <div class="sale-kicker">Today · very few people</div>
           <div class="org-top" style="margin-top:10px">
             <div class="org-rich">
-              <div class="org-role">President / sales</div>
+              <div class="org-role">Owner · vision</div>
               <div class="org-nm">Rich Olson</div>
-              <div class="org-job">The sales rep. He builds tools on the road and hands them off. This chart is how he gets back to just doing sales.</div>
+              <div class="org-job">The owner handles vision.</div>
             </div>
           </div>
           <div class="org-stem"></div>
           <div class="org-row">
-            <div class="org-seat"><div class="org-box"><div class="org-role">Orders / CS</div><div class="org-nm">Annie</div><div class="org-job">Customer service and orders. She sets up vendors the bot finds.</div></div></div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">Delivery</div><div class="org-nm">Patrick</div><div class="org-job">Delivery truck, plus sales calls between loads.</div></div></div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">Finance</div><div class="org-nm">Amber</div><div class="org-job">Finance / admin. The seat stays.</div></div></div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">Sales</div><div class="org-nm">Landon</div><div class="org-job">Sales, commission only. He is coming up on that.</div></div></div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">CFO</div><div class="org-nm">Dan Young</div><div class="org-job">Finance judgment stays with Dan.</div></div></div>
+            <div class="org-seat">
+              <div class="org-box">
+                <div class="org-role">Operations &amp; systems</div>
+                <div class="org-nm">Amber</div>
+                <div class="org-job">Stays at 25 hours a week. Transfers from office admin to running the office staff and building systems. She owns day-to-day operations.</div>
+              </div>
+              <div class="org-stem"></div>
+              <div class="org-box">
+                <div class="org-role">Orders / CS · office-side</div>
+                <div class="org-nm">Annie</div>
+                <div class="org-job">Orders and customer service. Office-side through Amber's operations ownership. She sets up vendors the bot finds.</div>
+              </div>
+            </div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Delivery</div><div class="org-nm">Patrick</div><div class="org-job">Delivery truck, plus sales calls between loads. One of the very few. Still here.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Sales</div><div class="org-nm">Landon</div><div class="org-job">Sales, commission only. One of the very few. Still here.</div></div></div>
           </div>
-          <p class="org-rev"><span class="org-label">Stays revenue producing · </span>Rich and Landon sell. Patrick delivers Driven packaging and sells between loads. Annie runs orders and customer service. Amber and Dan hold finance. Lines show Rich as President and these five seats under him.</p>
+          <p class="org-rev"><span class="org-label">Stays revenue producing · </span>Landon sells. Patrick delivers Driven packaging and sells between loads. Annie runs orders and customer service. Amber runs the day to day. Rich stays on vision.</p>
         </div>
-        <aside class="org-bots">
-          <h3>AI / bots beside them</h3>
-          <p>Backend only. They sit beside the six. They are not an added seat, and they are not a seat to cut.</p>
-          <ul>
-            <li>A bot finds vendors. Annie sets up what it finds.</li>
-            <li>Beside Amber: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated.</li>
-            <li>Dan stays CFO. The finance bots do not replace him.</li>
-            <li>Patrick's truck and the calls between loads stay his. Landon's sales stay his. Rich's sales stay his.</li>
-          </ul>
+        <aside>
+          <div class="org-advisor">
+            <h3>Advisor · not a full-time seat</h3>
+            <div class="org-nm">Dan Young</div>
+            <div class="org-pay">$30,000<span style="font-size:1rem;letter-spacing:1px"> / year</span></div>
+            <p>He stays on as an advisor. This is not a full-time CFO seat. The only pay figure on this chart.</p>
+          </div>
+          <div class="org-bots">
+            <h3>AI / bots</h3>
+            <p>Bots cover almost everything. Almost all backend sits here. Not an added seat, and not a person who was cut.</p>
+            <ul>
+              <li>A bot finds vendors. Annie sets up what it finds.</li>
+              <li>Vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated.</li>
+              <li>Patrick's truck and the calls between loads stay his. Landon's sales stay his.</li>
+            </ul>
+          </div>
         </aside>
       </div>
 
       <div class="org-stages">
         <article class="org-stage">
           <div class="goal-flag">Stated stage</div>
-          <div class="sale-kicker">Same six people</div>
+          <div class="sale-kicker">Same people · very few</div>
           <div class="org-stage-amt">$6M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · back to just sales</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Amber</b> — Ops &amp; systems · 25 hrs/week. Runs the office staff and builds systems.
+              <ul class="mini-kids">
+                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+              </ul>
+            </li>
             <li><b>Patrick</b> — Truck + sales calls between loads</li>
-            <li><b>Amber</b> — Finance</li>
             <li><b>Landon</b> — Sales, commission only</li>
-            <li><b>Dan Young</b> — CFO</li>
           </ul>
+          <div class="org-advisor" style="margin-top:10px">
+            <h3>Dan Young · advisor</h3>
+            <p>$30,000 per year. Not a full-time CFO seat.</p>
+          </div>
           <div class="org-botbox">
-            <h3>Bots cover</h3>
+            <h3>Bots cover almost everything</h3>
             <ul>
               <li>Vendor finding. Annie still sets up what the bot finds.</li>
-              <li>Finance backend beside Amber: payments by PO, ACH, bank and card matching. Commission stays automated.</li>
-              <li>No new back-office seat. Dan stays CFO.</li>
+              <li>Backend: payments by PO, ACH, bank and card matching. Commission stays automated.</li>
+              <li>No new back-office seat. No second president.</li>
             </ul>
           </div>
           <div class="org-acq">
             <div class="org-label">Acquisitions</div>
-            <p style="margin-top:4px">Rich plans to buy companies in the $10 to $15 million range. That range is above this stage, so none is folded in here. The six and the bots carry this stage.</p>
+            <p style="margin-top:4px">Rich plans to buy companies in the $10 to $15 million range. That range is above this stage, so none is folded in here. The very few people and the bots carry this stage.</p>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>The same seats produce it. Rich and Landon sell, Patrick delivers and sells between loads, Annie runs orders and customer service. Bots do not sell.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Landon sells. Patrick delivers and sells between loads. Annie runs orders and customer service. Amber runs the day to day. Rich stays on vision. Bots do not sell.</p>
         </article>
 
         <article class="org-stage">
           <div class="goal-flag">Stated stage · same $10M goal</div>
-          <div class="sale-kicker">Six stay · one fold-in pattern</div>
+          <div class="sale-kicker">Same people · one fold-in</div>
           <div class="org-stage-amt">$10M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · still just sales</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
+              <ul class="mini-kids">
+                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+              </ul>
+            </li>
             <li><b>Patrick</b> — Truck + sales calls between loads</li>
-            <li><b>Amber</b> — Finance, for the whole</li>
             <li><b>Landon</b> — Sales, commission only</li>
-            <li><b>Dan Young</b> — CFO, the only CFO on this chart</li>
           </ul>
+          <div class="org-advisor" style="margin-top:10px">
+            <h3>Dan Young · advisor</h3>
+            <p>$30,000 per year. Not a full-time CFO seat.</p>
+          </div>
           <div class="org-acq">
             <div class="org-label">Folds in · a $10–15M company</div>
             <p style="margin-top:4px">No name, no price, no terms. Revenue roles that come with it:</p>
@@ -436,26 +470,32 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
             <h3>Bots absorb</h3>
             <ul>
               <li>That company's vendor finding. The orders seat sets up what the bot finds, same as Annie.</li>
-              <li>Vendor payments by PO, ACH, and bank and card matching. A second finance back office is not added.</li>
+              <li>That company's back office goes onto the bots: vendor payments by PO, ACH, and bank and card matching. No second back office.</li>
               <li>Commission stays on the automation already in place.</li>
             </ul>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>Driven's seats keep producing. The sales, orders, and delivery roles that came with the company keep producing. The combined team stays lean: one president, one CFO, Amber's finance seat, and bots on the backend.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Landon, Patrick, and Annie keep producing. Revenue roles that come with the company keep producing. Amber runs ops and systems for the whole, still at 25 hours a week. Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</p>
         </article>
 
         <article class="org-stage">
           <div class="goal-flag">Stated stage</div>
-          <div class="sale-kicker">Six stay · fold-in repeats</div>
+          <div class="sale-kicker">Same people · fold-in repeats</div>
           <div class="org-stage-amt">$100M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>President / sales · still just sales</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Annie</b> — Orders / CS</li>
+            <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
+              <ul class="mini-kids">
+                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+              </ul>
+            </li>
             <li><b>Patrick</b> — Truck + sales calls between loads</li>
-            <li><b>Amber</b> — Finance, for the whole</li>
             <li><b>Landon</b> — Sales, commission only</li>
-            <li><b>Dan Young</b> — CFO of the whole</li>
           </ul>
+          <div class="org-advisor" style="margin-top:10px">
+            <h3>Dan Young · advisor</h3>
+            <p>$30,000 per year. Not a full-time CFO seat.</p>
+          </div>
           <div class="org-acq">
             <div class="org-label">Folds in · more $10–15M companies</div>
             <p style="margin-top:4px">The same fold-in repeats. This chart does not count the companies. Each one brings the same revenue roles: sales, orders / customer service, and delivery of their own goods when that is what they do.</p>
@@ -464,35 +504,56 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
             <h3>Bots absorb</h3>
             <ul>
               <li>Each company's vendor finding, vendor payments by PO, ACH, and bank and card matching.</li>
-              <li>The back office does not multiply per company. Dan stays the CFO. Amber stays finance. No second president.</li>
+              <li>The back office does not multiply per company. It goes onto the bots. Amber runs ops and systems for the whole. Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</li>
             </ul>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>People still produce it: the original six in these seats, plus the revenue roles that arrive with each company. Bots cover the backend for the whole, which is how the combined team stays lean.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Annie, Patrick, and Landon keep producing, and so do the revenue roles that arrive with each company. Bots cover almost all backend. The very few people stay. Dan stays the advisor.</p>
         </article>
       </div>
     </div>
 
     <div class="path-block">
       <div class="sec-title" style="font-size:1.2rem">Roles after automation</div>
-      <div class="sec-sub">Seat detail for the people on the chart. Those seats stay at $6 million, $10 million, and $100 million. People do the work that produces revenue. Bots and AI take the backend rest.</div>
-      <div class="path-rule">This plan keeps Annie, Patrick, Amber, Landon, Rich, and Dan. It does not cut any of them. Left is the work that stays with that person. Right is the backend for bots and AI. Revenue seats: Rich and Landon sell, Patrick delivers and sells on the route, Annie runs orders and customer service. Amber and Dan stay on finance.</div>
+      <div class="sec-sub">Seat detail for the people on the chart. They stay at $6 million, $10 million, and $100 million. The very few produce the revenue. Bots cover almost all backend.</div>
+      <div class="path-rule">No employees needed right now, or very few. Annie, Patrick, and Landon are those people. Amber stays at 25 hours a week and runs operations and systems. Rich stays on vision. Dan stays as advisor at $30,000 per year. Nobody on this list was cut.</div>
       <div class="role-list">
         <article class="role-card">
           <div class="role-top">
             <div>
               <div class="role-name">Rich Olson</div>
-              <div class="role-title">President / sales</div>
+              <div class="role-title">Owner · vision</div>
             </div>
             <div class="keep-chip">Keep</div>
           </div>
           <div class="role-split">
             <div class="split-col rev">
-              <div class="split-label">Revenue</div>
-              <p>He is the sales rep. On the road he builds the tools the company needs, then hands them off.</p>
+              <div class="split-label">Vision</div>
+              <p>The owner handles vision. Day-to-day operations and systems sit with Amber.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>The handoff is the point. What he builds on the road becomes something the company runs, so the backend does not sit on his sales time.</p>
+              <p>Bots cover almost all backend. That work does not sit on Rich.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Amber</div>
+              <div class="role-title">Day-to-day operations &amp; systems · 25 hours a week</div>
+              <div class="role-mail"><a href="mailto:amber@drivensol.com">amber@drivensol.com</a></div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Operations</div>
+              <p>She stays at 25 hours a week. She transfers from office admin to running the office staff and building systems. She owns day-to-day operations and systems.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>Bots cover almost all of that backend: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated. Amber builds the systems. The bots run that work.</p>
             </div>
           </div>
         </article>
@@ -501,7 +562,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-top">
             <div>
               <div class="role-name">Annie</div>
-              <div class="role-title">Customer service / orders</div>
+              <div class="role-title">Orders / CS · office-side through Amber</div>
               <div class="role-mail"><a href="mailto:orders@drivensol.com">orders@drivensol.com</a></div>
             </div>
             <div class="keep-chip">Keep</div>
@@ -509,7 +570,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Customer service and orders stay with Annie. She is how customers get taken care of.</p>
+              <p>Orders and customer service stay with Annie. Her office-side work runs through Amber's ownership of operations. She is one of the very few people. Still here.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -530,32 +591,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>He runs Driven's delivery truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between stops he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly.</p>
+              <p>He runs Driven's delivery truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between loads he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly. He is one of the very few people. Still here.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
               <p>The truck, the calls, and the route counts stay with Patrick. Backend bots do not replace the route.</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="role-card">
-          <div class="role-top">
-            <div>
-              <div class="role-name">Amber</div>
-              <div class="role-title">Finance / admin</div>
-              <div class="role-mail"><a href="mailto:amber@drivensol.com">amber@drivensol.com</a></div>
-            </div>
-            <div class="keep-chip">Keep</div>
-          </div>
-          <div class="role-split">
-            <div class="split-col rev">
-              <div class="split-label">Finance seat</div>
-              <p>Finance and admin stay with Amber. The hours goal is about 25 a week down to about 10. The seat stays.</p>
-            </div>
-            <div class="split-col bot">
-              <div class="split-label">Backend / AI</div>
-              <p>Automate the backend that fills those hours: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching rules. Commission is already fully automated.</p>
             </div>
           </div>
         </article>
@@ -572,7 +612,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Sales, commission only. He is coming up on that.</p>
+              <p>Sales, commission only. He is one of the very few people. Still here.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -585,19 +625,19 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-top">
             <div>
               <div class="role-name">Dan Young</div>
-              <div class="role-title">CFO</div>
+              <div class="role-title">Advisor · $30,000 per year</div>
               <div class="role-mail"><a href="mailto:drdanyoung79@gmail.com">drdanyoung79@gmail.com</a></div>
             </div>
             <div class="keep-chip">Keep</div>
           </div>
           <div class="role-split">
             <div class="split-col rev">
-              <div class="split-label">Finance seat</div>
-              <p>CFO. Finance judgment stays with Dan.</p>
+              <div class="split-label">Advisor</div>
+              <p>He stays on as an advisor at $30,000 per year. This is not a full-time CFO seat.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>Payment, ACH, and matching automation under Amber's line supports the finance work. It does not replace Dan.</p>
+              <p>Bots cover almost all finance backend: payments by PO, ACH, and bank and card matching. Dan advises. He does not hold an operating CFO seat.</p>
             </div>
           </div>
         </article>
@@ -606,8 +646,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
     <div class="path-card">
       <div class="sale-kicker">How this stays on track</div>
-      <p style="margin-top:8px">Rich and Landon sell. Patrick delivers Driven packaging on Driven's truck and sells between stops. Annie runs orders and customer service, and she sets up vendors the bot already finds. Amber and Dan hold finance, with bots taking vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
-      <p style="margin-top:8px">That is the whole build: this team produces the revenue, AI does the backend rest, and the company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
+      <p style="margin-top:8px">Rich handles vision. Amber runs day-to-day operations and systems at 25 hours a week, including the office staff and the systems she builds. Annie runs orders and customer service, office-side through Amber, and sets up vendors the bot finds. Patrick delivers Driven packaging on Driven's truck and sells between loads. Landon sells, commission only. Dan advises at $30,000 per year. Bots cover almost all backend, including vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
+      <p style="margin-top:8px">That is the whole build: very few people produce the revenue, bots cover almost everything else, and the company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
     </div>
   </div>
   <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
