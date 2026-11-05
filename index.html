@@ -119,7 +119,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .goal-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .goal-mark{background:var(--s);border:1px solid var(--br);border-radius:4px;padding:12px 12px 14px}
 .goal-year{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--td)}
-.goal-amt{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;letter-spacing:1px;color:var(--g);line-height:1;margin:6px 0 4px}
+.goal-amt{font-family:'Bebas Neue',sans-serif;font-size:2.15rem;letter-spacing:.5px;color:var(--g);line-height:1;margin:6px 0 4px}
 .goal-desc{font-size:12px;color:var(--tx);line-height:1.45}
 .goal-scale{display:flex;flex-direction:column;gap:10px}
 .goal-bar-row{display:grid;grid-template-columns:148px 1fr;gap:10px;align-items:center}
@@ -196,6 +196,10 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .org-acq{border:1px solid var(--br);background:var(--s)}
 .org-rev{margin-top:10px;padding-top:8px;border-top:1px solid var(--br)}
 .org-rev strong,.org-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--g)}
+.goal-take{margin-top:12px;padding-top:12px;border-top:1px solid var(--br)}
+.goal-net{font-family:'DM Mono',monospace;font-size:12px;color:var(--g);margin-top:6px}
+.org-dylan{margin-top:12px;background:var(--s);border:1px solid rgba(92,184,0,.45);border-radius:4px;padding:10px 12px;text-align:center}
+.org-dylan .org-role{color:var(--tg)}
 @media (max-width:980px){
   .goal-layout,.goal-pair,.role-split,.identity-grid,.goal-bar-row,.org-today,.org-stages{grid-template-columns:1fr}
   .org-row{flex-direction:column;gap:8px;margin-left:18px;padding-left:12px;border-left:2px solid var(--gd)}
@@ -281,36 +285,43 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
   <div class="panel" id="panel-path">
     <div class="sec-title">🎯 Growth Path</div>
-    <div class="sec-sub">Driven Solutions only. Final structure Rich stated on November 5, 2026. Rich on vision. Amber on day-to-day operations and systems.</div>
-    <p class="path-lead">No employees needed right now, or very few. Bots cover almost everything. The people still here produce the revenue. The dollar marks are Rich's stated goals. They are not a forecast from the books.</p>
+    <div class="sec-sub">Driven Solutions path. Dylan is shown as the Trailblazers person. Rich on vision and sales. Amber on day-to-day operations and systems.</div>
+    <p class="path-lead">Rich's stated targets, not a forecast from the books. Few or no additional employees. Bots cover almost everything. The people named here stay. This is reallocation, and nobody on the roster is laid off.</p>
 
     <div class="path-block">
       <div class="goal-layout">
         <div class="goal-card">
-          <div class="goal-flag">Rich's stated goals</div>
+          <div class="goal-flag">Rich's stated targets · not a forecast</div>
           <div class="goal-pair">
             <div class="goal-mark">
               <div class="goal-year">Calendar 2027</div>
-              <div class="goal-amt">$5M</div>
-              <div class="goal-desc">Next year, counted from November 2026. The path is $5 million.</div>
+              <div class="goal-amt">$5,000,000</div>
+              <div class="goal-desc">Cash revenue goal for next year, counted from November 2026.</div>
+              <div class="goal-net">At least 15% net margin → $750,000 net at the 15% floor</div>
             </div>
             <div class="goal-mark">
               <div class="goal-year">About 2029</div>
-              <div class="goal-amt">$10M</div>
-              <div class="goal-desc">Double that $5 million goal in 3 years. Rich's stated goal.</div>
+              <div class="goal-amt">$10,000,000</div>
+              <div class="goal-desc">Cash revenue goal. Double the $5,000,000 goal in 3 years.</div>
+              <div class="goal-net">15% net floor → $1,500,000 net</div>
             </div>
           </div>
-          <div class="goal-scale" role="img" aria-label="Goal markers only. Calendar 2027 goal is 5 million dollars. About 2029 goal is 10 million dollars, double the 2027 goal. No current-year revenue is shown.">
+          <div class="goal-scale" role="img" aria-label="Stated cash revenue goals only. 2027 is 5 million dollars. About 2029 is 10 million dollars. No current-year revenue is shown.">
             <div class="goal-bar-row">
-              <div class="goal-bar-name">2027 · $5M goal</div>
+              <div class="goal-bar-name">2027 · $5,000,000</div>
               <div class="goal-track"><div class="goal-fill" style="width:50%"></div></div>
             </div>
             <div class="goal-bar-row">
-              <div class="goal-bar-name">~2029 · $10M goal</div>
+              <div class="goal-bar-name">~2029 · $10,000,000</div>
               <div class="goal-track"><div class="goal-fill" style="width:100%"></div></div>
             </div>
           </div>
-          <p class="goal-note">Bar length compares these two goals only. The longer bar is double the shorter one because $10 million is double the $5 million goal. This page does not show current-year revenue, margin, cash, or headcount cost, and it does not draw a slope from the books.</p>
+          <div class="goal-take">
+            <div class="goal-year">Owner take-home target</div>
+            <div class="goal-amt">$1,000,000</div>
+            <div class="goal-desc">A year. Rich's stated target. At a 15% net floor, $1,000,000 needs about $6.67 million of cash revenue. The 2027 floor is $750,000 net, so the take-home does not fit inside the $5,000,000 year. It fits on the path between $5 million and $10 million, and it fits in the ~2029 year, where the 15% floor is $1,500,000 net.</div>
+          </div>
+          <p class="goal-note">Bar length compares the two stated cash revenue goals only. $750,000 and $1,500,000 are the 15% floors on those goals. No current-year revenue is shown. No number is stated for 2028, 2030, or 2031. The $100 million mark further down is an org stage, not a revenue goal for a year.</p>
         </div>
         <div class="sale-card">
           <div class="sale-kicker">Beside the path</div>
@@ -345,8 +356,8 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
     <div class="path-block" id="org-chart">
       <div class="sec-title" style="font-size:1.2rem">Org chart</div>
-      <div class="sec-sub">Today, then the same people at $6 million, $10 million, and $100 million. Stated stages, not a forecast from the books. Today's revenue is not shown. The only pay figure on this chart is Dan Young's advisor fee.</div>
-      <p class="path-lead">The path goals above stay: $5 million in calendar 2027, and double that goal to $10 million by about 2029. Rich handles vision. Amber owns day-to-day operations and systems and stays at 25 hours a week. Annie, Patrick, and Landon are the very few people. Dan stays on as an advisor at $30,000 per year, not as a full-time CFO seat. Bots cover almost all backend. Companies Rich plans to buy are in the $10 to $15 million range and fold in at the $10 million and $100 million stages. No target is named, and no price or terms are on this chart. Own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
+      <div class="sec-sub">Today, then the same roster at the $6 million, $10 million, and $100 million org stages. Those are stages, not a forecast, and $100 million is not a revenue goal for a year. Today's revenue is not shown. Dan Young's advisor fee is $30,000 per year. The owner's take-home target is the $1,000,000 above.</div>
+      <p class="path-lead">Rich handles vision and revenue-producing sales. Amber owns day-to-day operations and systems and stays at 25 hours a week, running the office staff and building systems. Annie stays on customer service. Patrick drives the truck. Landon stays on sales, commission only. Dan stays on as an advisor at $30,000 per year, not as a full-time CFO seat. Dylan is the Trailblazers person on this roster. Bots cover almost everything. Companies Rich plans to buy are in the $10 to $15 million range and fold in at the $10 million and $100 million stages. No target is named, and no price or terms are on this chart. Own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
       <div class="org-steps" aria-hidden="true">
         <span class="org-step">1 · <em>Today</em></span>
         <span class="org-step">2 · <em>$6M</em></span>
@@ -359,9 +370,9 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="sale-kicker">Today · very few people</div>
           <div class="org-top" style="margin-top:10px">
             <div class="org-rich">
-              <div class="org-role">Owner · vision</div>
+              <div class="org-role">Owner · vision and sales</div>
               <div class="org-nm">Rich Olson</div>
-              <div class="org-job">The owner handles vision.</div>
+              <div class="org-job">The owner handles vision and revenue-producing sales actions.</div>
             </div>
           </div>
           <div class="org-stem"></div>
@@ -374,30 +385,35 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
               </div>
               <div class="org-stem"></div>
               <div class="org-box">
-                <div class="org-role">Orders / CS · office-side</div>
+                <div class="org-role">Customer service</div>
                 <div class="org-nm">Annie</div>
-                <div class="org-job">Orders and customer service. Office-side through Amber's operations ownership. She sets up vendors the bot finds.</div>
+                <div class="org-job">Stays on customer service. Office-side through Amber. She sets up vendors the bot finds.</div>
               </div>
             </div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">Delivery</div><div class="org-nm">Patrick</div><div class="org-job">Delivery truck, plus sales calls between loads. One of the very few. Still here.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Drives the truck</div><div class="org-nm">Patrick</div><div class="org-job">Drives the truck. Sales calls between loads stay with him.</div></div></div>
             <div class="org-seat"><div class="org-box"><div class="org-role">Sales</div><div class="org-nm">Landon</div><div class="org-job">Sales, commission only. One of the very few. Still here.</div></div></div>
           </div>
-          <p class="org-rev"><span class="org-label">Stays revenue producing · </span>Landon sells. Patrick delivers Driven packaging and sells between loads. Annie runs orders and customer service. Amber runs the day to day. Rich stays on vision.</p>
+          <div class="org-dylan">
+            <div class="org-role">Trailblazers · on this roster</div>
+            <div class="org-nm">Dylan</div>
+            <div class="org-job">The Trailblazers person. No job title is stated. Not a Driven reporting line.</div>
+          </div>
+          <p class="org-rev"><span class="org-label">Stays revenue producing · </span>Rich and Landon do the sales. Patrick drives the truck. Annie stays on customer service. Amber runs the day to day. Rich also holds vision.</p>
         </div>
         <aside>
           <div class="org-advisor">
             <h3>Advisor · not a full-time seat</h3>
             <div class="org-nm">Dan Young</div>
             <div class="org-pay">$30,000<span style="font-size:1rem;letter-spacing:1px"> / year</span></div>
-            <p>He stays on as an advisor. This is not a full-time CFO seat. The only pay figure on this chart.</p>
+            <p>He stays on as an advisor. This is not a full-time CFO seat. This $30,000 is his advisor fee. It is separate from the owner's $1,000,000 take-home target.</p>
           </div>
           <div class="org-bots">
             <h3>AI / bots</h3>
-            <p>Bots cover almost everything. Almost all backend sits here. Not an added seat, and not a person who was cut.</p>
+            <p>Bots cover almost everything. Few or no additional employees. Almost all backend sits here.</p>
             <ul>
               <li>A bot finds vendors. Annie sets up what it finds.</li>
               <li>Vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated.</li>
-              <li>Patrick's truck and the calls between loads stay his. Landon's sales stay his.</li>
+              <li>Patrick drives the truck. Landon's sales stay his. Rich keeps the revenue-producing sales actions with the vision.</li>
             </ul>
           </div>
         </aside>
@@ -408,17 +424,22 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="goal-flag">Stated stage</div>
           <div class="sale-kicker">Same people · very few</div>
           <div class="org-stage-amt">$6M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
             <li><b>Amber</b> — Ops &amp; systems · 25 hrs/week. Runs the office staff and builds systems.
               <ul class="mini-kids">
-                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+                <li><b>Annie</b> — Stays on customer service</li>
               </ul>
             </li>
-            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Patrick</b> — Drives the truck</li>
             <li><b>Landon</b> — Sales, commission only</li>
           </ul>
+          <div class="org-dylan" style="text-align:left">
+            <div class="org-role">Trailblazers</div>
+            <div class="org-nm" style="font-size:14px">Dylan</div>
+            <div class="org-job">On this roster. No job title is stated. Not a Driven reporting line.</div>
+          </div>
           <div class="org-advisor" style="margin-top:10px">
             <h3>Dan Young · advisor</h3>
             <p>$30,000 per year. Not a full-time CFO seat.</p>
@@ -435,24 +456,29 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
             <div class="org-label">Acquisitions</div>
             <p style="margin-top:4px">Rich plans to buy companies in the $10 to $15 million range. That range is above this stage, so none is folded in here. The very few people and the bots carry this stage.</p>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>Landon sells. Patrick delivers and sells between loads. Annie runs orders and customer service. Amber runs the day to day. Rich stays on vision. Bots do not sell.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Rich and Landon do the sales. Patrick drives the truck. Annie stays on customer service. Amber runs the day to day. Bots do not sell. This $6 million mark is an org stage. It is not a separate year's revenue goal.</p>
         </article>
 
         <article class="org-stage">
           <div class="goal-flag">Stated stage · same $10M goal</div>
           <div class="sale-kicker">Same people · one fold-in</div>
           <div class="org-stage-amt">$10M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
             <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
               <ul class="mini-kids">
-                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+                <li><b>Annie</b> — Stays on customer service</li>
               </ul>
             </li>
-            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Patrick</b> — Drives the truck</li>
             <li><b>Landon</b> — Sales, commission only</li>
           </ul>
+          <div class="org-dylan" style="text-align:left">
+            <div class="org-role">Trailblazers</div>
+            <div class="org-nm" style="font-size:14px">Dylan</div>
+            <div class="org-job">On this roster. No job title is stated. Not a Driven reporting line.</div>
+          </div>
           <div class="org-advisor" style="margin-top:10px">
             <h3>Dan Young · advisor</h3>
             <p>$30,000 per year. Not a full-time CFO seat.</p>
@@ -474,24 +500,29 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
               <li>Commission stays on the automation already in place.</li>
             </ul>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>Landon, Patrick, and Annie keep producing. Revenue roles that come with the company keep producing. Amber runs ops and systems for the whole, still at 25 hours a week. Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Rich keeps vision and sales. Landon stays on commission sales. Patrick drives the truck. Annie stays on customer service. Revenue roles that come with the company keep producing. Amber runs ops and systems for the whole, still at 25 hours a week. Dan stays advisor at $30,000 per year. No second president. No second back office. The ~2029 cash revenue goal is $10,000,000, with a 15% floor of $1,500,000 net.</p>
         </article>
 
         <article class="org-stage">
-          <div class="goal-flag">Stated stage</div>
+          <div class="goal-flag">Org stage · not a year's revenue goal</div>
           <div class="sale-kicker">Same people · fold-in repeats</div>
           <div class="org-stage-amt">$100M</div>
-          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision</span></div>
+          <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
             <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
               <ul class="mini-kids">
-                <li><b>Annie</b> — Orders / CS · office-side through Amber</li>
+                <li><b>Annie</b> — Stays on customer service</li>
               </ul>
             </li>
-            <li><b>Patrick</b> — Truck + sales calls between loads</li>
+            <li><b>Patrick</b> — Drives the truck</li>
             <li><b>Landon</b> — Sales, commission only</li>
           </ul>
+          <div class="org-dylan" style="text-align:left">
+            <div class="org-role">Trailblazers</div>
+            <div class="org-nm" style="font-size:14px">Dylan</div>
+            <div class="org-job">On this roster. No job title is stated. Not a Driven reporting line.</div>
+          </div>
           <div class="org-advisor" style="margin-top:10px">
             <h3>Dan Young · advisor</h3>
             <p>$30,000 per year. Not a full-time CFO seat.</p>
@@ -507,7 +538,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
               <li>The back office does not multiply per company. It goes onto the bots. Amber runs ops and systems for the whole. Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</li>
             </ul>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>Annie, Patrick, and Landon keep producing, and so do the revenue roles that arrive with each company. Bots cover almost all backend. The very few people stay. Dan stays the advisor.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Rich keeps vision and sales. Annie stays on customer service. Patrick drives the truck. Landon stays on sales. Revenue roles that arrive with each company keep producing. Bots cover almost all backend. Dan stays the advisor at $30,000 per year. $100 million is this org stage only. No revenue number is stated for 2028, 2030, or 2031.</p>
         </article>
       </div>
     </div>
@@ -515,20 +546,20 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div class="path-block">
       <div class="sec-title" style="font-size:1.2rem">Roles after automation</div>
       <div class="sec-sub">Seat detail for the people on the chart. They stay at $6 million, $10 million, and $100 million. The very few produce the revenue. Bots cover almost all backend.</div>
-      <div class="path-rule">No employees needed right now, or very few. Annie, Patrick, and Landon are those people. Amber stays at 25 hours a week and runs operations and systems. Rich stays on vision. Dan stays as advisor at $30,000 per year. Nobody on this list was cut.</div>
+      <div class="path-rule">Few or no additional employees. Reallocation only. Rich, Amber, Dan, Annie, Patrick, Landon, and Dylan all stay. Amber stays at 25 hours a week and runs operations and systems. Rich stays on vision and sales. Dan stays as advisor at $30,000 per year. Dylan is the Trailblazers person, with no job title stated.</div>
       <div class="role-list">
         <article class="role-card">
           <div class="role-top">
             <div>
               <div class="role-name">Rich Olson</div>
-              <div class="role-title">Owner · vision</div>
+              <div class="role-title">Owner · vision and sales</div>
             </div>
             <div class="keep-chip">Keep</div>
           </div>
           <div class="role-split">
             <div class="split-col rev">
-              <div class="split-label">Vision</div>
-              <p>The owner handles vision. Day-to-day operations and systems sit with Amber.</p>
+              <div class="split-label">Vision and sales</div>
+              <p>The owner handles vision and revenue-producing sales actions. Day-to-day operations and systems sit with Amber.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -562,7 +593,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-top">
             <div>
               <div class="role-name">Annie</div>
-              <div class="role-title">Orders / CS · office-side through Amber</div>
+              <div class="role-title">Customer service</div>
               <div class="role-mail"><a href="mailto:orders@drivensol.com">orders@drivensol.com</a></div>
             </div>
             <div class="keep-chip">Keep</div>
@@ -570,7 +601,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Orders and customer service stay with Annie. Her office-side work runs through Amber's ownership of operations. She is one of the very few people. Still here.</p>
+              <p>Annie stays on customer service. Orders stay with her, and her office-side work runs through Amber. She sets up vendors the bot finds.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -583,7 +614,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-top">
             <div>
               <div class="role-name">Patrick</div>
-              <div class="role-title">Delivery truck and sales calls on the route</div>
+              <div class="role-title">Drives the truck</div>
               <div class="role-mail"><a href="mailto:logistics@drivensol.com">logistics@drivensol.com</a></div>
             </div>
             <div class="keep-chip">Keep</div>
@@ -591,7 +622,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>He runs Driven's delivery truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between loads he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly. He is one of the very few people. Still here.</p>
+              <p>Patrick drives the truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between loads he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -641,13 +672,33 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
             </div>
           </div>
         </article>
+
+        <article class="role-card">
+          <div class="role-top">
+            <div>
+              <div class="role-name">Dylan</div>
+              <div class="role-title">Trailblazers</div>
+            </div>
+            <div class="keep-chip">Keep</div>
+          </div>
+          <div class="role-split">
+            <div class="split-col rev">
+              <div class="split-label">Roster</div>
+              <p>Dylan is the Trailblazers person on this roster. No job title is stated. He is not a Driven reporting line. The Path tab stays the Driven view.</p>
+            </div>
+            <div class="split-col bot">
+              <div class="split-label">Backend / AI</div>
+              <p>Bots cover almost everything on the Driven side. Dylan is listed so the Trailblazers person already in view is on the same roster.</p>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
 
     <div class="path-card">
       <div class="sale-kicker">How this stays on track</div>
-      <p style="margin-top:8px">Rich handles vision. Amber runs day-to-day operations and systems at 25 hours a week, including the office staff and the systems she builds. Annie runs orders and customer service, office-side through Amber, and sets up vendors the bot finds. Patrick delivers Driven packaging on Driven's truck and sells between loads. Landon sells, commission only. Dan advises at $30,000 per year. Bots cover almost all backend, including vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
-      <p style="margin-top:8px">That is the whole build: very few people produce the revenue, bots cover almost everything else, and the company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
+      <p style="margin-top:8px">Rich handles vision and revenue-producing sales. Amber runs day-to-day operations and systems at 25 hours a week, running the office staff and building systems. Annie stays on customer service and sets up vendors the bot finds. Patrick drives the truck. Landon sells, commission only. Dan advises at $30,000 per year. Dylan is the Trailblazers person, with no job title stated. Bots cover almost everything else, including vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
+      <p style="margin-top:8px">Cash revenue targets Rich stated: $5,000,000 in 2027 with at least 15% net margin, $750,000 net at that floor, and $10,000,000 around 2029 with a 15% floor of $1,500,000 net. Owner take-home target is $1,000,000 a year. At 15% that needs about $6.67 million of revenue, so it does not fit in the 2027 net and it does fit at the $10,000,000 year. The company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
     </div>
   </div>
   <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
