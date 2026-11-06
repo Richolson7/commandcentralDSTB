@@ -120,6 +120,22 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .toast.err{border-color:var(--rbr);color:var(--red);background:var(--rbg)}
 @keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
 
+.fin-sub{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--br);margin:0 0 16px}
+.fin-tab{padding:8px 12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--td);cursor:pointer;border:0;border-bottom:3px solid transparent;background:none;white-space:nowrap}
+.fin-tab:hover{color:var(--tx)}
+.fin-tab.active{color:var(--g);border-bottom-color:var(--g)}
+.fin-view{display:none}.fin-view.active{display:block}
+.fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.fin-scroll{overflow-x:auto}
+.src{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:10px;border:1px solid var(--br);border-radius:99px;padding:2px 8px;color:var(--td);margin-right:6px}
+.src.qbo{color:var(--g);border-color:rgba(57,255,20,.35)}
+.src.amber{color:var(--amb);border-color:var(--abr)}
+.src.wait{color:var(--td)}
+.fin-note{background:var(--abg);border:1px solid var(--abr);border-radius:4px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--amb);line-height:1.5}
+.fin-form{display:grid;gap:8px;margin-top:14px;max-width:720px}
+.fin-form textarea{width:100%;min-height:120px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px}
+.fin-form textarea:focus{outline:none;border-color:var(--g)}
+
 @media print {
   #panel-proj{display:none!important}
   .co-switcher,.sync-bar,.links-bar,.tabs,.tbtn,.btn-g,.actual-inp{display:none!important}
@@ -176,6 +192,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
   <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
   <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
+  <div class="tab" id="tab-fin-desk" onclick="openFinanceDesk(event)">🏦 Finance Desk</div>
   <div class="tab" onclick="showPanel('pnl',this)">🧾 P&amp;L</div>
   <div class="tab" onclick="showPanel('proj',this)">🧮 Projections</div>
   <div class="tab" onclick="showPanel('charts',this)">📈 Charts</div>
@@ -188,6 +205,29 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
   <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
   <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
+  <div class="panel" id="panel-findesk">
+    <div class="sec-title">FINANCE DESK</div>
+    <div class="sec-sub">Driven Solutions company finance. Amber's sheet and the QuickBooks book stay on separate lines. Nothing on this desk pays a vendor, posts to the books, or sends email. The weekly meeting log remains on <a href="finance-accountability.html" style="color:var(--g)">Finance Accountability</a>.</div>
+    <div id="fin-status" class="sec-sub">Loading the latest snapshot…</div>
+    <div class="fin-sub" id="fin-subtabs">
+      <button type="button" class="fin-tab active" data-fin-view="cash">Cash on hand</button>
+      <button type="button" class="fin-tab" data-fin-view="decisions">Tue / Fri numbers</button>
+      <button type="button" class="fin-tab" data-fin-view="aging">AP aging</button>
+      <button type="button" class="fin-tab" data-fin-view="red">Red list</button>
+      <button type="button" class="fin-tab" data-fin-view="due">Next 14 days</button>
+      <button type="button" class="fin-tab" data-fin-view="autopay">Autopay check</button>
+      <button type="button" class="fin-tab" data-fin-view="contacts">Contact log</button>
+      <button type="button" class="fin-tab" data-fin-view="drafts">Draft emails</button>
+    </div>
+    <div id="fin-view-cash" class="fin-view active"></div>
+    <div id="fin-view-decisions" class="fin-view"></div>
+    <div id="fin-view-aging" class="fin-view"></div>
+    <div id="fin-view-red" class="fin-view"></div>
+    <div id="fin-view-due" class="fin-view"></div>
+    <div id="fin-view-autopay" class="fin-view"></div>
+    <div id="fin-view-contacts" class="fin-view"></div>
+    <div id="fin-view-drafts" class="fin-view"></div>
+  </div>
   <div class="panel" id="panel-pnl">
     <div class="sec-title">🧾 P&amp;L — QuickBooks</div>
     <div class="sec-sub" id="pnl-sub"></div>
@@ -232,6 +272,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   </div>
 </div>
 
+<script src="driven-finance.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════
 // SUPABASE
@@ -241,6 +282,7 @@ const db = createClient(
   'https://igaylyhkssahczubiztb.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnYXlseWhrc3NhaGN6dWJpenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTk3MzQsImV4cCI6MjA5Mjg3NTczNH0.iiRC320be1-kLa8tQoTupqWTu_8yTaEaJGVpdI4dnAo'
 );
+window.commandCenter = { db, getCompany: () => co };
 
 // ══════════════════════════════════════════════════════════
 // COMPANY + KPI CONFIG (simplified schema — one flat key store per company,
@@ -428,12 +470,31 @@ function switchCompany(c) {
   const bdg = document.getElementById('co-badge');
   bdg.textContent = cfg.badge; bdg.className = 'badge ' + cfg.badgeClass;
   renderLinks();
+  syncFinanceNav();
   loadData();
 }
 
 function renderLinks(){
   const cfg = COMPANIES[co];
-  document.getElementById('links-bar').innerHTML = cfg.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+  let html = cfg.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+  if (co==='driven') html += `<a class="link-chip" href="#driven-finance" onclick="openFinanceDesk(event)">Finance Desk</a>`;
+  document.getElementById('links-bar').innerHTML = html;
+}
+
+function syncFinanceNav(){
+  const tab = document.getElementById('tab-fin-desk');
+  if (tab) tab.style.display = (co==='driven') ? '' : 'none';
+  if (co!=='driven' && currentTab==='findesk'){
+    const dash = document.querySelector('#main-tabs .tab');
+    showPanel('dashboard', dash);
+  }
+}
+
+function openFinanceDesk(ev){
+  if (ev) ev.preventDefault();
+  if (co!=='driven') switchCompany('driven');
+  const tab = document.getElementById('tab-fin-desk');
+  showPanel('findesk', tab);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -441,10 +502,18 @@ function renderLinks(){
 // ══════════════════════════════════════════════════════════
 function showPanel(id, el){
   currentTab = id;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll('#main-tabs .tab').forEach(t=>t.classList.remove('active'));
+  if (el) el.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  if (panel) panel.classList.add('active');
+  if (id==='findesk') {
+    if (location.hash !== '#driven-finance') location.hash = 'driven-finance';
+    if (window.finDeskLoad) window.finDeskLoad();
+  } else if (window.finDeskPause) {
+    window.finDeskPause();
+    if (location.hash === '#driven-finance') history.replaceState(null, '', location.pathname + location.search);
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -738,7 +807,9 @@ function toast(msg, type){
 // INIT
 // ══════════════════════════════════════════════════════════
 renderLinks();
+syncFinanceNav();
 loadData();
+if (location.hash === '#driven-finance') openFinanceDesk();
 </script>
 </body>
 </html>
