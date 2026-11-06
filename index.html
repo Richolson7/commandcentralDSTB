@@ -196,12 +196,22 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .org-acq{border:1px solid var(--br);background:var(--s)}
 .org-rev{margin-top:10px;padding-top:8px;border-top:1px solid var(--br)}
 .org-rev strong,.org-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--g)}
+.path-jumps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.path-jumps a{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--g);border:1px solid var(--gd);background:var(--gbg);border-radius:2px;padding:5px 10px;text-decoration:none}
+.path-jumps a:hover{color:var(--tx)}
+.path-table-wrap{overflow-x:auto;margin-top:10px}
+.path-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.path-table th{background:var(--s);color:var(--td);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--br)}
+.path-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:top;line-height:1.45;color:var(--tx)}
+.path-table tr:hover td{background:rgba(255,255,255,.02)}
+.path-table td.num{font-family:'DM Mono',monospace;white-space:nowrap;color:var(--g)}
+.path-hours{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:12px}
 .goal-take{margin-top:12px;padding-top:12px;border-top:1px solid var(--br)}
 .goal-net{font-family:'DM Mono',monospace;font-size:12px;color:var(--g);margin-top:6px}
 .org-dylan{margin-top:12px;background:var(--s);border:1px solid rgba(92,184,0,.45);border-radius:4px;padding:10px 12px;text-align:center}
 .org-dylan .org-role{color:var(--tg)}
 @media (max-width:980px){
-  .goal-layout,.goal-pair,.role-split,.identity-grid,.goal-bar-row,.org-today,.org-stages{grid-template-columns:1fr}
+  .goal-layout,.goal-pair,.role-split,.identity-grid,.goal-bar-row,.org-today,.org-stages,.path-hours{grid-template-columns:1fr}
   .org-row{flex-direction:column;gap:8px;margin-left:18px;padding-left:12px;border-left:2px solid var(--gd)}
   .org-seat{padding-top:0}
   .org-seat::before,.org-seat::after,.org-stem{display:none}
@@ -285,8 +295,15 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel active" id="panel-dashboard"><div id="dash-content"></div></div>
   <div class="panel" id="panel-path">
     <div class="sec-title">🎯 Growth Path</div>
-    <div class="sec-sub">Driven Solutions path. Dylan is shown as the Trailblazers person. Rich on vision and sales. Amber on day-to-day operations and systems.</div>
-    <p class="path-lead">Rich's stated targets, not a forecast from the books. Few or no additional employees. Bots cover almost everything. The people named here stay. This is reallocation, and nobody on the roster is laid off.</p>
+    <div class="sec-sub">Driven Solutions path. Dylan is shown as the Trailblazers person. Rich on vision and sales. Amber owns day-to-day operations and systems: 25-hour paid seat until automation, 10 remaining planned hours after.</div>
+    <p class="path-lead">Rich's stated targets, not a forecast from the books. Few or no additional employees. Bots cover almost everything. The people named here stay. This is reallocation, and nobody on the roster is laid off. Driven delivers packaging in-house, never brokerage.</p>
+    <nav class="path-jumps" aria-label="Path sections">
+      <a href="#path-hours">Hours</a>
+      <a href="#path-when">Who does what when</a>
+      <a href="#path-revenue">Revenue and treatment</a>
+      <a href="#path-amber-tasks">Amber's tasks</a>
+      <a href="#org-chart">Org chart</a>
+    </nav>
 
     <div class="path-block">
       <div class="goal-layout">
@@ -336,7 +353,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
         <div class="path-card">
           <div class="sale-kicker">Who we are</div>
           <div class="slogan">"Create the fun and they will come."</div>
-          <p>Driven Solutions is a packaging company (drivensol.com). It delivers its own packaging to its own customers on its own truck. Call that delivery. Do not call Driven a freight brokerage.</p>
+          <p>Driven Solutions is a packaging company (drivensol.com). It delivers its own packaging to its own customers on its own truck. That is in-house packaging delivery.</p>
           <p style="margin-top:8px">The $5 million and $10 million goals stay inside this. Same company, same truck, same customers, same people. Growth keeps Driven on this track.</p>
         </div>
         <div class="path-card">
@@ -357,7 +374,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div class="path-block" id="org-chart">
       <div class="sec-title" style="font-size:1.2rem">Org chart</div>
       <div class="sec-sub">Today, then the same roster at the $6 million, $10 million, and $100 million org stages. Those are stages, not a forecast, and $100 million is not a revenue goal for a year. Today's revenue is not shown. Dan Young's advisor fee is $30,000 per year. The owner's take-home target is the $1,000,000 above.</div>
-      <p class="path-lead">Rich handles vision and revenue-producing sales. Amber owns day-to-day operations and systems and stays at 25 hours a week, running the office staff and building systems. Annie stays on customer service. Patrick drives the truck. Landon stays on sales, commission only. Dan stays on as an advisor at $30,000 per year, not as a full-time CFO seat. Dylan is the Trailblazers person on this roster. Bots cover almost everything. Companies Rich plans to buy are in the $10 to $15 million range and fold in at the $10 million and $100 million stages. No target is named, and no price or terms are on this chart. Own packaging, own customers, own truck. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
+      <p class="path-lead">Rich handles vision and revenue-producing sales. Amber owns day-to-day operations and systems: a 25-hour paid seat until automation, then 10 remaining planned hours (10.5 while PO-to-bill remains this week). Annie stays on customer service. Patrick drives the truck. Landon stays on sales, commission only. Dan Young stays on as an advisor at $30,000 per year, not as a full-time CFO seat. Dylan is the Trailblazers person on this roster, not a Driven reporting line. Bots cover almost everything. Growth path: $5M next year (2027), about $10M in three years (~2029), 15% net floor, $1M owner take-home (fits once revenue passes about $6.67M). Org stages are $6M, $10M, and $100M. Companies in the $10 to $15 million range fold in at the $10 million and $100 million stages: revenue roles can come with the company, the back office goes onto Driven bots, and Amber runs ops for the whole. No target is named, and no price or terms are on this chart. In-house packaging delivery, never brokerage. "Create the fun and they will come." Integrity, Discipline, Growth, Loyalty, Good-Natured, Persistence.</p>
       <div class="org-steps" aria-hidden="true">
         <span class="org-step">1 · <em>Today</em></span>
         <span class="org-step">2 · <em>$6M</em></span>
@@ -381,7 +398,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
               <div class="org-box">
                 <div class="org-role">Operations &amp; systems</div>
                 <div class="org-nm">Amber</div>
-                <div class="org-job">Stays at 25 hours a week. Transfers from office admin to running the office staff and building systems. She owns day-to-day operations.</div>
+                <div class="org-job">25-hour paid seat until automation. 10 remaining planned hours after (10.5 while PO-to-bill remains). Owns day-to-day operations and systems.</div>
               </div>
               <div class="org-stem"></div>
               <div class="org-box">
@@ -390,7 +407,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
                 <div class="org-job">Stays on customer service. Office-side through Amber. She sets up vendors the bot finds.</div>
               </div>
             </div>
-            <div class="org-seat"><div class="org-box"><div class="org-role">Drives the truck</div><div class="org-nm">Patrick</div><div class="org-job">Drives the truck. Sales calls between loads stay with him.</div></div></div>
+            <div class="org-seat"><div class="org-box"><div class="org-role">Drives the truck</div><div class="org-nm">Patrick</div><div class="org-job">Drives the truck. Meeting-setting calls between deliveries; Rich attends those meetings. VMI on-route is not extra hours.</div></div></div>
             <div class="org-seat"><div class="org-box"><div class="org-role">Sales</div><div class="org-nm">Landon</div><div class="org-job">Sales, commission only. One of the very few. Still here.</div></div></div>
           </div>
           <div class="org-dylan">
@@ -427,7 +444,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Amber</b> — Ops &amp; systems · 25 hrs/week. Runs the office staff and builds systems.
+            <li><b>Amber</b> — Ops &amp; systems · 25-hour paid seat until automation, then 10 remaining planned hours. Owns day-to-day operations and systems.
               <ul class="mini-kids">
                 <li><b>Annie</b> — Stays on customer service</li>
               </ul>
@@ -466,7 +483,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
+            <li><b>Amber</b> — Ops &amp; systems for the whole · 25-hour paid seat until automation; 10 remaining planned hours after
               <ul class="mini-kids">
                 <li><b>Annie</b> — Stays on customer service</li>
               </ul>
@@ -500,7 +517,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
               <li>Commission stays on the automation already in place.</li>
             </ul>
           </div>
-          <p class="org-rev"><span class="org-label">Revenue · </span>Rich keeps vision and sales. Landon stays on commission sales. Patrick drives the truck. Annie stays on customer service. Revenue roles that come with the company keep producing. Amber runs ops and systems for the whole, still at 25 hours a week. Dan stays advisor at $30,000 per year. No second president. No second back office. The ~2029 cash revenue goal is $10,000,000, with a 15% floor of $1,500,000 net.</p>
+          <p class="org-rev"><span class="org-label">Revenue · </span>Rich keeps vision and sales. Landon stays on commission sales. Patrick drives the truck. Annie stays on customer service. Revenue roles that come with the company keep producing. Amber runs ops and systems for the whole on the remaining-work plan: 25-hour paid seat until automation, 10 remaining planned hours after. Dan stays advisor at $30,000 per year. No second president. No second back office. The ~2029 cash revenue goal is $10,000,000, with a 15% floor of $1,500,000 net.</p>
         </article>
 
         <article class="org-stage">
@@ -510,7 +527,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="mini-rich"><div class="org-nm" style="font-size:14px">Rich Olson</div><span>Owner · vision and sales</span></div>
           <div class="mini-stem"></div>
           <ul class="mini-kids">
-            <li><b>Amber</b> — Ops &amp; systems for the whole · 25 hrs/week
+            <li><b>Amber</b> — Ops &amp; systems for the whole · 25-hour paid seat until automation; 10 remaining planned hours after
               <ul class="mini-kids">
                 <li><b>Annie</b> — Stays on customer service</li>
               </ul>
@@ -535,7 +552,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
             <h3>Bots absorb</h3>
             <ul>
               <li>Each company's vendor finding, vendor payments by PO, ACH, and bank and card matching.</li>
-              <li>The back office does not multiply per company. It goes onto the bots. Amber runs ops and systems for the whole. Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</li>
+              <li>The back office does not multiply per company. It goes onto the bots. Amber runs ops and systems for the whole (25-hour paid seat until automation, 10 remaining planned hours after). Rich stays on vision. Dan stays advisor at $30,000 per year. No second president. No second back office.</li>
             </ul>
           </div>
           <p class="org-rev"><span class="org-label">Revenue · </span>Rich keeps vision and sales. Annie stays on customer service. Patrick drives the truck. Landon stays on sales. Revenue roles that arrive with each company keep producing. Bots cover almost all backend. Dan stays the advisor at $30,000 per year. $100 million is this org stage only. No revenue number is stated for 2028, 2030, or 2031.</p>
@@ -543,10 +560,194 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
       </div>
     </div>
 
+    <div class="path-block" id="path-hours">
+      <div class="sec-title" style="font-size:1.2rem">Weekly hours</div>
+      <div class="sec-sub">Estimated or paid seat is what is on the books. Post-automation planned hours are the remaining duties after the bots take the backend. These are planned hours, not a time study. No payroll change is being executed.</div>
+      <div class="path-table-wrap">
+        <table class="path-table">
+          <thead>
+            <tr><th>Person</th><th>Estimated / paid seat</th><th>Post-automation planned duties</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rich</td><td class="num">50</td><td class="num">34.5</td></tr>
+            <tr><td>Annie</td><td class="num">30</td><td class="num">30</td></tr>
+            <tr><td>Patrick</td><td class="num">30</td><td>30, plus VMI on-route (not extra hours)</td></tr>
+            <tr><td>Amber</td><td class="num">25</td><td>10 after automation; 10.5 while PO-to-bill remains this week</td></tr>
+            <tr><td>Dan</td><td>Advisor (no numeric estimate)</td><td class="num">9.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="path-hours">
+        <div class="path-card">
+          <div class="sale-kicker">Amber's paid seat and the 10-hour path</div>
+          <p style="margin-top:8px">Amber paid seat stays 25 hours at $27/hour = $675/week ($35,100/year before payroll tax) until automation lands. The 10-hour remaining-work path is $270/week. No payroll change is being executed.</p>
+          <div class="path-table-wrap">
+            <table class="path-table">
+              <thead><tr><th>Amber's 10-hour breakdown</th><th>Hrs/wk</th></tr></thead>
+              <tbody>
+                <tr><td>Weekly AR + monthly cash deposits</td><td class="num">2.5</td></tr>
+                <tr><td>ACH payment-run / exception review</td><td class="num">1</td></tr>
+                <tr><td>Rare bank/CC exceptions</td><td class="num">0.5</td></tr>
+                <tr><td>Credit memos</td><td class="num">0.5</td></tr>
+                <tr><td>Weekly mail (pickup + drop-off as one trip)</td><td class="num">1</td></tr>
+                <tr><td>State accounts</td><td class="num">0.5</td></tr>
+                <tr><td>Daily huddle</td><td class="num">1</td></tr>
+                <tr><td>Financial/accounting meetings</td><td class="num">1.5</td></tr>
+                <tr><td>Finishing systems Rich hands off from the road (includes bot follow-through)</td><td class="num">1</td></tr>
+                <tr><td>Hours approval and payroll glance</td><td class="num">0.5</td></tr>
+                <tr><td>Total after automation</td><td class="num">10</td></tr>
+                <tr><td>Interim: QuickBooks PO-to-bill until that automation lands, then this 0.5 drops off</td><td class="num">0.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="path-card">
+            <div class="sale-kicker">Why 25 and 10 both appear</div>
+            <p style="margin-top:8px">Nov 6 role template padded planned duties to 25 by replacing the 1-hour road-handoff with 8 systems hours and adding 7.5 office/ops hours. That padding is removed. Office coordination is ownership, not a padded extra block.</p>
+          </div>
+          <div class="path-card" style="margin-top:12px">
+            <div class="sale-kicker">Hour gap that is not invented</div>
+            <p style="margin-top:8px">Ownership of Command Center upkeep, roles/hours review, automation follow-through, and finishing road handoffs moves to Amber, but a positive hour transfer cannot be calculated honestly. Rich's only separately listed road-build/handoff duty already has 0 hours; those admin items have no separate hour allocation. The gap is documented here. Sales time and owner meeting attendance stay on Rich's 34.5. Amber remains 10 plus unquantified additional work that must be measured. Rich's numeric planned total stays 34.5.</p>
+          </div>
+          <div class="path-card" style="margin-top:12px">
+            <div class="sale-kicker">Dan's report blocks</div>
+            <p style="margin-top:8px">Dan's two manual half-hour report-building blocks (vendor payments by PO; weekly cash/AP snapshot) drop to 0 after automation; review stays inside financial oversight. Planned duties are 9.5. The advisor seat has no numeric estimate.</p>
+          </div>
+        </div>
+      </div>
+      <p class="path-note">Landon is commission only and is not a time-based paid seat in this table. Dylan is Trailblazers, not a Driven reporting line. No cadence or hours are set for Dylan here.</p>
+    </div>
+
+    <div class="path-block" id="path-when">
+      <div class="sec-title" style="font-size:1.2rem">Who does what when after automation</div>
+      <div class="sec-sub">Teammates produce revenue. AI and bots handle the backend. No layoffs, reallocation only.</div>
+      <div class="path-table-wrap">
+        <table class="path-table">
+          <thead><tr><th>Role</th><th>After automation</th><th>When</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Rich</td>
+              <td>Keeps vision and revenue-producing visits, calls and relationships. Starts tools only on the road, then hands completion to Amber; keeps owner financial decisions and team participation.</td>
+              <td>Selling next week; Monday/Friday admin review. Amber owns non-sales follow-through, not his sales.</td>
+            </tr>
+            <tr>
+              <td>Amber</td>
+              <td>Takes admin/ops execution off Rich: Command Center upkeep, roles/hours review, automation follow-through and finishing road-started systems. Coordinates Annie's office-side work and Patrick's schedule escalations; bots do backend execution.</td>
+              <td>Monday/Friday admin reviews and each road handoff; daily exceptions/huddle, weekly deposits/mail, scheduled financial meetings.</td>
+            </tr>
+            <tr>
+              <td>Annie</td>
+              <td>10 different existing-customer calls each workday; orders, onboarding, late collections and setting up vendors the bot finds; runs weekly L10.</td>
+              <td>Office-side escalation goes through Amber.</td>
+            </tr>
+            <tr>
+              <td>Patrick</td>
+              <td>Truck deliveries; meeting-setting calls between deliveries (Rich attends those meetings); confirms automated routes; Kemp VMI every two weeks; SV Labs weekly.</td>
+              <td>Each route. VMI counting is on the route, not extra hours.</td>
+            </tr>
+            <tr>
+              <td>Landon</td>
+              <td>Daily calls, quotes, closes and account relationships; weekly numbers at huddle/L10.</td>
+              <td>Commission page stays automated.</td>
+            </tr>
+            <tr>
+              <td>Dan Young</td>
+              <td>Weekly accounting and scheduled financial advice on runway, terms, debt and budget; reviews automated reports instead of building them.</td>
+              <td>Advisor, not full-time CFO.</td>
+            </tr>
+            <tr>
+              <td>Dylan</td>
+              <td>Trailblazers only, not a Driven reporting line.</td>
+              <td>No invented cadence or hours.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="path-block" id="path-revenue">
+      <div class="sec-title" style="font-size:1.2rem">Revenue and treatment</div>
+      <p class="path-lead">Keep the people we have: no layoffs, reallocation only. Teammates produce revenue; AI and bots handle the backend. Driven delivers packaging in-house, never brokerage. Compensation below records known arrangements, not new pay plans.</p>
+      <div class="path-table-wrap">
+        <table class="path-table">
+          <thead><tr><th>Role</th><th>Revenue</th><th>Compensation / treatment</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Rich</td>
+              <td>Owner: vision and revenue-producing sales, visits, calls and closing the meetings Patrick lands.</td>
+              <td>Owner; no pay amount is set here. Protect selling time; Monday and Friday are admin days.</td>
+            </tr>
+            <tr>
+              <td>Amber</td>
+              <td>Backend operations and systems let Rich stay on sales and let the team sell and deliver; she protects cash, clears exceptions and finishes road handoffs.</td>
+              <td>$27/hour. Paid seat stays 25 hours = $675/week ($35,100/year before payroll tax) until automation lands. The 10-hour remaining-work path is $270/week, plus only genuinely measured additional assigned work. Paid hours follow remaining work; no invented 7.5-hour office or 8-hour systems block.</td>
+            </tr>
+            <tr>
+              <td>Annie</td>
+              <td>Customer service and orders: existing-customer calls create reorders, collections bring cash, and she sets up the vendors the bot finds. Office-side coordination goes through Amber.</td>
+              <td>Existing page records $20/hour and 30 hours/week = $600/week ($31,200/year before payroll tax). No new compensation plan.</td>
+            </tr>
+            <tr>
+              <td>Patrick</td>
+              <td>Drives the truck, which the page says makes $1,000/day in net income; calls companies between deliveries to land meetings Rich attends. Counts VMI on-route at Kemp every two weeks and SV Labs weekly.</td>
+              <td>Existing page records $20/hour and 30 hours/week = $600/week ($31,200/year before payroll tax). Truck net income is company performance, not his wage. No new compensation plan.</td>
+            </tr>
+            <tr>
+              <td>Landon</td>
+              <td>Sales, customer/vendor relations, quotes, closes and margin from his accounts.</td>
+              <td>Commission only. No commission percentage is set here.</td>
+            </tr>
+            <tr>
+              <td>Dan Young</td>
+              <td>Advice protects runway, vendor terms, debt decisions and cash; he does not directly close sales.</td>
+              <td>$30,000/year advisor, not a full-time CFO seat.</td>
+            </tr>
+            <tr>
+              <td>Dylan</td>
+              <td>Trailblazers role shown on the roster; no specific revenue target is established here.</td>
+              <td>Trailblazers, not a Driven reporting line. Pay is not known and is not invented.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="path-block" id="path-amber-tasks">
+      <div class="sec-title" style="font-size:1.2rem">Amber's task list</div>
+      <p class="path-lead">November 9 dates mean confirm ownership/process at Monday Level 10, not that recurring work ends. November 6 dates are this week's automation commitment. December 1 bank rules remain no excuses. These items are also in driven_tasks 131–149.</p>
+      <div class="path-table-wrap">
+        <table class="path-table">
+          <thead><tr><th>Owner</th><th>Date</th><th>Task</th></tr></thead>
+          <tbody>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm office staff and day-to-day operations ownership</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Finish road-handoff systems and own bot follow-through</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm weekly AR and monthly cash deposit routine</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm ACH payment-run and exception review</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm rare bank and credit-card exception review</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm customer and vendor credit-memo ownership</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm weekly mail pickup and drop-off as one trip</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm state accounts filing and upkeep</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm daily huddle ownership with Annie backup</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm financial and accounting meeting preparation</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm hours approval and payroll exception glance</td></tr>
+            <tr><td>Amber</td><td class="num">Dec 1</td><td>Put bank reconciliation matching rules in place (not the existing CCF rec)</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 6</td><td>Automate vendor-payments-by-PO report</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 6</td><td>Automate AP bill process through ACH</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 6</td><td>Finish QuickBooks PO-to-bill conversion automation</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm receipt capture and payroll holiday-rule automation</td></tr>
+            <tr><td>Amber</td><td class="num">Nov 9</td><td>Confirm commission page stays automated with no hand upkeep</td></tr>
+            <tr><td>Annie</td><td class="num">Nov 9</td><td>Confirm vendor-bot-to-Annie setup handoff</td></tr>
+            <tr><td>Amber</td><td class="num">Dec 1</td><td>Include TB checks and cash in the existing deposit routine</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="path-block">
       <div class="sec-title" style="font-size:1.2rem">Roles after automation</div>
       <div class="sec-sub">Seat detail for the people on the chart. They stay at $6 million, $10 million, and $100 million. The very few produce the revenue. Bots cover almost all backend.</div>
-      <div class="path-rule">Few or no additional employees. Reallocation only. Rich, Amber, Dan, Annie, Patrick, Landon, and Dylan all stay. Amber stays at 25 hours a week and runs operations and systems. Rich stays on vision and sales. Dan stays as advisor at $30,000 per year. Dylan is the Trailblazers person, with no job title stated.</div>
+      <div class="path-rule">No layoffs, reallocation only. Few or no additional employees because bots cover almost everything. Rich, Amber, Dan, Annie, Patrick, Landon, and Dylan all stay. Rich: vision and revenue-producing sales, 34.5 planned hours. Amber: 25-hour paid seat until automation, 10 remaining planned hours after, owns day-to-day operations and systems. Dan Young: advisor $30,000/year, 9.5 planned hours. Annie: customer service, 30 hours. Patrick: drives the truck, 30 hours plus VMI on-route. Landon: sales, commission only. Dylan: Trailblazers, not a Driven reporting line.</div>
       <div class="role-list">
         <article class="role-card">
           <div class="role-top">
@@ -559,11 +760,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Vision and sales</div>
-              <p>The owner handles vision and revenue-producing sales actions. Day-to-day operations and systems sit with Amber.</p>
+              <p>Estimated seat 50. Post-automation planned duties 34.5. Keeps vision and revenue-producing visits, calls and relationships. Starts tools only on the road, then hands completion to Amber. Keeps owner financial decisions and team participation. Selling next week; Monday and Friday are admin review. Amber owns non-sales follow-through, not his sales.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>Bots cover almost all backend. That work does not sit on Rich.</p>
+              <p>Bots cover almost all backend. That work does not sit on Rich. His road-build/handoff duty is already 0 hours, so no positive hour transfer is subtracted from the 34.5.</p>
             </div>
           </div>
         </article>
@@ -572,7 +773,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-top">
             <div>
               <div class="role-name">Amber</div>
-              <div class="role-title">Day-to-day operations &amp; systems · 25 hours a week</div>
+              <div class="role-title">Day-to-day operations &amp; systems · 25-hour paid seat until automation, then 10</div>
               <div class="role-mail"><a href="mailto:amber@drivensol.com">amber@drivensol.com</a></div>
             </div>
             <div class="keep-chip">Keep</div>
@@ -580,11 +781,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Operations</div>
-              <p>She stays at 25 hours a week. She transfers from office admin to running the office staff and building systems. She owns day-to-day operations and systems.</p>
+              <p>Paid seat stays 25 hours at $27/hour ($675/week) until automation lands. Remaining planned work is 10 hours after, or 10.5 while QuickBooks PO-to-bill remains. She owns day-to-day operations and systems, coordinates Annie's office-side work and Patrick's schedule escalations, and finishes road handoffs. Office coordination is ownership, not a padded extra block.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>Bots cover almost all of that backend: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated. Amber builds the systems. The bots run that work.</p>
+              <p>Bots do backend execution: vendor payments by PO, ACH for POs, bills, commissions, and reimbursements, and bank and credit-card matching. Commission is already fully automated. She reviews exceptions. The 10-hour path is $270/week. No payroll change is being executed.</p>
             </div>
           </div>
         </article>
@@ -601,7 +802,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Annie stays on customer service. Orders stay with her, and her office-side work runs through Amber. She sets up vendors the bot finds.</p>
+              <p>30 estimated hours and 30 planned hours. 10 different existing-customer calls each workday; orders, onboarding, late collections, and setting up vendors the bot finds. She runs weekly L10. Office-side escalation goes through Amber.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -622,11 +823,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Patrick drives the truck. The seat measure Rich uses for that truck is $1,000 net income per day. Between loads he makes sales calls, toward about 2 deliveries a day. VMI counting stays on his route: Kemp bi-weekly, SV Labs weekly.</p>
+              <p>30 estimated hours and 30 planned hours, plus VMI on-route (not extra hours). Truck deliveries; meeting-setting calls between deliveries (Rich attends those meetings); confirms automated routes; Kemp VMI every two weeks; SV Labs weekly. The page's $1,000 a day net income from the truck is company performance, not his wage.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>The truck, the calls, and the route counts stay with Patrick. Backend bots do not replace the route.</p>
+              <p>The truck, the calls, and the route counts stay with Patrick. He confirms the automated route. VMI stays on the route.</p>
             </div>
           </div>
         </article>
@@ -643,11 +844,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Revenue</div>
-              <p>Sales, commission only. He is one of the very few people. Still here.</p>
+              <p>Daily calls, quotes, closes and account relationships. Weekly numbers at huddle/L10. Commission only. No commission percentage is set here.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>No backend seat. His work is revenue.</p>
+              <p>Commission page stays automated. No hand upkeep.</p>
             </div>
           </div>
         </article>
@@ -664,11 +865,11 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Advisor</div>
-              <p>He stays on as an advisor at $30,000 per year. This is not a full-time CFO seat.</p>
+              <p>Advisor, not a full-time CFO seat. $30,000/year. No numeric estimate on the seat. Planned duties after automation are 9.5. Weekly accounting and scheduled financial advice on runway, terms, debt and budget.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
-              <p>Bots cover almost all finance backend: payments by PO, ACH, and bank and card matching. Dan advises. He does not hold an operating CFO seat.</p>
+              <p>He reviews automated reports instead of building them. The two manual half-hour blocks (vendor payments by PO; weekly cash/AP snapshot) drop to 0. Review stays inside financial oversight.</p>
             </div>
           </div>
         </article>
@@ -684,7 +885,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
           <div class="role-split">
             <div class="split-col rev">
               <div class="split-label">Roster</div>
-              <p>Dylan is the Trailblazers person on this roster. No job title is stated. He is not a Driven reporting line. The Path tab stays the Driven view.</p>
+              <p>Dylan is the Trailblazers person on this roster. Trailblazers only, not a Driven reporting line. No cadence or hours are invented here. Pay is not known and is not invented. The Path tab stays the Driven view.</p>
             </div>
             <div class="split-col bot">
               <div class="split-label">Backend / AI</div>
@@ -697,7 +898,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 
     <div class="path-card">
       <div class="sale-kicker">How this stays on track</div>
-      <p style="margin-top:8px">Rich handles vision and revenue-producing sales. Amber runs day-to-day operations and systems at 25 hours a week, running the office staff and building systems. Annie stays on customer service and sets up vendors the bot finds. Patrick drives the truck. Landon sells, commission only. Dan advises at $30,000 per year. Dylan is the Trailblazers person, with no job title stated. Bots cover almost everything else, including vendor payments by PO, ACH, and bank and card matching. Commission automation is already done.</p>
+      <p style="margin-top:8px">No layoffs, reallocation only. Rich: vision and revenue-producing sales, 50 estimated and 34.5 planned. Amber: 25-hour paid seat until automation, 10 remaining planned hours after (10.5 interim), owns day-to-day operations and systems. Annie: customer service, 30 and 30. Patrick: drives the truck, 30 and 30 plus VMI on-route. Landon: sales, commission only. Dan Young: advisor at $30,000 per year, 9.5 planned hours, no numeric seat estimate. Dylan: Trailblazers, not a Driven reporting line. Bots cover almost everything else, including vendor payments by PO, ACH, and bank and card matching. Commission automation is already done. Driven delivers packaging in-house, never brokerage.</p>
       <p style="margin-top:8px">Cash revenue targets Rich stated: $5,000,000 in 2027 with at least 15% net margin, $750,000 net at that floor, and $10,000,000 around 2029 with a 15% floor of $1,500,000 net. Owner take-home target is $1,000,000 a year. At 15% that needs about $6.67 million of revenue, so it does not fit in the 2027 net and it does fit at the $10,000,000 year. The company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
     </div>
   </div>
@@ -975,8 +1176,8 @@ function showPanel(id, el){
   const panel = document.getElementById('panel-'+id);
   if (panel) panel.classList.add('active');
   if (id === 'path') {
-    if (location.hash !== '#path') history.replaceState(null, '', '#path');
-  } else if (location.hash === '#path') {
+    if (!location.hash.startsWith('#path')) history.replaceState(null, '', '#path');
+  } else if (location.hash.startsWith('#path')) {
     history.replaceState(null, '', location.pathname + location.search);
   }
 }
@@ -1271,9 +1472,15 @@ function toast(msg, type){
 // ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
+function openPathFromHash(){
+  if (location.hash === '#path' || location.hash.startsWith('#path-')) {
+    showPanel('path', document.getElementById('tab-path'));
+  }
+}
 renderLinks();
 syncPathTab();
-if (location.hash === '#path') showPanel('path', document.getElementById('tab-path'));
+openPathFromHash();
+window.addEventListener('hashchange', openPathFromHash);
 loadData();
 </script>
 </body>
