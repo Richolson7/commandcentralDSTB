@@ -227,20 +227,33 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .toast.err{border-color:var(--rbr);color:var(--red);background:var(--rbg)}
 @keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
 
-.fin-sub{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--br);margin:0 0 16px}
-.fin-tab{padding:8px 12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--td);cursor:pointer;border:0;border-bottom:3px solid transparent;background:none;white-space:nowrap}
+.fin-sub{display:flex;background:#030505;border-bottom:2px solid var(--br);margin:0 0 16px;overflow-x:auto;gap:2px}
+.fin-tab{padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--td);cursor:pointer;border:0;border-bottom:3px solid transparent;background:none;white-space:nowrap}
 .fin-tab:hover{color:var(--tx)}
 .fin-tab.active{color:var(--g);border-bottom-color:var(--g)}
 .fin-view{display:none}.fin-view.active{display:block}
-.fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.fin-scroll{overflow-x:auto}
+.fin-block{margin-bottom:16px}
 .src{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:10px;border:1px solid var(--br);border-radius:99px;padding:2px 8px;color:var(--td);margin-right:6px}
 .src.qbo{color:var(--g);border-color:rgba(57,255,20,.35)}
 .src.amber{color:var(--amb);border-color:var(--abr)}
 .src.wait{color:var(--td)}
 .fin-note{background:var(--abg);border:1px solid var(--abr);border-radius:4px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--amb);line-height:1.5}
-.fin-form{display:grid;gap:8px;margin-top:14px;max-width:720px}
-.fin-form textarea{width:100%;min-height:120px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px}
+.fin-list{display:flex;flex-direction:column;gap:8px}
+.fin-item{background:var(--s2);border:1px solid var(--br);border-radius:4px;padding:12px 14px}
+.fin-item-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.fin-item-name{font-size:13px;font-weight:600;color:var(--tx)}
+.fin-item-meta{font-size:12px;color:var(--td);line-height:1.5;margin-top:4px}
+.fin-item-amt{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1;color:var(--g);white-space:nowrap}
+.fin-item-amt.bad{color:var(--red)}
+.fin-item-amt.warn{color:var(--amb)}
+.fin-item-amt.mute{color:var(--tm);font-size:1.2rem}
+.fin-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fin-subitem{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05);font-size:12px;color:var(--td)}
+.fin-point{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;color:var(--tx)}
+.fin-point .fin-point-note{color:var(--td);text-align:right}
+.fin-form{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-width:640px}
+.fin-form textarea,.fin-form input,.fin-form select{width:100%}
+.fin-form textarea{min-height:120px;background:var(--s2);border:1px solid var(--br);border-radius:3px;color:var(--tx);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px}
 .fin-form textarea:focus{outline:none;border-color:var(--g)}
 
 @media print {
@@ -924,19 +937,25 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
   <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
   <div class="panel" id="panel-findesk">
     <div class="sec-title">FINANCE DESK</div>
-    <div class="sec-sub">Driven Solutions company finance. Amber's sheet and the QuickBooks book stay on separate lines. Nothing on this desk pays a vendor, posts to the books, or sends email. The weekly meeting log remains on <a href="finance-accountability.html" style="color:var(--g)">Finance Accountability</a>.</div>
+    <div class="sec-sub">Driven Solutions. Tuesday and Friday snapshots are the clock for the weekly, monthly, and quarterly agendas. Amber’s sheet and the QuickBooks book stay on separate lines. This desk does not pay a bill or send email.</div>
     <div id="fin-status" class="sec-sub">Loading the latest snapshot…</div>
     <div class="fin-sub" id="fin-subtabs">
-      <button type="button" class="fin-tab active" data-fin-view="cash">Cash on hand</button>
-      <button type="button" class="fin-tab" data-fin-view="decisions">Tue / Fri numbers</button>
-      <button type="button" class="fin-tab" data-fin-view="aging">AP aging</button>
+      <button type="button" class="fin-tab active" data-fin-view="overview">Overview</button>
+      <button type="button" class="fin-tab" data-fin-view="cash">Cash</button>
+      <button type="button" class="fin-tab" data-fin-view="decisions">Tue / Fri</button>
+      <button type="button" class="fin-tab" data-fin-view="aging">Aging</button>
       <button type="button" class="fin-tab" data-fin-view="red">Red list</button>
-      <button type="button" class="fin-tab" data-fin-view="due">Next 14 days</button>
-      <button type="button" class="fin-tab" data-fin-view="autopay">Autopay check</button>
-      <button type="button" class="fin-tab" data-fin-view="contacts">Contact log</button>
-      <button type="button" class="fin-tab" data-fin-view="drafts">Draft emails</button>
+      <button type="button" class="fin-tab" data-fin-view="due">14 days</button>
+      <button type="button" class="fin-tab" data-fin-view="autopay">Autopay</button>
+      <button type="button" class="fin-tab" data-fin-view="contacts">Contacts</button>
+      <button type="button" class="fin-tab" data-fin-view="drafts">Drafts</button>
+      <button type="button" class="fin-tab" data-fin-view="meetings">Meetings</button>
+      <button type="button" class="fin-tab" data-fin-view="weekly">Weekly</button>
+      <button type="button" class="fin-tab" data-fin-view="monthly">Monthly</button>
+      <button type="button" class="fin-tab" data-fin-view="quarterly">Quarterly</button>
     </div>
-    <div id="fin-view-cash" class="fin-view active"></div>
+    <div id="fin-view-overview" class="fin-view active"></div>
+    <div id="fin-view-cash" class="fin-view"></div>
     <div id="fin-view-decisions" class="fin-view"></div>
     <div id="fin-view-aging" class="fin-view"></div>
     <div id="fin-view-red" class="fin-view"></div>
@@ -944,6 +963,10 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
     <div id="fin-view-autopay" class="fin-view"></div>
     <div id="fin-view-contacts" class="fin-view"></div>
     <div id="fin-view-drafts" class="fin-view"></div>
+    <div id="fin-view-meetings" class="fin-view"></div>
+    <div id="fin-view-weekly" class="fin-view"></div>
+    <div id="fin-view-monthly" class="fin-view"></div>
+    <div id="fin-view-quarterly" class="fin-view"></div>
   </div>
   <div class="panel" id="panel-pnl">
     <div class="sec-title">🧾 P&amp;L — QuickBooks</div>
