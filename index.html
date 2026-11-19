@@ -205,6 +205,13 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 .path-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:top;line-height:1.45;color:var(--tx)}
 .path-table tr:hover td{background:rgba(255,255,255,.02)}
 .path-table td.num{font-family:'DM Mono',monospace;white-space:nowrap;color:var(--g)}
+.path-table td.num.over{color:var(--red)}
+.budget-note{display:block;font-family:'Barlow',sans-serif;font-size:11px;letter-spacing:0;text-transform:none;color:var(--td);font-weight:500;white-space:normal;margin-top:3px}
+.budget-table{min-width:860px}
+.budget-week{width:112px}
+.budget-status{width:132px}
+.path-table tr.budget-total td{font-weight:700;border-top:1px solid var(--br)}
+.budget-help p + p{margin-top:8px}
 .path-hours{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:12px}
 .goal-take{margin-top:12px;padding-top:12px;border-top:1px solid var(--br)}
 .goal-net{font-family:'DM Mono',monospace;font-size:12px;color:var(--g);margin-top:6px}
@@ -310,6 +317,7 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
 <div class="tabs" id="main-tabs">
   <div class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</div>
   <div class="tab" id="tab-path" onclick="showPanel('path',this)">🎯 Path</div>
+  <div class="tab" id="tab-budget" onclick="showPanel('budget',this)">💵 Budget</div>
   <div class="tab" onclick="showPanel('Sales',this)">📋 Sales</div>
   <div class="tab" onclick="showPanel('Ops',this)">⚙️ Ops</div>
   <div class="tab" onclick="showPanel('Finance',this)">💰 Finance</div>
@@ -918,6 +926,244 @@ body{background:var(--dk);color:var(--tx);font-family:'Barlow',sans-serif;font-s
       <p style="margin-top:8px">Cash revenue targets Rich stated: $5,000,000 in 2027 with at least 15% net margin, $750,000 net at that floor, and $10,000,000 around 2029 with a 15% floor of $1,500,000 net. Owner take-home target is $1,000,000 a year. At 15% that needs about $6.67 million of revenue, so it does not fit in the 2027 net and it does fit at the $10,000,000 year. The company stays Driven — own packaging, own customers, own truck, "Create the fun and they will come," held to Integrity, Discipline, Growth, Loyalty, Good-Natured, and Persistence.</p>
     </div>
   </div>
+  <!--
+    BUDGET CAPS
+    October actual and Monthly cap are the static numbers in the two tables below.
+    Edit them here when a cap is reset (first Friday of the month) or when Driven
+    fuel/truck, loans, and the rest of insurance get filled in.
+    This week actual and Status are typed on the page. They save with that company's
+    weekly dashboard numbers (keys bgt_week_* and bgt_status_*). Shift Weeks does not clear them.
+    Payroll is not on this page. Do not add pay, salary, commission, or payroll totals here.
+  -->
+  <div class="panel" id="panel-budget">
+    <div class="sec-title">💵 Budget</div>
+    <div class="sec-sub">Driven and Trailblazers, both on this tab. October actual against the cap we hold now.</div>
+    <nav class="path-jumps" aria-label="Budget sections">
+      <a href="#budget-where">Where we are</a>
+      <a href="#budget-how">How this works</a>
+      <a href="#budget-caps">Caps</a>
+      <a href="#budget-cadence">Cadence</a>
+    </nav>
+
+    <div class="path-block" id="budget-where">
+      <div class="sec-title" style="font-size:1.2rem">Where we really are</div>
+      <div class="path-card">
+        <p>Driven cash was -$109.2K the week of 11/9. Driven AR days are 44.9.</p>
+        <p style="margin-top:8px">Trailblazers is paying about $4,900 a week (about $21,500 a month) in cash-advance payments. IOU Financial, Merit, Legend.</p>
+        <div class="path-rule" style="margin-top:12px">Stop new advances. Get the payoff letters. Pay them off.</div>
+        <p style="margin-top:12px">Google Ads and Yelp were cancelled 11/19.</p>
+      </div>
+    </div>
+
+    <div class="path-block" id="budget-how">
+      <div class="sec-title" style="font-size:1.2rem">How this works</div>
+      <div class="path-card budget-help">
+        <p>October actual is what already went out. Monthly cap is the ceiling. Over it, that line gets cut. At it, nothing new gets added.</p>
+        <p>This week actual starts blank. Type what hit this week. The box turns green when that number is at or under the monthly cap, and red when it is over. A green week can still blow the month. Add the weeks. Status starts from October versus the cap. Edit it. Friday tags: on budget, over cap, new vendor, cancelled vendor billing again, personal-looking.</p>
+        <p>The week box and the status box save the same way the other weekly entries on this site save, on that company's row. Both tables stay up when you switch the company at the top. Shift Weeks does not clear these boxes. Blank the week box when the new week starts, then type the new week.</p>
+        <p>The cadence table is who checks what, and when. First due is the first time it happens. Payroll tracked separately. Do not type pay into a status box. To change an October number or a cap, edit this page. Search BUDGET CAPS.</p>
+      </div>
+    </div>
+
+    <div class="path-block" id="budget-caps">
+      <div class="sec-title" style="font-size:1.2rem">Monthly budget caps</div>
+      <div class="sec-sub">Driven fuel/truck, loans, and the rest of insurance are still being filled in. They are not in the Driven table yet.</div>
+      <p class="path-note">Payroll tracked separately.</p>
+
+      <div class="sale-kicker">Driven</div>
+      <div class="path-table-wrap">
+        <table class="path-table budget-table">
+          <thead>
+            <tr><th>Category</th><th>October actual</th><th>Monthly cap</th><th>This week actual</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Insurance</td>
+              <td class="num">$449.00</td>
+              <td class="num">$449.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_insurance" data-cap="449" aria-label="Driven insurance this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_insurance" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven insurance status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Software</td>
+              <td class="num">$1,231.00</td>
+              <td class="num">$1,272.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_software" data-cap="1272" aria-label="Driven software this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_software" data-default-status="Under cap" value="Under cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven software status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>AI tools</td>
+              <td class="num over">$1,435.00</td>
+              <td class="num">$1,415.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_ai" data-cap="1415" aria-label="Driven AI tools this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_ai" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven AI tools status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Marketing / ads<span class="budget-note">Google Ads and Yelp cancelled 11/19.</span></td>
+              <td class="num over">$2,256.84</td>
+              <td class="num">$157.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_marketing" data-cap="157" aria-label="Driven marketing this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_marketing" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven marketing status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Subscriptions to cancel</td>
+              <td class="num over">$551.00</td>
+              <td class="num">$0.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_cancel" data-cap="0" aria-label="Driven subscriptions to cancel this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_cancel" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven subscriptions to cancel status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Customer entertainment</td>
+              <td class="num over">$1,042.00</td>
+              <td class="num">$600.00<span class="budget-note">proposed</span></td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_entertain" data-cap="600" aria-label="Driven customer entertainment this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_entertain" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven customer entertainment status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Personal charges moved off the business card</td>
+              <td class="num over">$903.00</td>
+              <td class="num">$0.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="driven" data-budget-field="bgt_week_personal" data-cap="0" aria-label="Driven personal charges this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="driven" data-budget-field="bgt_status_personal" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Driven personal charges status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr class="budget-total">
+              <td>Total</td>
+              <td class="num over">$7,867.84</td>
+              <td class="num">$3,893.00<span class="budget-note">cut of $3,974.84/month</span></td>
+              <td class="num" id="bgt-week-sum-driven"></td>
+              <td><span class="status-chip st-r">Over cap</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="path-note">These known lines cut $3,974.84 a month, from $7,867.84 down to $3,893.00. Fuel/truck, loans, and the rest of insurance are still being filled in.</p>
+
+      <div class="sale-kicker" style="margin-top:18px">Trailblazers</div>
+      <div class="sec-sub">October. Payroll is not in these lines.</div>
+      <div class="path-table-wrap">
+        <table class="path-table budget-table">
+          <thead>
+            <tr><th>Category</th><th>October actual</th><th>Monthly cap</th><th>This week actual</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Insurance</td>
+              <td class="num">$3,667.61</td>
+              <td class="num">$3,667.61</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_insurance" data-cap="3667.61" aria-label="Trailblazers insurance this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_insurance" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers insurance status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Fuel / truck</td>
+              <td class="num">$3,897.34</td>
+              <td class="num">$3,897.34</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_fuel" data-cap="3897.34" aria-label="Trailblazers fuel this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_fuel" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers fuel status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Equipment &amp; leases</td>
+              <td class="num">$6,722.25</td>
+              <td class="num">$6,722.25</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_equip" data-cap="6722.25" aria-label="Trailblazers equipment this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_equip" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers equipment status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Software</td>
+              <td class="num">$559.00</td>
+              <td class="num">$559.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_software" data-cap="559" aria-label="Trailblazers software this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_software" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers software status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Marketing / ads</td>
+              <td class="num">$2,055.30</td>
+              <td class="num">$2,055.30</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_marketing" data-cap="2055.30" aria-label="Trailblazers marketing this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_marketing" data-default-status="At cap" value="At cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers marketing status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Cash advances &amp; LOC interest<span class="budget-note">Cap is higher because Merit and Legend started late Oct. Full weekly payments hit now. Payoff is the priority.</span></td>
+              <td class="num">$11,060.47</td>
+              <td class="num">$21,489.15</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_advance" data-cap="21489.15" aria-label="Trailblazers cash advances this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_advance" data-default-status="Under cap" value="Under cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers cash advances status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Subscriptions to cancel</td>
+              <td class="num over">$100.59</td>
+              <td class="num">$0.00</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_cancel" data-cap="0" aria-label="Trailblazers subscriptions to cancel this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_cancel" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers subscriptions to cancel status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Personal charges moved off the business card</td>
+              <td class="num over">$4,327.62</td>
+              <td class="num">$0.00<span class="budget-note">under review</span></td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_personal" data-cap="0" aria-label="Trailblazers personal charges this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_personal" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers personal charges status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr>
+              <td>Other</td>
+              <td class="num over">$142.13</td>
+              <td class="num">$127.13</td>
+              <td><input type="number" step="0.01" class="actual-inp budget-week" data-co="tb" data-budget-field="bgt_week_other" data-cap="127.13" aria-label="Trailblazers other this week actual" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+              <td><input type="text" class="actual-inp budget-status" data-co="tb" data-budget-field="bgt_status_other" data-default-status="Over cap" value="Over cap" title="on budget, over cap, new vendor, cancelled vendor billing again, personal-looking" aria-label="Trailblazers other status" autocomplete="off" oninput="onBudgetInput(this)" onchange="onBudgetCommit(this)"></td>
+            </tr>
+            <tr class="budget-total">
+              <td>Total</td>
+              <td class="num">$32,532.31</td>
+              <td class="num">$38,517.78</td>
+              <td class="num" id="bgt-week-sum-tb"></td>
+              <td><span class="status-chip st-g">Under cap</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="path-note">October total is $32,532.31 against a cap of $38,517.78. The cap is higher because Merit and Legend started late October and the full weekly payments are in the number now. That is not room to spend. Pay the advances off.</p>
+    </div>
+
+    <div class="path-block" id="budget-cadence">
+      <div class="sec-title" style="font-size:1.2rem">Cadence — who checks what, when</div>
+      <div class="sec-sub">Times are Central. Thanksgiving week moves the first Friday checks to Wednesday.</div>
+      <div class="path-table-wrap">
+        <table class="path-table">
+          <thead>
+            <tr><th>Cadence</th><th>What</th><th>Owner</th><th>When (Central)</th><th>First due</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Weekly</td>
+              <td>Every bank/card charge checked against the caps (tag: on budget, over cap, new vendor, cancelled vendor billing again, personal-looking)</td>
+              <td>Amber + Josh</td>
+              <td>Fri 2:00 PM</td>
+              <td>Wed Nov 25 (Thanksgiving week)</td>
+            </tr>
+            <tr>
+              <td>Weekly</td>
+              <td>One-page exceptions report to Rich (new vendors, over-cap lines, cancelled vendors billing again, any new cash advance)</td>
+              <td>Amber</td>
+              <td>Fri 4:00 PM</td>
+              <td>Wed Nov 25</td>
+            </tr>
+            <tr>
+              <td>Weekly</td>
+              <td>Cash, AR and the cut list reviewed at Level 10</td>
+              <td>Rich + team</td>
+              <td>Mon at L10</td>
+              <td>Mon Nov 30</td>
+            </tr>
+            <tr>
+              <td>Monthly</td>
+              <td>Budget review: actual vs cap for every line, reset caps</td>
+              <td>Rich + Amber</td>
+              <td>First Fri of month</td>
+              <td>Fri Dec 4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div class="panel" id="panel-Sales"><div class="sec-title">📋 Sales</div><div class="sec-sub">Click Save after entering W4 (this week's actual). Shift Weeks rolls W2→W1, W3→W2, W4→W3 and clears W4 for the new week.</div><div id="kpi-Sales"></div></div>
   <div class="panel" id="panel-Ops"><div class="sec-title">⚙️ Ops</div><div class="sec-sub"></div><div id="kpi-Ops"></div></div>
   <div class="panel" id="panel-Finance"><div class="sec-title">💰 Finance</div><div class="sec-sub"></div><div id="kpi-Finance"></div></div>
@@ -1132,6 +1378,7 @@ async function loadData() {
     state[co].history = (data && data.history) || [];
     state[co].tasks = (data && data.tasks) || [];
     state[co].pnl = (data && data.pnl) || null;
+    state[co]._loaded = true;
     setSync('live');
     if (data && data.updated_at) {
       const ago = Math.round((Date.now()-new Date(data.updated_at))/60000);
@@ -1139,9 +1386,12 @@ async function loadData() {
     }
   } catch(e) {
     state[co].data = {}; state[co].history = []; state[co].tasks = []; state[co].pnl = null;
+    state[co]._loaded = false;
     setSync('error');
   }
   renderAll();
+  hydrateBudget();
+  loadInactiveBudgetCache();
 }
 
 let saveTimer;
@@ -1167,7 +1417,9 @@ async function saveAllData() {
     state[c].history = payload.new.history || [];
     state[c].tasks = payload.new.tasks || [];
     state[c].pnl = payload.new.pnl || null;
+    state[c]._loaded = true;
     renderAll();
+    hydrateBudget();
     document.getElementById('last-sync').textContent = 'just now';
     toast('Updated by team','ok');
   }).subscribe();
@@ -1253,7 +1505,9 @@ function showPanel(id, el){
   if (window.finDeskPause) window.finDeskPause();
   if (id === 'path') {
     if (!location.hash.startsWith('#path')) history.replaceState(null, '', '#path');
-  } else if (location.hash.startsWith('#path') || location.hash === '#driven-finance') {
+  } else if (id === 'budget') {
+    if (location.hash !== '#budget') history.replaceState(null, '', '#budget');
+  } else if (location.hash.startsWith('#path') || location.hash === '#driven-finance' || location.hash === '#budget') {
     history.replaceState(null, '', location.pathname + location.search);
   }
 }
@@ -1546,9 +1800,173 @@ function toast(msg, type){
 }
 
 // ══════════════════════════════════════════════════════════
+// BUDGET WEEKLY ENTRY
+// October actuals and monthly caps are static in #panel-budget (search BUDGET CAPS).
+// This week actual and status save with that company's weekly dashboard row,
+// same upsert as the W4 boxes. Keys are bgt_week_* and bgt_status_*.
+// Shift Weeks does not clear them. Payroll is not stored here.
+// ══════════════════════════════════════════════════════════
+const budgetCache = { driven: null, tb: null };
+const budgetPending = { driven: {}, tb: {} };
+const budgetSaveTimers = { driven: null, tb: null };
+
+function onBudgetInput(inp){
+  inp.dataset.dirty = '1';
+  if (inp.classList.contains('budget-week')) {
+    paintBudgetWeek(inp);
+    paintBudgetWeekTotals();
+  } else {
+    paintBudgetStatus(inp);
+  }
+}
+function onBudgetCommit(inp){
+  onBudgetInput(inp);
+  queueBudgetSave(inp);
+}
+function paintBudgetWeek(inp){
+  inp.classList.remove('g','r','a');
+  const raw = inp.value.trim();
+  if (raw === '') return;
+  const n = parseFloat(raw);
+  const cap = parseFloat(inp.dataset.cap);
+  if (Number.isNaN(n) || Number.isNaN(cap)) return;
+  inp.classList.add(n > cap ? 'r' : 'g');
+}
+function paintBudgetStatus(inp){
+  const t = inp.value.toLowerCase();
+  inp.classList.remove('g','r','a');
+  if (!t.trim()) return;
+  if (t.includes('over') || t.includes('personal') || t.includes('again')) inp.classList.add('r');
+  else if (t.includes('under') || t.includes('at cap') || t.includes('on budget')) inp.classList.add('g');
+  else inp.classList.add('a');
+}
+function paintBudgetWeekTotals(){
+  [['driven', 3893], ['tb', 38517.78]].forEach(([c, cap]) => {
+    let sum = 0;
+    let any = false;
+    document.querySelectorAll('.budget-week[data-co="'+c+'"]').forEach(inp => {
+      const raw = inp.value.trim();
+      if (raw === '') return;
+      const n = parseFloat(raw);
+      if (Number.isNaN(n)) return;
+      any = true;
+      sum += n;
+    });
+    const el = document.getElementById('bgt-week-sum-'+c);
+    if (!el) return;
+    if (!any) {
+      el.textContent = '';
+      el.classList.remove('over');
+      return;
+    }
+    sum = Math.round(sum * 100) / 100;
+    el.textContent = fmMoney(sum);
+    el.classList.toggle('over', sum > cap);
+  });
+}
+function readBudgetStored(c, key){
+  if (c === co && state[c] && state[c]._loaded && state[c].data) {
+    if (Object.prototype.hasOwnProperty.call(state[c].data, key)) return state[c].data[key];
+    return undefined;
+  }
+  const cache = budgetCache[c];
+  if (cache && Object.prototype.hasOwnProperty.call(cache, key)) return cache[key];
+  return undefined;
+}
+function hydrateBudget(){
+  document.querySelectorAll('[data-budget-field]').forEach(inp => {
+    if (inp.dataset.dirty === '1' || document.activeElement === inp) return;
+    const val = readBudgetStored(inp.dataset.co, inp.dataset.budgetField);
+    if (val === undefined || val === null) return;
+    inp.value = String(val);
+  });
+  document.querySelectorAll('.budget-week').forEach(paintBudgetWeek);
+  document.querySelectorAll('.budget-status').forEach(paintBudgetStatus);
+  paintBudgetWeekTotals();
+}
+function queueBudgetSave(inp){
+  const c = inp.dataset.co;
+  const key = inp.dataset.budgetField;
+  const raw = inp.value.trim();
+  budgetPending[c][key] = raw;
+  if (c === co && state[c] && state[c]._loaded) {
+    if (raw === '') delete state[c].data[key];
+    else state[c].data[key] = raw;
+  }
+  clearTimeout(budgetSaveTimers[c]);
+  budgetSaveTimers[c] = setTimeout(() => flushBudgetCompany(c), 600);
+}
+async function saveCompanySnapshot(c){
+  if (!state[c] || !state[c]._loaded) return;
+  const cfg = COMPANIES[c];
+  const s = state[c];
+  const {error} = await db.from('dashboard_data').upsert({
+    id: cfg.dbRow, week_data: s.data, history: s.history, tasks: s.tasks, updated_at: new Date().toISOString()
+  }, {onConflict:'id'});
+  if (error) throw error;
+  if (c === co) {
+    const el = document.getElementById('last-sync');
+    if (el) el.textContent = 'just now';
+  }
+}
+async function mergeBudgetRemote(c, batch){
+  const {data, error} = await db.from('dashboard_data').select('*').eq('id', COMPANIES[c].dbRow).single();
+  if (error) throw error;
+  const week = Object.assign({}, (data && data.week_data) || {});
+  Object.keys(batch).forEach(k => {
+    if (batch[k] === '') delete week[k];
+    else week[k] = batch[k];
+  });
+  const {error: writeError} = await db.from('dashboard_data').upsert({
+    id: COMPANIES[c].dbRow,
+    week_data: week,
+    history: (data && data.history) || [],
+    tasks: (data && data.tasks) || [],
+    updated_at: new Date().toISOString()
+  }, {onConflict:'id'});
+  if (writeError) throw writeError;
+  budgetCache[c] = week;
+  if (c === co) {
+    const el = document.getElementById('last-sync');
+    if (el) el.textContent = 'just now';
+  }
+}
+async function flushBudgetCompany(c){
+  const pending = budgetPending[c];
+  const keys = Object.keys(pending);
+  if (!keys.length) return;
+  const batch = {};
+  keys.forEach(k => { batch[k] = pending[k]; delete pending[k]; });
+  try {
+    if (c === co && state[c] && state[c]._loaded) await saveCompanySnapshot(c);
+    else await mergeBudgetRemote(c, batch);
+  } catch (e) {
+    Object.keys(batch).forEach(k => {
+      if (!Object.prototype.hasOwnProperty.call(pending, k)) pending[k] = batch[k];
+    });
+    toast('Save failed — check connection','err');
+    return;
+  }
+  if (Object.keys(pending).length) flushBudgetCompany(c);
+}
+async function loadInactiveBudgetCache(){
+  const other = co === 'driven' ? 'tb' : 'driven';
+  try {
+    const {data, error} = await db.from('dashboard_data').select('week_data').eq('id', COMPANIES[other].dbRow).single();
+    if (error) throw error;
+    budgetCache[other] = (data && data.week_data) || {};
+  } catch (e) { /* caps still show; week boxes stay blank until a save lands */ }
+  hydrateBudget();
+}
+
+// ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
 function openPathFromHash(){
+  if (location.hash === '#budget') {
+    showPanel('budget', document.getElementById('tab-budget'));
+    return;
+  }
   if (location.hash === '#path' || location.hash.startsWith('#path-')) {
     showPanel('path', document.getElementById('tab-path'));
   }
@@ -1558,6 +1976,7 @@ syncPathTab();
 syncFinanceNav();
 openPathFromHash();
 window.addEventListener('hashchange', openPathFromHash);
+document.querySelectorAll('.budget-status').forEach(paintBudgetStatus);
 loadData();
 if (location.hash === '#driven-finance') openFinanceDesk();
 </script>
